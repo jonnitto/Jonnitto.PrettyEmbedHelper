@@ -1,0 +1,15 @@
+Neos:
+  Neos:
+    userInterface:
+      translation:
+        autoInclude:
+          Jonnitto.PrettyEmbedHelper:
+            - 'NodeTypes/*'
+    nodeTypes:
+      groups:
+        prettyembed:
+          position: 200
+          label: 'Jonnitto.PrettyEmbedHelper:NodeTypes.Groups:prettyembed'
+    fusion:
+      autoInclude:
+        Jonnitto.PrettyEmbedHelper: true

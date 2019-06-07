@@ -1,0 +1,13 @@
+'Jonnitto.PrettyEmbedHelper:Mixin.Groups':
+  abstract: true
+  ui:
+    inspector:
+      groups:
+        sources:
+          label: i18n
+          icon: 'fas fa-file-video'
+          position: 10
+        look:
+          label: i18n
+          icon: 'fas fa-paint-brush'
+          position: 20

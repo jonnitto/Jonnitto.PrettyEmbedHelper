@@ -1,0 +1,132 @@
+.jonnitto-prettyembedbackend__label {
+  position: absolute;
+  display: block;
+  background: #00adee;
+  color: #fff;
+  padding: 5px 15px;
+  cursor: pointer;
+  transform: translateY(-100%);
+  z-index: 1;
+
+  .jonnitto-prettyembedbackend__hide {
+    display: none;
+  }
+}
+
+.jonnitto-prettyembedbackend__checkbox {
+  display: none;
+
+  &:checked {
+    ~ .jonnitto-prettyembedbackend__label {
+      .jonnitto-prettyembedbackend__show {
+        display: none;
+      }
+
+      .jonnitto-prettyembedbackend__hide {
+        display: block;
+      }
+    }
+
+    ~ .jonnitto-prettyembedbackend__table {
+      display: table;
+    }
+  }
+}
+
+.jonnitto-prettyembedbackend__table {
+  display: none;
+  width: 100%;
+  text-align: left;
+  margin: 1em 0 2em;
+  position: relative;
+
+  th,
+  td {
+    &:not(:first-child) {
+      padding-left: 5px;
+    }
+
+    &:not(:last-child) {
+      text-align: inherit;
+      padding-right: 5px;
+    }
+
+    &.jonnitto-prettyembedbackend__center,
+    &:last-child {
+      text-align: center;
+    }
+  }
+
+  .jonnitto-prettyembedbackend__error {
+    background: #d9534f;
+    color: #fff;
+    padding: 0 !important;
+  }
+
+  tbody {
+    td {
+      border-top: 1px solid #aaa;
+    }
+
+    > :not(td) {
+      display: table-row;
+    }
+
+    > [data-__neos-fusion-path*="removedContent"]:first-child,
+    > [class^="style__addEmptyContentCollectionOverlay"] {
+      outline: 0;
+    }
+
+    &:empty,
+    > [data-__neos-fusion-path*="removedContent"]:first-child,
+    > [class^="style__addEmptyContentCollectionOverlay"] {
+      $height: 41px;
+
+      cursor: pointer;
+      height: $height;
+      text-align: center;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+
+      &::before {
+        position: relative;
+        display: block;
+        opacity: 0.95;
+        transition: opacity 0.2s ease;
+        line-height: $height;
+        color: #fff;
+        content: "Click here to add captions";
+        z-index: 1;
+
+        [lang^="de"] {
+          content: "Hier klicken um Inhalt hinzuzufügen";
+        }
+      }
+
+      &::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: $height;
+        background: #00adee;
+        opacity: 0.95;
+        z-index: 0;
+        margin: 0;
+        animation: none;
+      }
+
+      &:hover {
+        &::before,
+        &::after {
+          opacity: 1;
+        }
+      }
+    }
+
+    > [data-__neos-fusion-path*="removedContent"]:first-child {
+      box-shadow: 0 0 0 2px rgba(#000, 0.3);
+    }
+  }
+}

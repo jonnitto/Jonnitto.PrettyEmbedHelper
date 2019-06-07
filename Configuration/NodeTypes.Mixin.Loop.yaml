@@ -1,0 +1,11 @@
+'Jonnitto.PrettyEmbedHelper:Mixin.Loop':
+  abstract: true
+  properties:
+    loop:
+      type: boolean
+      defaultValue: false
+      ui:
+        label: i18n
+        inspector:
+          group: look
+          position: 60

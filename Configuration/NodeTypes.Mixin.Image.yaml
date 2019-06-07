@@ -1,0 +1,20 @@
+'Jonnitto.PrettyEmbedHelper:Mixin.Image':
+  abstract: true
+  superTypes:
+    'Carbon.Image:Image': true
+  ui:
+    inspector:
+      groups:
+        image:
+          label: i18n
+  properties:
+    image:
+      ui:
+        inspector:
+          editorOptions:
+            crop:
+              aspectRatio:
+                forceCrop: true
+                locked:
+                  width: 16
+                  height: 9

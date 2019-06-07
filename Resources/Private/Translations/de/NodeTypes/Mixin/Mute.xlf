@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" 
+    xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file original="" product-name="Jonnitto.PrettyEmbedHelper" source-language="en" target-language="de" datatype="plaintext">
+        <body>
+            <trans-unit id="properties.mute" xml:space="preserve">
+                <source>Mute video</source>
+                <target>Video stumm schalten</target>
+            </trans-unit>
+            <trans-unit id="properties.mute.ui.help.message" xml:space="preserve">
+                <source>If set, the audio will be initially silenced.</source>
+                <target>Wenn dies gesetzt ist, wird der Ton initial stumm geschaltet.</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

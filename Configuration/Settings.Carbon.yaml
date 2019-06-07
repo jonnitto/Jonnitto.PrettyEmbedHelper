@@ -1,0 +1,14 @@
+Carbon:
+  IncludeAssets:
+    Packages:
+      'Jonnitto.PrettyEmbedHelper':
+        Package: 'Jonnitto.PrettyEmbedHelper'
+        ConditionPrototype: 'Jonnitto.PrettyEmbedHelper:IncludeAssets'
+        General:
+          Head: Main.css
+        Backend:
+          Head:
+            - Backend.css
+            - Backend.js[defer]
+        Live:
+          Head: Main.js[defer]

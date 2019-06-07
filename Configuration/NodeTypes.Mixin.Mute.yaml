@@ -1,0 +1,13 @@
+'Jonnitto.PrettyEmbedHelper:Mixin.Mute':
+  abstract: true
+  properties:
+    mute:
+      type: boolean
+      defaultValue: false
+      ui:
+        label: i18n
+        help:
+          message: i18n
+        inspector:
+          group: look
+          position: 50

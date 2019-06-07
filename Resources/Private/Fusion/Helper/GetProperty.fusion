@@ -1,0 +1,17 @@
+prototype(Jonnitto.PrettyEmbedHelper:GetProperty) < prototype(Neos.Fusion:Component) {
+    property = null
+    node = ${node}
+    value = ${q(this.node).property(this.property)}
+    package = ${package}
+
+    renderer = Neos.Fusion:Case {
+        hasValue {
+            condition = ${Type.isBoolean(props.value) || Type.isString(props.value)}
+            renderer = ${props.value}
+        }
+        default {
+            condition = true
+            renderer = ${Configuration.setting('Jonnitto.PrettyEmbed' + props.package + '.defaults.' + props.property)}
+        }
+    }
+}

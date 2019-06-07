@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" 
+    xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file original="" product-name="Jonnitto.PrettyEmbedHelper" source-language="en" target-language="en" datatype="plaintext">
+        <body>
+            <trans-unit id="prettyembed" xml:space="preserve">
+                <source>Videos</source>
+                <target>Videos</target>
+            </trans-unit>
+            <trans-unit id="groups.sources" xml:space="preserve">
+                <source>Sources</source>
+                <target>Sources</target>
+            </trans-unit>
+            <trans-unit id="groups.look" xml:space="preserve">
+                <source><![CDATA[Look & Feel]]></source>
+                <target><![CDATA[Look & Feel]]></target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

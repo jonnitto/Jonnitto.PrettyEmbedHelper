@@ -1,0 +1,4 @@
+prototype(Jonnitto.PrettyEmbedHelper:IncludeAssets) < prototype(Carbon.IncludeAssets:Case) {
+    package = 'Helper'
+    mixin = ${'Jonnitto.PrettyEmbed' + this.package + ':Mixin.IncludeAssets'}
+}
