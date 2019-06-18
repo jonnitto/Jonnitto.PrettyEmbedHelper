@@ -1,0 +1,14 @@
+.jonnitto-prettyembed--iframe {
+  iframe {
+    border: 0 solid transparent;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  &:not(.jonnitto-prettyembed__content):not(.jonnitto-prettyembed--play) {
+    @extend %play-button;
+  }
+}

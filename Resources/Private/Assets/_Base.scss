@@ -85,6 +85,7 @@
   }
 
   .jonnitto-prettyembed__inner {
+    width: 100%;
     max-width: $prettyembed-lightbox-max-width;
     transform: scale(0);
     transition: transform 0.2s;
