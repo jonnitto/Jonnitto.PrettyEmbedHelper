@@ -9,7 +9,7 @@ Neos:
       groups:
         prettyembed:
           position: 200
-          label: 'Jonnitto.PrettyEmbedHelper:NodeTypes.Groups:prettyembed'
+          label: 'Jonnitto.PrettyEmbedHelper:NodeTypes.Mixin.Groups:prettyembed'
     fusion:
       autoInclude:
         Jonnitto.PrettyEmbedHelper: true
