@@ -5,15 +5,17 @@ import * as lightboxHelper from '../Helper/Lightbox';
 const BASE = 'jonnitto-prettyembed';
 
 function markup(node) {
-    let fullscreen =
-        node.getAttribute('data-fs') == 'true' ? ' allowfullscreen' : '';
-    let embed = node.getAttribute('data-embed') || false;
-
-    if (!embed) {
+    let data = node.dataset;
+    let fullscreen = data.fs != null;
+    if (!data.embed) {
         return false;
     }
 
-    return `<div class="${BASE}__lightbox-holder"><iframe class="${BASE}__lightbox-iframe" src="${src}" frameborder="0" allow="fullscreen; accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"${fullscreen}></iframe></div>`;
+    return `<iframe src="${data.embed}" ${
+        fullscreen ? 'allowfullscreen ' : ''
+    }frameborder="0" allow="${
+        fullscreen ? 'fullscreen; ' : ''
+    }accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"></iframe>`;
 }
 
 function replace(element, tagName) {
@@ -34,22 +36,39 @@ function replace(element, tagName) {
     }
 }
 
-function write(link, playClass) {
-    let embed = link.getAttribute('data-embed') || false;
-    let image = link.getElementsByTagName('img')[0];
-    let imageSrc = image.getAttribute('src') || false;
-    let width = image.width;
-    let height = image.height;
-    if (embed && width && height) {
-        let element = replace(link, 'div');
-        let fullscreen =
-            link.getAttribute('data-fs') == 'true' ? 'allowfullscreen ' : '';
+function getImage(node) {
+    let image = node.querySelector('img');
+    return {
+        node: image || null,
+        src: image ? image.getAttribute('src') : null
+    };
+}
 
-        element.setAttribute('data-img', imageSrc);
+function getPaddingTop(node, fallback = '56.25%') {
+    // 56.25% is a 16:9 fallback
+    let image = getImage(node);
+    if (!image.node) {
+        return fallback;
+    }
+    let ratio =
+        (parseInt(image.node.naturalHeight) /
+            parseInt(image.node.naturalWidth)) *
+        100;
+    if (typeof ratio != 'number') {
+        return fallback;
+    }
+    return ratio + '%';
+}
+
+function write(link, playClass) {
+    let iframe = markup(link);
+    let image = getImage(link);
+    if (iframe && image.src) {
+        let element = replace(link, 'div');
+        element.setAttribute('data-img', image.src);
         element.classList.add(playClass);
-        element.style.paddingTop =
-            (parseInt(height) / parseInt(width)) * 100 + '%';
-        element.innerHTML = `<iframe src="${embed}" width="${width}" height="${height}" ${fullscreen}frameborder="0" allow="fullscreen; accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"></iframe>`;
+        element.style.paddingTop = getPaddingTop(link);
+        element.innerHTML = iframe;
     }
 }
 
@@ -75,21 +94,22 @@ function init(selector, links) {
 }
 
 function lightbox(type) {
-    const SELECTOR = `a.${BASE}__${type}--lightbox`;
+    const SELECTOR = `a.${BASE}--${type}.${BASE}--lightbox`;
 
     lightboxHelper.init(SELECTOR, function(event) {
-        let html = markup(embed, fullscreen);
+        let html = markup(this);
         if (html) {
+            let paddingTop = getPaddingTop(this);
             event.preventDefault();
-            lightboxHelper.get().innerHTML = html;
+            lightboxHelper.get([type, 'iframe'], paddingTop).innerHTML = html;
             lightboxHelper.show();
         }
     });
 }
 
 function embed(type) {
-    const SELECTOR = `a.${BASE}__${type}--inline`;
-    const PLAY_CLASS = `${BASE}__${type}--play`;
+    const SELECTOR = `a.${BASE}--${type}.${BASE}--inline`;
+    const PLAY_CLASS = `${BASE}--play`;
 
     Gator(window).on('load', function() {
         init(SELECTOR);

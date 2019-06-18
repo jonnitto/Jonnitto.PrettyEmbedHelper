@@ -29,14 +29,21 @@ function resetContent() {
     lighboxContent.innerHTML = '';
 }
 
-function get(type) {
+function get(type, paddingTop) {
     if (!lighboxContent) {
         BODY_ELEMENT.appendChild(lighbox);
         lighboxContent = document.getElementById(ID);
     }
     resetContent();
-    if (type) {
-        lighboxContent.classList.add(`${BASE_CLASS}--${type}`);
+    if (typeof type != 'object') {
+        type = type ? [type] : [];
+    }
+    type.forEach(item => {
+        lighboxContent.classList.add(`${BASE_CLASS}--${item}`);
+    });
+
+    if (paddingTop) {
+        lighboxContent.style.paddingTop = paddingTop;
     }
     return lighboxContent;
 }

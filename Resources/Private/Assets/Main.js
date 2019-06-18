@@ -1,3 +1,3 @@
 import './Video';
-// import './Vimeo';
-// import './Youtube';
+import './Vimeo';
+import './Youtube';
