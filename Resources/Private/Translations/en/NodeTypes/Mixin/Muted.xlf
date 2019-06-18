@@ -3,11 +3,11 @@
     xmlns="urn:oasis:names:tc:xliff:document:1.2">
     <file original="" product-name="Jonnitto.PrettyEmbedHelper" source-language="en" target-language="en" datatype="plaintext">
         <body>
-            <trans-unit id="properties.mute" xml:space="preserve">
+            <trans-unit id="properties.muted" xml:space="preserve">
                 <source>Mute video</source>
                 <target>Mute video</target>
             </trans-unit>
-            <trans-unit id="properties.mute.ui.help.message" xml:space="preserve">
+            <trans-unit id="properties.muted.ui.help.message" xml:space="preserve">
                 <source>If set, the audio will be initially silenced.</source>
                 <target>If set, the audio will be initially silenced.</target>
             </trans-unit>

@@ -1,7 +1,7 @@
-'Jonnitto.PrettyEmbedHelper:Mixin.Mute':
+'Jonnitto.PrettyEmbedHelper:Mixin.Muted':
   abstract: true
   properties:
-    mute:
+    muted:
       type: boolean
       defaultValue: false
       ui:
