@@ -3,10 +3,18 @@
   ui:
     inspector:
       groups:
-        sources:
-          label: i18n
+        video:
+          label: Video
           icon: 'fas fa-file-video'
           position: 10
+        vimeo:
+          label: Vimeo
+          icon: 'fab fa-vimeo-v'
+          position: 11
+        youtube:
+          label: YouTube
+          icon: 'fab fa-youtube'
+          position: 12
         look:
           label: i18n
           icon: 'fas fa-paint-brush'
