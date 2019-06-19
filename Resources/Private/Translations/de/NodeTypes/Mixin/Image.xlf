@@ -7,6 +7,10 @@
                 <source>Preview Image</source>
                 <target>Vorschaubild</target>
             </trans-unit>
+            <trans-unit id="properties.image" xml:space="preserve">
+                <source>Image</source>
+                <target>Bild</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

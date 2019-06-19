@@ -27,8 +27,7 @@
         "neos/fusion-afx": "^1.2",
         "carbon/includeassets": "^3.5",
         "carbon/notification": "^1.3.1",
-        "carbon/eel": "^1.5",
-        "carbon/image": "^1.3 || ^2.1"
+        "carbon/eel": "^1.5"
     },
     "autoload": {
         "psr-4": {

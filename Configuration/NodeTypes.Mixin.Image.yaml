@@ -1,16 +1,21 @@
 'Jonnitto.PrettyEmbedHelper:Mixin.Image':
   abstract: true
-  superTypes:
-    'Carbon.Image:Image': true
   ui:
     inspector:
       groups:
         image:
           label: i18n
+          icon: 'fas fa-image'
+          position: 100
   properties:
     image:
+      type: Neos\Media\Domain\Model\ImageInterface
       ui:
+        label: i18n
+        reloadIfChanged: true
         inspector:
+          group: image
+          position: 10
           editorOptions:
             crop:
               aspectRatio:
