@@ -11,7 +11,9 @@
 
 # Jonnitto.PrettyEmbedHelper
 
-This package contains helper mixins, prototypes and frontend resources for the PrettyEmbed series. This package is used by following packages:
+This package contains helper mixins, prototypes and frontend resources for the PrettyEmbed series.
+
+This package is used by following packages:
 
 - [Jonnitto.PrettyEmbedVideo](https://github.com/jonnitto/Jonnitto.PrettyEmbedVideo)
 - [Jonnitto.PrettyEmbedVimeo](https://github.com/jonnitto/Jonnitto.PrettyEmbedVimeo)
