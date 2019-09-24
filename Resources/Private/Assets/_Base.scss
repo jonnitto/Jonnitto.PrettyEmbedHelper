@@ -20,10 +20,11 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    size: size("PlayButton.png", 2);
+    width: width($prettyembed-play-button, 2);
+    height: height($prettyembed-play-button, 2);
     opacity: 0.8;
     transform: translate(-50%, -50%) scale(0.8);
-    background: inline("PlayButton.png") center no-repeat;
+    background: inline($prettyembed-play-button) center no-repeat;
     background-size: contain;
     transition: transform 0.25s ease-in-out, opacity 0.25s linear;
     pointer-events: none;
@@ -38,10 +39,10 @@
 %pause-button {
   &::after {
     opacity: 0;
-    background: inline("PauseButton.png") center no-repeat;
-    background-size: size("PlayButton.png", 4);
-    top: height("PlayButton.png", 4);
-    left: width("PlayButton.png", 4);
+    background: inline($prettyembed-pause-button) center no-repeat;
+    background-size: size($prettyembed-play-button, 4);
+    top: height($prettyembed-play-button, 4);
+    left: width($prettyembed-play-button, 4);
   }
 
   &:hover::after {
