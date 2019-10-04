@@ -1,5 +1,3 @@
-import Gator from 'gator';
-
 const BASE_CLASS = 'jonnitto-prettyembed';
 const INIT_CLASS = `${BASE_CLASS}--init`;
 const PLAY_CLASS = `${BASE_CLASS}--play`;
@@ -20,7 +18,7 @@ function init(video) {
 
     if (!video.hasAttribute('controls')) {
         classList.add(SLIM_CLASS);
-        Gator(video).on('click', () => {
+        video.addEventListener('click', () => {
             let play = !classList.contains(PLAY_CLASS);
             classList[play ? 'add' : 'remove'](PLAY_CLASS);
             if (play) {
@@ -51,8 +49,8 @@ function pause(videos = VIDEOS, current = null) {
 }
 
 for (let index = 0; index < VIDEOS.length; index++) {
-    Gator(VIDEOS[index]).on('play', function() {
-        pause(VIDEOS, this);
+    VIDEOS[index].addEventListener('play', event => {
+        pause(VIDEOS, event.target);
     });
 }
 

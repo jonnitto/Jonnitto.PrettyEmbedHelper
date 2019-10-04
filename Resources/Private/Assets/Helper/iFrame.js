@@ -1,4 +1,4 @@
-import Gator from 'gator';
+import addEvent from './addEvent';
 import { noAutoplay } from './checkAgent';
 import * as lightboxHelper from '../Helper/Lightbox';
 
@@ -82,13 +82,13 @@ function restore(element, playClass) {
     }
 }
 
-function init(selector, links) {
+function init(selector, playClass, links) {
     noAutoplay(() => {
         if (!links) {
             links = document.querySelectorAll(selector);
         }
         for (let i = links.length - 1; i >= 0; i--) {
-            write(links[i]);
+            write(links[i], playClass);
         }
     });
 }
@@ -111,10 +111,10 @@ function embed(type) {
     const SELECTOR = `a.${BASE}--${type}.${BASE}--inline`;
     const PLAY_CLASS = `${BASE}--play`;
 
-    Gator(window).on('load', function() {
-        init(SELECTOR);
+    window.addEventListener('load', () => {
+        init(SELECTOR, PLAY_CLASS);
     });
-    Gator(document.documentElement).on('click', SELECTOR, function(event) {
+    addEvent(SELECTOR, function(event) {
         event.preventDefault();
         write(this, PLAY_CLASS);
     });

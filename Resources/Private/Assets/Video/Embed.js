@@ -1,11 +1,10 @@
-import Gator from 'gator';
 import { init } from './Init';
+import addEvent from '../Helper/addEvent';
 
 const SELECTOR =
     '.jonnitto-prettyembed--video.jonnitto-prettyembed--inline video';
 
-// Attach the events to the html tag (because of the Google Tag Manager)
-Gator(document.documentElement).on('click', SELECTOR, function(event) {
+addEvent(SELECTOR, function(event) {
     event.preventDefault();
     init(this);
 });

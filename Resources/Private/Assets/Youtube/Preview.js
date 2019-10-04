@@ -1,4 +1,3 @@
-import Gator from 'gator';
 import { hasAutoplay } from '../Helper/checkAgent';
 
 function fixPreview(img) {
@@ -38,7 +37,7 @@ function fixPreviews(images) {
     });
 }
 
-Gator(window).on('load', () => {
+window.addEventListener('load', () => {
     fixPreviews();
 });
 

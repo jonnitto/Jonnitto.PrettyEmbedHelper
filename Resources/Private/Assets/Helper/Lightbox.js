@@ -1,4 +1,4 @@
-import Gator from 'gator';
+import addEvent from './addEvent';
 
 const HTML_ELEMENT = document.documentElement;
 const BODY_ELEMENT = document.body;
@@ -76,23 +76,20 @@ function closeLighboxOnESC(event) {
 
 function init(selector, callback) {
     if (typeof callback == 'function' && typeof selector == 'string') {
-        Gator(HTML_ELEMENT).on('click', selector, callback);
+        addEvent(selector, callback);
     }
 }
 
 // Catch click event to prevent closing lightbox if some clicks on content
-Gator(HTML_ELEMENT).on('click', `.${CONTENT_CLASS}`, event => {
+addEvent(`.${CONTENT_CLASS}`, event => {
     event.stopPropagation();
 });
 
 // Close lightbox on click on lightbox background or on close button
-Gator(HTML_ELEMENT).on(
-    'click',
-    `.${LIGHTBOX_CLASS},.${CLOSE_CLASS}`,
-    closeLighbox
-);
+addEvent(`.${LIGHTBOX_CLASS}`, closeLighbox);
+addEvent(`.${CLOSE_CLASS}`, closeLighbox);
 
 // Close on ESC
-Gator(HTML_ELEMENT).on('keyup', closeLighboxOnESC);
+HTML_ELEMENT.addEventListener('keyup', closeLighboxOnESC);
 
 export { get, show, init };
