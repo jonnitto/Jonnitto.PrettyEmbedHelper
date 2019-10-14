@@ -10,17 +10,17 @@ const VISIBLE_CLASS_LIST = HTML_ELEMENT.classList;
 const INNER_CLASS = `${BASE_CLASS}__inner`;
 const CLOSE_CLASS = `${BASE_CLASS}__close`;
 const CONTENT_CLASS = `${BASE_CLASS}__content`;
+const LIGHTBOX = document.createElement('div');
 
-let lighboxContent = false;
-let lighbox = document.createElement('div');
-let timeout = null;
-
-lighbox.className = LIGHTBOX_CLASS;
-lighbox.innerHTML = `
+LIGHTBOX.className = LIGHTBOX_CLASS;
+LIGHTBOX.innerHTML = `
 <div class="${INNER_CLASS}">
     <button type="button" class="${CLOSE_CLASS}">&times;</button>
     <div id="${ID}" class="${BASE_CLASS} ${CONTENT_CLASS}"></div>
 </div>`;
+
+let lighboxContent = false;
+let timeout = null;
 
 function resetContent() {
     // Reset the content to the default class
@@ -31,7 +31,7 @@ function resetContent() {
 
 function get(type, paddingTop) {
     if (!lighboxContent) {
-        BODY_ELEMENT.appendChild(lighbox);
+        BODY_ELEMENT.appendChild(LIGHTBOX);
         lighboxContent = document.getElementById(ID);
     }
     resetContent();

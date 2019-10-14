@@ -9,12 +9,12 @@ lightbox.init(SELECTOR_CLASS, function(event) {
     event.preventDefault();
     clearTimeout(timeout);
     video.pause();
-    let videoNode = lightbox.get('video').appendChild(this.cloneNode(true));
+    const VIDEO_NODE = lightbox.get('video').appendChild(this.cloneNode(true));
     lightbox.show(() => {
-        video.init(videoNode);
+        video.init(VIDEO_NODE);
     });
     timeout = setTimeout(function() {
-        // Make sure the videoNode start playing
-        videoNode.play();
+        // Make sure the VIDEO_NODE start playing
+        VIDEO_NODE.play();
     }, 500);
 });

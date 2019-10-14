@@ -3,11 +3,11 @@ import fixPreviews from './Preview';
 function backendFixPreview(event) {
     const NODE_TYPE = 'Jonnitto.PrettyEmbedYoutube:YouTube';
     try {
-        const node = event.detail.node;
+        const NODE = event.detail.node;
         if (
-            (typeof node.get == 'function' &&
-                node.get('nodeType') === NODE_TYPE) ||
-            (typeof node.nodeType == 'string' && node.nodeType === NODE_TYPE)
+            (typeof NODE.get == 'function' &&
+                NODE.get('nodeType') === NODE_TYPE) ||
+            (typeof NODE.nodeType == 'string' && NODE.nodeType === NODE_TYPE)
         ) {
             fixPreviews();
         }

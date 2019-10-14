@@ -7,8 +7,8 @@ const VIDEOS = document.querySelectorAll(
 );
 
 function init(video) {
-    let classList = video.parentNode.classList;
-    if (classList.contains(INIT_CLASS)) {
+    const CLASS_LIST = video.parentNode.classList;
+    if (CLASS_LIST.contains(INIT_CLASS)) {
         return;
     }
 
@@ -17,10 +17,10 @@ function init(video) {
     }
 
     if (!video.hasAttribute('controls')) {
-        classList.add(SLIM_CLASS);
+        CLASS_LIST.add(SLIM_CLASS);
         video.addEventListener('click', () => {
-            let play = !classList.contains(PLAY_CLASS);
-            classList[play ? 'add' : 'remove'](PLAY_CLASS);
+            const play = !CLASS_LIST.contains(PLAY_CLASS);
+            CLASS_LIST[play ? 'add' : 'remove'](PLAY_CLASS);
             if (play) {
                 video.play();
             } else {
@@ -29,8 +29,8 @@ function init(video) {
         });
     }
 
-    classList.add(INIT_CLASS);
-    classList.add(PLAY_CLASS);
+    CLASS_LIST.add(INIT_CLASS);
+    CLASS_LIST.add(PLAY_CLASS);
     setTimeout(() => {
         video.play();
     }, 0);
@@ -38,12 +38,12 @@ function init(video) {
 
 function pause(videos = VIDEOS, current = null) {
     for (let index = 0; index < videos.length; index++) {
-        const video = VIDEOS[index];
-        if (video != current) {
-            if (!video.hasAttribute('controls')) {
-                video.parentNode.classList.remove(PLAY_CLASS);
+        const VIDEO = VIDEOS[index];
+        if (VIDEO != current) {
+            if (!VIDEO.hasAttribute('controls')) {
+                VIDEO.parentNode.classList.remove(PLAY_CLASS);
             }
-            video.pause();
+            VIDEO.pause();
         }
     }
 }
