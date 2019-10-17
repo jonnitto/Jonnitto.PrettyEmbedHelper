@@ -4,18 +4,22 @@
     inspector:
       groups:
         video:
-          label: Video
+          label: i18n
           icon: 'fas fa-file-video'
           position: 10
         vimeo:
-          label: Vimeo
+          label: i18n
           icon: 'fab fa-vimeo-v'
           position: 11
         youtube:
-          label: YouTube
+          label: i18n
           icon: 'fab fa-youtube'
           position: 12
+        audio:
+          label: i18n
+          icon: 'fas fa-file-audio'
+          position: 20
         look:
           label: i18n
           icon: 'fas fa-paint-brush'
-          position: 20
+          position: 30

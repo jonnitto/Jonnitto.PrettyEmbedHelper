@@ -1,4 +1,4 @@
-import { init } from './Init';
+import { init } from '../Helper/MediaInit';
 import addEvent from '../Helper/addEvent';
 
 const SELECTOR =

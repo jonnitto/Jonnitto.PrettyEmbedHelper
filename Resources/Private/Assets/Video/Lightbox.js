@@ -1,4 +1,4 @@
-import * as video from './Init';
+import * as video from '../Helper/MediaInit';
 import * as lightbox from '../Helper/Lightbox';
 
 const BASE_CLASS = 'jonnitto-prettyembed';
