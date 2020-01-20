@@ -1,10 +1,10 @@
 import { hasAutoplay } from '../Helper/checkAgent';
 
 function fixPreview(img) {
-    const IMAGE = img.getAttribute('src');
+    let src = img.getAttribute('src');
     if (
-        IMAGE.naturalHeight <= 90 &&
-        IMAGE.naturalWidth <= 120 &&
+        img.naturalHeight <= 90 &&
+        img.naturalWidth <= 120 &&
         src.indexOf('/default.jpg') == -1
     ) {
         src = src
@@ -12,14 +12,14 @@ function fixPreview(img) {
             .replace('hqdefault', 'mqdefault')
             .replace('sddefault', 'hqdefault')
             .replace('maxresdefault', 'sddefault');
-        IMAGE.setAttribute('src', src);
+        img.setAttribute('src', src);
         setTimeout(() => {
-            IMAGE.onload = () => {
-                fixPreview(IMAGE);
+            img.onload = () => {
+                fixPreview(img);
             };
         }, 10);
         setTimeout(() => {
-            fixPreview(IMAGE);
+            fixPreview(img);
         }, 5000);
     }
 }
