@@ -12,6 +12,7 @@ prototype(Jonnitto.PrettyEmbedHelper:Content) < prototype(Neos.Neos:ContentCompo
     origin = Neos.Neos:NodeUri {
         node = ${site}
         absolute = true
+        @process.onlyTheDomain = ${String.pregMatch(value, '(https?:\/\/[^\/]+)')[0]}
     }
 
     // Global properties
