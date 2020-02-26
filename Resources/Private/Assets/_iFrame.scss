@@ -15,8 +15,7 @@
 
 .jonnitto-prettyembed--16to9 {
   height: 0;
-  // The 2px are for the fine black border
-  padding-top: calc(56.25% - 2px);
+  padding-top: 56.25%;
   overflow: hidden;
 
   img {

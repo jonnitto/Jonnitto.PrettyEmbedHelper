@@ -44,8 +44,8 @@ function getImage(node) {
     };
 }
 
-function getPaddingTop(node, force = false, fallback = 'calc(56.25% - 2px)') {
-    // 56.25% is a 16:9 fallback. The 2px is to avoid black borders
+function getPaddingTop(node, force = false, fallback = '56.25%') {
+    // 56.25% is a 16:9 in percent
     if (force) {
         return fallback;
     }
