@@ -12,3 +12,17 @@
     @extend %play-button;
   }
 }
+
+.jonnitto-prettyembed--16to9 {
+  height: 0;
+  // The 2px are for the fine black border
+  padding-top: calc(56.25% - 2px);
+  overflow: hidden;
+
+  img {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
