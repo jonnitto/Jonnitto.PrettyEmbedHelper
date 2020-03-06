@@ -1,4 +1,4 @@
-import './Audio';
-import './Video';
-import './Vimeo';
-import './Youtube';
+import './Audio/index.js';
+import './Video/index.js';
+import './Vimeo/index.js';
+import './Youtube/index.js';
