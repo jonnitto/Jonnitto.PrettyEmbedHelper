@@ -67,6 +67,6 @@
     top: 0;
     bottom: 0;
     width: auto;
-    max-height: calc(99vh - #{$prettyembed-lightbox-padding * 1.5 + $prettyembed-close-size});
+    max-height: calc(99vh - #{round($prettyembed-lightbox-padding * 1.5 + $prettyembed-close-size)});
   }
 }
