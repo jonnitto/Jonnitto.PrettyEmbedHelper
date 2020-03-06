@@ -117,7 +117,8 @@
         animation: none;
       }
 
-      &:hover {
+      &:hover,
+      &:focus {
         &::before,
         &::after {
           opacity: 1;
