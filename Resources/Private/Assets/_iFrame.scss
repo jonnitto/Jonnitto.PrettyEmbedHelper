@@ -8,7 +8,7 @@
     height: 100%;
   }
 
-  &:not(.jonnitto-prettyembed__content):not(.jonnitto-prettyembed--play) {
+  &:not(.jonnitto-prettyembed--play):not(.jonnitto-prettyembed__content) {
     @extend %play-button;
   }
 }
