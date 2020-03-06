@@ -31,10 +31,12 @@
     z-index: 1;
   }
 
-  &:hover::after {
-    transform: translate(-50%, -50%) scale(1);
+  &:hover,
+  &:focus {
+    &::after {
+      transform: translate(-50%, -50%) scale(1);
+    }
   }
-}
 
 %pause-button {
   &::after {
@@ -45,8 +47,11 @@
     left: width($prettyembed-play-button, 4);
   }
 
-  &:hover::after {
-    opacity: 1;
+  &:hover,
+  &:focus {
+    &::after {
+      opacity: 1;
+    }
   }
 }
 
