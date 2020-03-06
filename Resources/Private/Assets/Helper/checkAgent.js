@@ -1,7 +1,5 @@
 function check(autoplay = true, callback) {
-    const HAS_AUTOPLAY = !/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(
-        window.navigator.userAgent
-    );
+    const HAS_AUTOPLAY = !/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(window.navigator.userAgent);
     if ((!HAS_AUTOPLAY && !autoplay) || (HAS_AUTOPLAY && autoplay)) {
         if (typeof callback == 'function') {
             callback();

@@ -11,9 +11,7 @@ function markup(node) {
         return false;
     }
 
-    return `<iframe src="${DATA.embed}" ${
-        FULLSCREEN ? 'allowfullscreen ' : ''
-    }frameborder="0" allow="${
+    return `<iframe src="${DATA.embed}" ${FULLSCREEN ? 'allowfullscreen ' : ''}frameborder="0" allow="${
         FULLSCREEN ? 'fullscreen; ' : ''
     }accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"></iframe>`;
 }
@@ -27,9 +25,7 @@ function replace(element, tagName) {
         const START_SUBST = '<' + tagName;
         const END_SUBST = tagName + '>';
         const WRAPPER = document.createElement('div');
-        WRAPPER.innerHTML = ORIGINAL_ELEMENT.outerHTML
-            .replace(START_RX, START_SUBST)
-            .replace(END_RX, END_SUBST);
+        WRAPPER.innerHTML = ORIGINAL_ELEMENT.outerHTML.replace(START_RX, START_SUBST).replace(END_RX, END_SUBST);
         const NEW_ELEMENT = WRAPPER.firstChild;
         element.parentNode.replaceChild(NEW_ELEMENT, element);
         return NEW_ELEMENT;
@@ -54,10 +50,7 @@ function getPaddingTop(node, force = false, fallback = '56.25%') {
     if (!IMAGE.node) {
         return fallback;
     }
-    const RATIO =
-        (parseInt(IMAGE.node.naturalHeight) /
-            parseInt(IMAGE.node.naturalWidth)) *
-        100;
+    const RATIO = (parseInt(IMAGE.node.naturalHeight) / parseInt(IMAGE.node.naturalWidth)) * 100;
     if (typeof RATIO != 'number') {
         return fallback;
     }

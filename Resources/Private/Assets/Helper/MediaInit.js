@@ -3,12 +3,8 @@ const INIT_CLASS = `${BASE}--init`;
 const SLIM_CLASS = `${BASE}--slim`;
 const PLAY_CLASS = `${BASE}--play`;
 
-const VIDEOS = Array.from(
-    document.querySelectorAll(`.${BASE}--video video:not([autoplay])`)
-);
-const AUDIOS = Array.from(
-    document.querySelectorAll(`.${BASE}--audio audio:not([autoplay])`)
-);
+const VIDEOS = Array.from(document.querySelectorAll(`.${BASE}--video video:not([autoplay])`));
+const AUDIOS = Array.from(document.querySelectorAll(`.${BASE}--audio audio:not([autoplay])`));
 const ELEMENTS = [].concat(VIDEOS, AUDIOS);
 
 function init(element, autoplay = true) {
