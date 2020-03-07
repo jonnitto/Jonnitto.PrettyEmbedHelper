@@ -34,13 +34,16 @@
     "sass": "^1.26.2"
   },
   "scripts": {
-    "build:js": "rollup -c",
+    "build:js": "rollup --config",
     "build:css:scss": "sass --embed-sources Resources/Private/Assets:Resources/Public/Styles",
-    "build:css:postcss": "postcss --map --replace Resources/Public/Styles/*.css",
+    "build:css:postcss": "postcss Resources/Public/Styles/*.css --map --replace",
     "build:css": "yarn build:css:scss && yarn build:css:postcss",
-    "build": "yarn build:css | yarn build:js",
+    "watch:js": "rollup --config --watch",
+    "watch:css:scss": "sass --watch --embed-sources Resources/Private/Assets:Resources/Public/__Styles",
+    "watch:css:postcss": "postcss Resources/Public/__Styles/*.css --dir Resources/Public/Styles/ --map --watch",
+    "build": "rm -rf Resources/Public/__Styles Resources/Public/Styles Resources/Public/Scripts;yarn build:css | yarn build:js",
     "start": "yarn build",
-    "watch": "rollup -c --watch"
+    "watch": "yarn watch:css:scss | yarn watch:css:postcss | yarn watch:js"
   },
   "dependencies": {}
 }
