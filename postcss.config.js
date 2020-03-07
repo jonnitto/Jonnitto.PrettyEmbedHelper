@@ -9,9 +9,6 @@ Licensed under ${composer.license}`;
 module.exports = {
     plugins: {
         'postcss-sort-media-queries': true,
-        'postcss-url': {
-            url: 'inline'
-        },
         autoprefixer: true,
         cssnano: {
             preset: ['default', { discardComments: { removeAll: true } }]
