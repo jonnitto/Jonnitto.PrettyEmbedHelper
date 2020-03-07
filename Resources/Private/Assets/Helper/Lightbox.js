@@ -82,7 +82,7 @@ function init(selector, callback) {
 
 // Catch click event to prevent closing lightbox if some clicks on content
 addEvent(`.${CONTENT_CLASS}`, event => {
-    event.stopPropagation();
+    event.stopImmediatePropagation();
 });
 
 // Close lightbox on click on lightbox background or on close button
