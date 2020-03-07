@@ -25,6 +25,8 @@ let timeout = null;
 function resetContent() {
     // Reset the content to the default class
     lighboxContent.className = `${BASE_CLASS} ${CONTENT_CLASS}`;
+    // Remove style attribute
+    lighboxContent.removeAttribute('style');
     // Clear all content
     lighboxContent.innerHTML = '';
 }

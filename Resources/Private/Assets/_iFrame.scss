@@ -9,9 +9,8 @@
   }
 }
 
-.jonnitto-prettyembed--16to9 {
+.jonnitto-prettyembed--ratio[style*="padding-top:"] {
   height: 0;
-  padding-top: 56.25%;
   overflow: hidden;
 
   img {

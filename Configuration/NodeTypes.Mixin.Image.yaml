@@ -16,10 +16,3 @@
         inspector:
           group: image
           position: 10
-          editorOptions:
-            crop:
-              aspectRatio:
-                forceCrop: true
-                locked:
-                  width: 16
-                  height: 9

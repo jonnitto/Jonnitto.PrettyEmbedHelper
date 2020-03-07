@@ -40,10 +40,11 @@ function getImage(node) {
     };
 }
 
-function getPaddingTop(node, force = false, fallback = '56.25%') {
+function getPaddingTop(node, fallback = '56.25%') {
     // 56.25% is a 16:9 in percent
-    if (force) {
-        return fallback;
+
+    if (node.dataset.ratio) {
+        return node.dataset.ratio;
     }
 
     const IMAGE = getImage(node);
@@ -60,12 +61,11 @@ function getPaddingTop(node, force = false, fallback = '56.25%') {
 function write(link, playClass) {
     const IFRAME = markup(link);
     const IMAGE = getImage(link);
-    const FORCE_16to9 = link.classList.contains(`${BASE}--16to9`);
     if (IFRAME && IMAGE.src) {
         const ELEMENT = replace(link, 'div');
         ELEMENT.setAttribute('data-img', IMAGE.src);
         ELEMENT.classList.add(playClass);
-        ELEMENT.style.paddingTop = getPaddingTop(link, FORCE_16to9);
+        ELEMENT.style.paddingTop = getPaddingTop(link);
         ELEMENT.innerHTML = IFRAME;
     }
 }
@@ -96,9 +96,8 @@ function lightbox(type) {
 
     lightboxHelper.init(SELECTOR, function(event) {
         const HTML = markup(this);
-        const FORCE_16to9 = this.classList.contains(`${BASE}--16to9`);
         if (HTML) {
-            const PADDING_TOP = getPaddingTop(this, FORCE_16to9);
+            const PADDING_TOP = getPaddingTop(this);
             event.preventDefault();
             lightboxHelper.get([type, 'iframe'], PADDING_TOP).innerHTML = HTML;
             lightboxHelper.show();

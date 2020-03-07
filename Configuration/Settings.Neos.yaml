@@ -13,3 +13,6 @@ Neos:
     fusion:
       autoInclude:
         Jonnitto.PrettyEmbedHelper: true
+  Fusion:
+    defaultContext:
+      Jonnitto.PrettyEmbedHelper: 'Jonnitto\PrettyEmbedHelper\Eel\Helper'
