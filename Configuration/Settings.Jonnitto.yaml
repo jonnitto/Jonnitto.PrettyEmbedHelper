@@ -2,3 +2,6 @@ Jonnitto:
   PrettyEmbedHelper:
     maximumWidth: 1920
     wrapper: 'jonnitto-prettyembed-wrapper'
+    button:
+      play: 'resource://Jonnitto.PrettyEmbedHelper/Public/Assets/PlayButton.svg'
+      pause: 'resource://Jonnitto.PrettyEmbedHelper/Public/Assets/PauseButton.svg'

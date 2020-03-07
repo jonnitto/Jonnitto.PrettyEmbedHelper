@@ -16,8 +16,6 @@
 }
 
 .jonnitto-prettyembed--video {
-  @extend %play-button;
-
   img {
     position: absolute;
     top: 50%;
@@ -30,22 +28,12 @@
     pointer-events: none;
   }
 
-  &.jonnitto-prettyembed--play {
-    &:not(.jonnitto-prettyembed--slim) {
-      @extend %hide-button;
-    }
-
-    &.jonnitto-prettyembed--slim {
-      @extend %pause-button;
-    }
+  &.jonnitto-prettyembed--play.jonnitto-prettyembed--slim .jonnitto-prettyembed-button--pause {
+    display: block;
   }
 
   &.jonnitto-prettyembed--autoplay {
     pointer-events: none;
-
-    &::after {
-      display: none;
-    }
   }
 
   &.jonnitto-prettyembed--autoplay,
