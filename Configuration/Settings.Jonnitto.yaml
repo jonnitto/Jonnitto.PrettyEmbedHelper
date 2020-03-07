@@ -1,4 +1,4 @@
 Jonnitto:
   PrettyEmbedHelper:
     maximumWidth: 1920
-    wrapper: false
+    wrapper: 'jonnitto-prettyembed-wrapper'
