@@ -9,7 +9,7 @@ lightbox.init(SELECTOR_CLASS, function(event) {
     event.preventDefault();
     clearTimeout(timeout);
     video.pause();
-    const VIDEO_NODE = lightbox.get('video').appendChild(this.cloneNode(true));
+    const VIDEO_NODE = lightbox.get('video', false).appendChild(this.cloneNode(true));
     lightbox.show(() => {
         video.init(VIDEO_NODE);
     });
