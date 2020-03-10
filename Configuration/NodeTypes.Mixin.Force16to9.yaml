@@ -1,0 +1,13 @@
+'Jonnitto.PrettyEmbedHelper:Mixin.Force16to9':
+  abstract: true
+  properties:
+    force16to9:
+      type: boolean
+      defaultValue: true
+      ui:
+        label: i18n
+        reloadIfChanged: true
+        inspector:
+          group: look
+          position: 30
+          hidden: 'ClientEval:node.properties.metadataRatio ? true : false'
