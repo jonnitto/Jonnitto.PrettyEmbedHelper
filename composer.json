@@ -34,14 +34,6 @@
             "Jonnitto\\PrettyEmbedHelper\\": "Classes"
         }
     },
-    "archive": {
-        "exclude": [
-            ".gitattributes",
-            ".github",
-            "CODE_OF_CONDUCT.md",
-            "Gulp.yaml"
-        ]
-    },
     "extra": {
         "marketplace-account": "me@jonnitto.ch",
         "installer-name": "Jonnitto.PrettyEmbedHelper",
