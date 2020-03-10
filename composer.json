@@ -23,6 +23,7 @@
         }
     ],
     "require": {
+        "php": "^7.1",
         "neos/neos": "^4.2 || ^5.0",
         "neos/fusion-afx": "^1.2",
         "carbon/includeassets": "^3.5",
