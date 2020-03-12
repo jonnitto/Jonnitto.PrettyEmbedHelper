@@ -11,6 +11,8 @@ $prettyembed-lightbox-max-width: 900px !default;
 $prettyembed-shadow: 0 0 8px rgba(#000, 0.6) !default;
 $prettyembed-z-index: 1500 !default;
 $prettyembed-close-size: 30px !default;
+
+// Play and pause button stuff
 $prettyembed-play-button-size: 72px !default;
 $prettyembed-pause-button-size: round($prettyembed-play-button-size / 2) !default;
 $prettyembed-pause-button-margin: round($prettyembed-pause-button-size / 2) !default;
