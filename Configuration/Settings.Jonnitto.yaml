@@ -6,7 +6,7 @@ Jonnitto:
     # If set to true, the element gets wrapped with a div without any class.
     # If set to false, the element get not wrapped at all
     wrapper: 'jonnitto-prettyembed-wrapper'
-    # The buttons who get injected (file content) to the player.
+    # The buttons which get injected (file content) to the player.
     button:
       play: 'resource://Jonnitto.PrettyEmbedHelper/Public/Assets/PlayButton.svg'
       pause: 'resource://Jonnitto.PrettyEmbedHelper/Public/Assets/PauseButton.svg'
