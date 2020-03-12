@@ -26,20 +26,20 @@
     "postcss-cli": "^7.1.0",
     "postcss-sort-media-queries": "^1.31.21",
     "rollup": "^1.32.1",
-    "rollup-plugin-babel": "^4.3.3",
+    "rollup-plugin-babel": "^4.4.0",
     "rollup-plugin-license": "^0.13.0",
-    "rollup-plugin-terser": "^5.2.0",
-    "sass": "^1.26.2"
+    "rollup-plugin-terser": "^5.3.0",
+    "sass": "^1.26.3"
   },
   "scripts": {
-    "build:js": "rollup --config",
-    "build:css:scss": "sass --embed-sources Resources/Private/Assets:Resources/Public/Styles",
-    "build:css:postcss": "postcss Resources/Public/Styles/*.css --map --replace",
-    "build:css": "yarn build:css:scss && yarn build:css:postcss",
+    "js": "rollup --config",
+    "css:scss": "sass --embed-sources Resources/Private/Assets:Resources/Public/Styles",
+    "css:postcss": "postcss Resources/Public/Styles/*.css --map --replace",
+    "css": "yarn css:scss && yarn css:postcss",
     "watch:js": "rollup --config --watch",
     "watch:css:scss": "sass --watch --embed-sources Resources/Private/Assets:Resources/Public/__Styles",
     "watch:css:postcss": "postcss Resources/Public/__Styles/*.css --dir Resources/Public/Styles/ --map --watch",
-    "build": "rm -rf Resources/Public/__Styles Resources/Public/Styles Resources/Public/Scripts;yarn build:css | yarn build:js",
+    "build": "rm -rf Resources/Public/__Styles Resources/Public/Styles Resources/Public/Scripts;yarn css | yarn js",
     "start": "yarn build",
     "watch": "yarn watch:css:scss | yarn watch:css:postcss | yarn watch:js"
   }
