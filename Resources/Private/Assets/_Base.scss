@@ -10,61 +10,11 @@
     display: block;
     width: 100%;
     height: auto;
-  }
-
-  &:hover,
-  &:focus {
-    .jonnitto-prettyembed-button--play {
-      transform: translate(-50%, -50%) scale(1);
-    }
-
-    .jonnitto-prettyembed-button--pause {
-      opacity: 1;
-    }
+    max-width: none;
   }
 }
 
-.jonnitto-prettyembed--play {
-  .jonnitto-prettyembed-button--play {
-    opacity: 0;
-  }
-}
-
-.jonnitto-prettyembed-button {
-  color: $prettyembed-button-foreground-color;
-  position: absolute;
-  pointer-events: none;
-  z-index: 1;
-}
-
-.jonnitto-prettyembed-button--play {
-  display: block;
-  top: 50%;
-  left: 50%;
-  width: $prettyembed-play-button-size;
-  height: $prettyembed-play-button-size;
-  opacity: 0.8;
-  transform: translate(-50%, -50%) scale(0.8);
-  transition: transform 0.25s ease-in-out, opacity 0.25s linear;
-}
-
-.jonnitto-prettyembed-button--pause {
-  display: none;
-  top: $prettyembed-pause-button-margin;
-  left: $prettyembed-pause-button-margin;
-  width: $prettyembed-pause-button-size;
-  height: $prettyembed-pause-button-size;
-  transition: opacity 0.25s linear;
-  opacity: 0;
-}
-
-.jonnitto-prettyembed-button__background {
-  fill: $prettyembed-button-background-color;
-  fill-opacity: $prettyembed-button-background-opactiy;
-  stroke-width: 5;
-}
-
-@if $prettyembed-include-lightbox {
+@if $prettyembed-lightbox-include {
   .jonnitto-prettyembed--lightbox {
     cursor: pointer;
   }
@@ -88,11 +38,11 @@
     white-space: nowrap;
     -webkit-overflow-scrolling: touch;
     pointer-events: none;
-    background: rgba($prettyembed-overlay-color, $prettyembed-overlay-opacity);
+    background: rgba($prettyembed-lightbox-overlay-color, $prettyembed-lightbox-overlay-opacity);
     padding: $prettyembed-lightbox-padding;
 
     .-jonnitto-prettyembed__lightbox & {
-      z-index: $prettyembed-z-index;
+      z-index: $prettyembed-lightbox-z-index;
       opacity: 1;
       transition: opacity 0.2s;
       pointer-events: initial;
@@ -112,7 +62,7 @@
 
   .jonnitto-prettyembed__content {
     line-height: 0;
-    box-shadow: $prettyembed-shadow;
+    box-shadow: $prettyembed-lightbox-shadow;
   }
 
   .jonnitto-prettyembed__close {
@@ -121,7 +71,7 @@
     z-index: 1;
     padding: 10px 16px;
     margin: calc(-1em - 10px) -18px -8px auto;
-    font-size: $prettyembed-close-size;
+    font-size: $prettyembed-lightbox-close-size;
     font-family: Arial, Baskerville, monospace;
     font-style: normal;
     line-height: 1;
@@ -133,14 +83,14 @@
     outline: none;
     box-shadow: none;
     text-decoration: none;
-    color: $prettyembed-controls-color;
-    opacity: $prettyembed-controls-opacity;
-    transition: opacity 0.2s;
+    color: $prettyembed-lightbox-close-color;
+    opacity: $prettyembed-lightbox-close-opacity;
+    transition: opacity 0.2s linear;
 
     &:hover,
     &:focus,
     &:active {
-      opacity: 1;
+      opacity: $prettyembed-lightbox-close-opacity-hover;
       outline: none;
     }
 

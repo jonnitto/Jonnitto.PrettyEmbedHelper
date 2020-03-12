@@ -28,10 +28,6 @@
     pointer-events: none;
   }
 
-  &.jonnitto-prettyembed--play.jonnitto-prettyembed--slim .jonnitto-prettyembed-button--pause {
-    display: block;
-  }
-
   &.jonnitto-prettyembed--autoplay {
     pointer-events: none;
   }
@@ -48,9 +44,9 @@
   }
 }
 
-@if $prettyembed-include-lightbox {
+@if $prettyembed-lightbox-include {
   .jonnitto-prettyembed__lightbox video {
     width: auto;
-    max-height: calc(99vh - #{round($prettyembed-lightbox-padding * 1.5 + $prettyembed-close-size)});
+    max-height: calc(99vh - #{round($prettyembed-lightbox-padding * 1.5 + $prettyembed-lightbox-close-size)});
   }
 }

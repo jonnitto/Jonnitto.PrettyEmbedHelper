@@ -1,21 +1,24 @@
-// Basis stuff
-$prettyembed-controls-opacity: 0.65 !default;
-$prettyembed-controls-color: #fff !default;
-$prettyembed-lightbox-padding: 15px !default;
-
-// Lightbox stuff
-$prettyembed-include-lightbox: true !default;
-$prettyembed-overlay-color: #0b0b0b !default;
-$prettyembed-overlay-opacity: 0.8 !default;
-$prettyembed-lightbox-max-width: 900px !default;
-$prettyembed-shadow: 0 0 8px rgba(#000, 0.6) !default;
-$prettyembed-z-index: 1500 !default;
-$prettyembed-close-size: 30px !default;
-
-// Play and pause button stuff
-$prettyembed-play-button-size: 72px !default;
-$prettyembed-pause-button-size: round($prettyembed-play-button-size / 2) !default;
-$prettyembed-pause-button-margin: round($prettyembed-pause-button-size / 2) !default;
+// Buttons (play / pause)// Play and pause button size/position
+$prettyembed-button-play-size: 72px !default;
+$prettyembed-button-pause-size: round($prettyembed-button-play-size / 2) !default;
+$prettyembed-button-pause-margin: round($prettyembed-button-pause-size / 2) !default;
+$prettyembed-button-opacity: 0.9 !default;
+$prettyembed-button-scale: 0.8 !default;
+$prettyembed-button-scale-hover: 1 !default;
+$prettyembed-button-scale-active: 0.9 !default;
 $prettyembed-button-foreground-color: #fff !default;
 $prettyembed-button-background-color: #000 !default;
 $prettyembed-button-background-opactiy: 0.4 !default;
+
+// Lightbox
+$prettyembed-lightbox-include: true !default;
+$prettyembed-lightbox-overlay-color: #0b0b0b !default;
+$prettyembed-lightbox-overlay-opacity: 0.8 !default;
+$prettyembed-lightbox-padding: 15px !default;
+$prettyembed-lightbox-max-width: 900px !default;
+$prettyembed-lightbox-shadow: 0 0 8px rgba(#000, 0.6) !default;
+$prettyembed-lightbox-z-index: 5500 !default;
+$prettyembed-lightbox-close-size: 30px !default;
+$prettyembed-lightbox-close-opacity: 0.65 !default;
+$prettyembed-lightbox-close-opacity-hover: 1 !default;
+$prettyembed-lightbox-close-color: #fff !default;
