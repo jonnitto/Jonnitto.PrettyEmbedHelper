@@ -6,8 +6,8 @@
       defaultValue: true
       ui:
         label: i18n
-        reloadIfChanged: true
+        reloadPageIfChanged: true
         inspector:
           group: look
           position: 30
-          hidden: 'ClientEval:node.properties.metadataRatio ? true : false'
+          hidden: 'ClientEval: node.properties.metadataRatio.trim() ? true : !node.properties.videoID.trim()'

@@ -1,0 +1,5 @@
+'Jonnitto.PrettyEmbedHelper:Mixin.Metadata.Ratio':
+  abstract: true
+  properties:
+    metadataRatio:
+      type: string

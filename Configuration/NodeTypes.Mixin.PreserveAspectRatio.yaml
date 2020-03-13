@@ -6,7 +6,8 @@
       defaultValue: true
       ui:
         label: i18n
+        reloadIfChanged: true
         inspector:
           group: look
-          position: 21
-          hidden: 'ClientEval:node.properties.lightbox ? false : true'
+          position: 25
+          hidden: 'ClientEval:node.properties.lightbox && node.properties.metadataRatio.trim() ? false : true'

@@ -5,6 +5,8 @@ namespace Jonnitto\PrettyEmbedHelper\Eel;
 
 use Neos\Flow\Annotations as Flow;
 use Neos\Eel\ProtectedContextAwareInterface;
+use Jonnitto\PrettyEmbedHelper\Service\Oembed;
+use Jonnitto\PrettyEmbedHelper\Service\ParseID;
 
 /**
  * @Flow\Proxy(false)
@@ -15,28 +17,54 @@ class Helper implements ProtectedContextAwareInterface
     /**
      * This helper calcualtes the padding from a given ratio or width and height
      *
-     * @param float||string $ratio
-     * @param integer $width
-     * @param integer $height
-     * @return string The calculated value
+     * @param float|integer|string $ratio
+     * @return string|null The calculated value
      */
-    function paddingTop($ratio = null, int $width = null, int $height = null)
+    function paddingTop($ratio = null): ?string
     {
-        if ($ratio && is_string($ratio)) {
+        if ($ratio === null) {
+            return null;
+        }
+        if (is_string($ratio)) {
             return $ratio;
         }
 
-        if ($ratio && is_float($ratio) || is_int($ratio)) {
-            return (100 / $ratio) . '%';
-        }
-
-        if ($width && $height && is_int($width) && is_int($height)) {
-            return (100 / ($width / $height)) . '%';
-        }
-
-        return null;
+        return (100 / $ratio) . '%';
     }
 
+    /**
+     * Return the thumbnail URL from vimeo
+     *
+     * @param string|integer $videoID
+     * @return string|null
+     */
+    function vimeoThumbnail($videoID): ?string
+    {
+        $data = Oembed::vimeo($videoID);
+        return $data->thumbnail_url ?? null;
+    }
+
+    /**
+     * Return the oembed data from vimeo
+     *
+     * @param string|integer $videoID
+     * @return string|integer|null
+     */
+    function vimeoID($videoID)
+    {
+        return ParseID::vimeo($videoID);
+    }
+
+    /**
+     * Return the oembed data from vimeo
+     *
+     * @param string|integer $videoID
+     * @return array|null
+     */
+    function youtubeID($videoID)
+    {
+        return ParseID::youtube($videoID);
+    }
 
 
     /**

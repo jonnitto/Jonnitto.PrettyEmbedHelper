@@ -1,0 +1,5 @@
+'Jonnitto.PrettyEmbedHelper:Mixin.Metadata.Image':
+  abstract: true
+  properties:
+    metadataImage:
+      type: string

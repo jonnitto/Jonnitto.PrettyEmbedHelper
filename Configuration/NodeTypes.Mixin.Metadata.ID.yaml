@@ -1,0 +1,5 @@
+'Jonnitto.PrettyEmbedHelper:Mixin.Metadata.ID':
+  abstract: true
+  properties:
+    metadataID:
+      type: string
