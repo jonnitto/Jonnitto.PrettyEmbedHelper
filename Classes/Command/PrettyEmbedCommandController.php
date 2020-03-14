@@ -13,6 +13,7 @@ use Neos\ContentRepository\Domain\Service\ContextFactoryInterface;
 use Neos\ContentRepository\Domain\Service\ContentDimensionCombinator;
 use Jonnitto\PrettyEmbedHelper\Service\Metadata;
 use Neos\Flow\Persistence\PersistenceManagerInterface;
+use Neos\ContentRepository\Domain\Repository\WorkspaceRepository;
 
 /**
  * @Flow\Scope("singleton")
@@ -44,24 +45,36 @@ class PrettyEmbedCommandController extends CommandController
     protected $persistenceManager;
 
     /**
+     * @Flow\Inject
+     * @var WorkspaceRepository
+     */
+    protected $workspaceRepository;
+
+    /**
      * Generate metadata for the PrettyEmbed Vimeo and Youtube player
      *
      * This generates the metadata for all video player which has the mixin 
      * Jonnitto.PrettyEmbedVimeo:Mixin.VideoID or Jonnitto.PrettyEmbedYoutube:Mixin.VideoID
      *
-     * @param string $workspaceName
-     * @param boolean $remove
+     * @param string $workspace Workspace name, default is 'live'
+     * @param boolean $remove Is set, all metadata will be removed
      * @return void
      * @throws EelException
      * @throws NodeException
      * @throws NeosException
      */
 
-    public function metadataCommand(string $workspaceName = 'live', bool $remove = false): void
+    public function metadataCommand(string $workspace = 'live', bool $remove = false): void
     {
         $this->outputLine('');
+        /** @noinspection PhpUndefinedMethodInspection */
+        if ($this->workspaceRepository->countByName($workspace) === 0) {
+            $this->outputLine('<error>Workspace "%s" does not exist</error>', [$workspace]);
+            exit(1);
+        }
+
         $contextProperties = [
-            'workspaceName' => $workspaceName,
+            'workspaceName' => $workspace,
             'dimensions' => array(),
             'invisibleContentShown' => true,
             'inaccessibleContentShown' => true
