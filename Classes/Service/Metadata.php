@@ -90,6 +90,7 @@ class Metadata
             $node->setProperty('metadataImage', $image);
 
             return [
+                'nodeTypeName' => $node->getNodeType()->getName(),
                 'node' => 'Vimeo',
                 'type' => 'Video',
                 'id' => $videoID,
