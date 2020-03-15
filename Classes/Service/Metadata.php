@@ -80,7 +80,7 @@ class Metadata
                 if (isset($data)) {
                     $title = $data->title ?? null;
                     $ratio = $data->width && $data->height ? $this->calculatePaddingTop($data->width, $data->height) : null;
-                    $image = $data->thumbnail_url ?? null;
+                    $image = Oembed::removeProtocolFromUrl($data->thumbnail_url) ?? null;
                 }
             }
 
@@ -161,12 +161,13 @@ class Metadata
             $url = preg_replace('/\/[\w]*\.([a-z]{3,})$/i', "/{$resultion}.$1", $url);
             $headers = @get_headers($url);
             if ($headers && strpos($headers[0], '200')) {
-                return $url;
+                return Oembed::removeProtocolFromUrl($url);
             }
         }
 
         return null;
     }
+
 
     /**
      * This calculates the padding-top from width and height
