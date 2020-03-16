@@ -90,13 +90,13 @@ class PrettyEmbedCommandController extends CommandController
             $this->outputFormatted(sprintf('<error>Could not find any site nodes in "%s" root node</error>', SiteService::SITES_ROOT_PATH));
             $this->quit(1);
         }
+        $this->outputFormatted('Searching for PrettyEmbed nodes which are able to save metadata');
         $successArray = array();
         $errorArray = array();
         foreach ($this->dimensionCombinator->getAllAllowedCombinations() as $dimensionCombination) {
             $flowQuery = new FlowQuery($baseContextSiteNodes);
             $siteNodes = $flowQuery->context(['dimensions' => $dimensionCombination, 'targetDimensions' => []])->get();
             if (count($siteNodes) > 0) {
-                $this->outputFormatted('Searching for PrettyEmbed nodes which are able to save metadata');
                 foreach ($siteNodes as $siteNode) {
                     $returnFromSiteNode = $this->metadataService->createDataFromService($siteNode, $remove);
                     if ($returnFromSiteNode['node']) {
