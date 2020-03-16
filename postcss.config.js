@@ -3,7 +3,7 @@ const composer = require('./composer');
 const AUTHOR = composer.authors[0].name;
 const BANNER_CONTENT = `${composer.extra.neos['package-key']} - created by ${AUTHOR}
 @link ${composer.homepage}
-Copyright 2016-${parseInt(new Date().getFullYear(), 10)} ${AUTHOR}
+Copyright 2019-${parseInt(new Date().getFullYear(), 10)} ${AUTHOR}
 Licensed under ${composer.license}`;
 
 module.exports = {
