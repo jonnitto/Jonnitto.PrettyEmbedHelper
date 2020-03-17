@@ -67,6 +67,7 @@ class Metadata
 
         if ($node->getNodeType()->isOfType('Jonnitto.PrettyEmbedVimeo:Mixin.VideoID')) {
             // Check Vimeo
+            $videoIDProperty = null;
             $videoID = null;
             $data = null;
             $title = null;
@@ -74,7 +75,8 @@ class Metadata
             $image = null;
 
             if ($remove === false) {
-                $videoID = ParseID::vimeo($node->getProperty('videoID'));
+                $videoIDProperty = $node->getProperty('videoID');
+                $videoID = ParseID::vimeo($videoIDProperty);
                 $data = Oembed::vimeo($videoID);
 
                 if (isset($data)) {
@@ -89,16 +91,23 @@ class Metadata
             $node->setProperty('metadataRatio', $ratio);
             $node->setProperty('metadataImage', $image);
 
+            if ($videoIDProperty || $remove) {
+                return [
+                    'nodeTypeName' => $node->getNodeType()->getName(),
+                    'node' => 'Vimeo',
+                    'type' => 'Video',
+                    'id' => $videoID,
+                    'path' => $node->getPath(),
+                    'data' => isset($data)
+                ];
+            }
+
             return [
-                'nodeTypeName' => $node->getNodeType()->getName(),
-                'node' => 'Vimeo',
-                'type' => 'Video',
-                'id' => $videoID,
-                'path' => $node->getPath(),
-                'data' => isset($data)
+                'node' => null
             ];
         } else if ($node->getNodeType()->isOfType('Jonnitto.PrettyEmbedYoutube:Mixin.VideoID')) {
             // Check Youtube
+            $videoIDProperty = null;
             $videoID = null;
             $data = null;
             $title = null;
@@ -114,7 +123,8 @@ class Metadata
                         $type = $typeFromProperty;
                     }
                 }
-                $videoID = ParseID::youtube($node->getProperty('videoID'));
+                $videoIDProperty = $node->getProperty('videoID');
+                $videoID = ParseID::youtube($videoIDProperty);
                 $data = Oembed::youtube($videoID, $type);
 
                 if (isset($data)) {
@@ -131,13 +141,19 @@ class Metadata
             $node->setProperty('metadataRatio', $ratio);
             $node->setProperty('metadataImage', $image);
 
+            if ($videoIDProperty || $remove) {
+                return [
+                    'nodeTypeName' => $node->getNodeType()->getName(),
+                    'node' => 'Youtube',
+                    'type' => ucfirst($type),
+                    'id' => $videoID,
+                    'path' => $node->getPath(),
+                    'data' => isset($data)
+                ];
+            }
+
             return [
-                'nodeTypeName' => $node->getNodeType()->getName(),
-                'node' => 'Youtube',
-                'type' => ucfirst($type),
-                'id' => $videoID,
-                'path' => $node->getPath(),
-                'data' => isset($data)
+                'node' => null
             ];
         }
         return [
