@@ -109,7 +109,10 @@ class Metadata
             if ($remove === false) {
                 $type = $this->youtubeSettings['defaults']['type'];
                 if ($node->hasProperty('type')) {
-                    $type = $node->getProperty('type');
+                    $typeFromProperty = $node->getProperty('type');
+                    if ($typeFromProperty == 'video' || $typeFromProperty == 'playlist') {
+                        $type = $typeFromProperty;
+                    }
                 }
                 $videoID = ParseID::youtube($node->getProperty('videoID'));
                 $data = Oembed::youtube($videoID, $type);
