@@ -1,0 +1,3 @@
+prototype(Jonnitto.PrettyEmbedHelper:GdprMessage) < prototype(Neos.Fusion:Value) {
+    gdprMessage = ${Translation.translate('gdprMessage', 'While playing this video, external contents are loaded and you may be tracked by the inital content provider.', [], null, 'Jonnitto.PrettyEmbedHelper')}
+}

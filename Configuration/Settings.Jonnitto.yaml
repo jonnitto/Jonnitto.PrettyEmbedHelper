@@ -1,5 +1,6 @@
 Jonnitto:
   PrettyEmbedHelper:
+    enableGdprMessage: false
     # This is the maximum width of a custom preview image
     maximumWidth: 1920
     # If this is set to a string, the element gets wrapped with a div and the class with the giving string.

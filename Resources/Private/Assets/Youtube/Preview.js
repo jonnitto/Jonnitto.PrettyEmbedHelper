@@ -1,5 +1,3 @@
-import { hasAutoplay } from '../Helper/checkAgent';
-
 function fixPreview(img) {
     let src = img.getAttribute('src');
     if (img.naturalHeight <= 90 && img.naturalWidth <= 120 && src.indexOf('/default.jpg') == -1) {
@@ -21,14 +19,12 @@ function fixPreview(img) {
 }
 
 function fixPreviews(images) {
-    hasAutoplay(() => {
-        if (typeof images === 'undefined') {
-            images = document.querySelectorAll('img.jonnitto-prettyembed__youtube-preview');
-        }
-        for (let i = images.length - 1; i >= 0; i--) {
-            fixPreview(images[i]);
-        }
-    });
+    if (typeof images === 'undefined') {
+        images = document.querySelectorAll('img.jonnitto-prettyembed__youtube-preview');
+    }
+    for (let i = images.length - 1; i >= 0; i--) {
+        fixPreview(images[i]);
+    }
 }
 
 window.addEventListener('load', () => {

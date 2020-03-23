@@ -1,5 +1,4 @@
 import addEvent from './addEvent';
-import { noAutoplay } from './checkAgent';
 import * as lightboxHelper from '../Helper/Lightbox';
 
 const BASE = 'jonnitto-prettyembed';
@@ -59,15 +58,30 @@ function getPaddingTop(node, fallback = '56.25%') {
 }
 
 function write(link, playClass) {
-    const IFRAME = markup(link);
-    const IMAGE = getImage(link);
-    if (IFRAME && IMAGE.src) {
-        const ELEMENT = replace(link, 'div');
-        ELEMENT.setAttribute('data-img', IMAGE.src);
-        ELEMENT.classList.add(playClass);
-        ELEMENT.style.paddingTop = getPaddingTop(link);
-        ELEMENT.innerHTML = IFRAME;
+    if (checkGdpr(link)) {
+        const IFRAME = markup(link);
+        const IMAGE = getImage(link);
+        if (IFRAME && IMAGE.src) {
+            const ELEMENT = replace(link, 'div');
+            ELEMENT.setAttribute('data-img', IMAGE.src);
+            ELEMENT.classList.add(playClass);
+            ELEMENT.style.paddingTop = getPaddingTop(link);
+            ELEMENT.innerHTML = IFRAME;
+        }
     }
+}
+
+function checkGdpr(element) {
+    const GDPR = element.dataset.gdpr;
+
+    if (!GDPR) {
+        return true;
+    }
+    if (GDPR && confirm(GDPR)) {
+        element.removeAttribute('data-gdpr');
+        return true;
+    }
+    return false;
 }
 
 function restore(element, playClass) {
@@ -80,27 +94,18 @@ function restore(element, playClass) {
     }
 }
 
-function init(selector, playClass, links) {
-    noAutoplay(() => {
-        if (!links) {
-            links = document.querySelectorAll(selector);
-        }
-        for (let i = links.length - 1; i >= 0; i--) {
-            write(links[i], playClass);
-        }
-    });
-}
-
 function lightbox(type) {
     const SELECTOR = `a.${BASE}--${type}.${BASE}--lightbox`;
 
     lightboxHelper.init(SELECTOR, function(event) {
         const HTML = markup(this);
         if (HTML) {
-            const PADDING_TOP = getPaddingTop(this);
             event.preventDefault();
-            lightboxHelper.get([type, 'iframe'], PADDING_TOP).innerHTML = HTML;
-            lightboxHelper.show();
+            if (checkGdpr(this)) {
+                const PADDING_TOP = getPaddingTop(this);
+                lightboxHelper.get([type, 'iframe'], PADDING_TOP).innerHTML = HTML;
+                lightboxHelper.show();
+            }
         }
     });
 }
@@ -109,13 +114,10 @@ function embed(type) {
     const SELECTOR = `a.${BASE}--${type}.${BASE}--inline`;
     const PLAY_CLASS = `${BASE}--play`;
 
-    window.addEventListener('load', () => {
-        init(SELECTOR, PLAY_CLASS);
-    });
     addEvent(SELECTOR, function(event) {
         event.preventDefault();
         write(this, PLAY_CLASS);
     });
 }
 
-export { markup, replace, write, restore, init, lightbox, embed };
+export { markup, replace, write, restore, lightbox, embed };
