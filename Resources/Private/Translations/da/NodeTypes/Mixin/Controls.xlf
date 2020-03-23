@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" 
+    xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file original="" product-name="Jonnitto.PrettyEmbedHelper" source-language="en" target-language="en" datatype="plaintext">
+        <body>
+            <trans-unit id="properties.controls" xml:space="preserve">
+                <source>Show controls</source>
+                <target>Vis kontroller</target>
+            </trans-unit>
+            <trans-unit id="properties.controls.ui.help.message" xml:space="preserve">
+                <source>If set, the browser will offer controls to allow the user to control video playback, including volume, seeking, and pause/resume playback.</source>
+                <target>Hvis dette er indstillet, viser browseren kontroller til afspilning. Under er lydstyrke, spole tilbage og pause / genoptage afspilning.</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>
