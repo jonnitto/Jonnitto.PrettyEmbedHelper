@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" 
+    xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file original="" product-name="Jonnitto.PrettyEmbedHelper" source-language="en" target-language="da" datatype="plaintext">
+        <body>
+            <trans-unit id="properties.autoplay" xml:space="preserve">
+                <source>Autoplay video</source>
+                <target>Start video automatisk</target>
+            </trans-unit>
+            <trans-unit id="properties.autoplay.ui.help.message" xml:space="preserve">
+                <source>If set, the video automatically begins to play back and set to muted. Not available on some devices.</source>
+                <target>Hvis dette er indstillet, begynder videoen automatisk at afspilles, og lyden slukkes. Denne funktion er ikke tilgængelig på alle slutapparater.</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>
