@@ -7,7 +7,7 @@ use Neos\Flow\Annotations as Flow;
 /**
  * @Flow\Scope("singleton")
  */
-class Oembed
+class OembedService
 {
     /**
      * Grab the data of a publicly embeddable video hosted on youtube

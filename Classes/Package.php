@@ -5,7 +5,7 @@ namespace Jonnitto\PrettyEmbedHelper;
 use Neos\Flow\Core\Bootstrap;
 use Neos\ContentRepository\Domain\Model\Node;
 use Neos\Flow\Package\Package as BasePackage;
-use Jonnitto\PrettyEmbedHelper\Service\Metadata;
+use Jonnitto\PrettyEmbedHelper\Service\MetadataService;
 
 class Package extends BasePackage
 {
@@ -18,7 +18,7 @@ class Package extends BasePackage
     public function boot(Bootstrap $bootstrap)
     {
         $dispatcher = $bootstrap->getSignalSlotDispatcher();
-        $dispatcher->connect(Node::class, 'nodeAdded', Metadata::class, 'createDataFromService');
-        $dispatcher->connect(Node::class, 'nodePropertyChanged', Metadata::class, 'updateDataFromService');
+        $dispatcher->connect(Node::class, 'nodeAdded', MetadataService::class, 'createDataFromService');
+        $dispatcher->connect(Node::class, 'nodePropertyChanged', MetadataService::class, 'updateDataFromService');
     }
 }

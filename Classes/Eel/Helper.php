@@ -5,8 +5,8 @@ namespace Jonnitto\PrettyEmbedHelper\Eel;
 
 use Neos\Flow\Annotations as Flow;
 use Neos\Eel\ProtectedContextAwareInterface;
-use Jonnitto\PrettyEmbedHelper\Service\Oembed;
-use Jonnitto\PrettyEmbedHelper\Service\ParseID;
+use Jonnitto\PrettyEmbedHelper\Service\OembedService;
+use Jonnitto\PrettyEmbedHelper\Service\ParseIDService;
 
 /**
  * @Flow\Proxy(false)
@@ -40,8 +40,8 @@ class Helper implements ProtectedContextAwareInterface
      */
     function vimeoThumbnail($videoID): ?string
     {
-        $data = Oembed::vimeo($videoID);
-        return Oembed::removeProtocolFromUrl($data->thumbnail_url) ?? null;
+        $data = OembedService::vimeo($videoID);
+        return OembedService::removeProtocolFromUrl($data->thumbnail_url) ?? null;
     }
 
     /**
@@ -52,7 +52,7 @@ class Helper implements ProtectedContextAwareInterface
      */
     function vimeoID($videoID)
     {
-        return ParseID::vimeo($videoID);
+        return ParseIDService::vimeo($videoID);
     }
 
     /**
@@ -63,7 +63,7 @@ class Helper implements ProtectedContextAwareInterface
      */
     function youtubeID($videoID)
     {
-        return ParseID::youtube($videoID);
+        return ParseIDService::youtube($videoID);
     }
 
 

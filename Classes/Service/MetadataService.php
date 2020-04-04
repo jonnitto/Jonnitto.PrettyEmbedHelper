@@ -4,13 +4,13 @@ namespace Jonnitto\PrettyEmbedHelper\Service;
 
 use Neos\Flow\Annotations as Flow;
 use Neos\ContentRepository\Domain\Model\NodeInterface;
-use Jonnitto\PrettyEmbedHelper\Service\ParseID;
-use Jonnitto\PrettyEmbedHelper\Service\Oembed;
+use Jonnitto\PrettyEmbedHelper\Service\ParseIDService;
+use Jonnitto\PrettyEmbedHelper\Service\OembedService;
 
 /**
  * @Flow\Scope("singleton")
  */
-class Metadata
+class MetadataService
 {
 
     /**
@@ -76,13 +76,13 @@ class Metadata
 
             if ($remove === false) {
                 $videoIDProperty = $node->getProperty('videoID');
-                $videoID = ParseID::vimeo($videoIDProperty);
-                $data = Oembed::vimeo($videoID);
+                $videoID = ParseIDService::vimeo($videoIDProperty);
+                $data = OembedService::vimeo($videoID);
 
                 if (isset($data)) {
                     $title = $data->title ?? null;
                     $ratio = $data->width && $data->height ? $this->calculatePaddingTop($data->width, $data->height) : null;
-                    $image = Oembed::removeProtocolFromUrl($data->thumbnail_url) ?? null;
+                    $image = OembedService::removeProtocolFromUrl($data->thumbnail_url) ?? null;
                 }
             }
 
@@ -124,8 +124,8 @@ class Metadata
                     }
                 }
                 $videoIDProperty = $node->getProperty('videoID');
-                $videoID = ParseID::youtube($videoIDProperty);
-                $data = Oembed::youtube($videoID, $type);
+                $videoID = ParseIDService::youtube($videoIDProperty);
+                $data = OembedService::youtube($videoID, $type);
 
                 if (isset($data)) {
                     $title = $data->title ?? null;
@@ -180,7 +180,7 @@ class Metadata
             $url = preg_replace('/\/[\w]*\.([a-z]{3,})$/i', "/{$resultion}.$1", $url);
             $headers = @get_headers($url);
             if ($headers && strpos($headers[0], '200')) {
-                return Oembed::removeProtocolFromUrl($url);
+                return OembedService::removeProtocolFromUrl($url);
             }
         }
 

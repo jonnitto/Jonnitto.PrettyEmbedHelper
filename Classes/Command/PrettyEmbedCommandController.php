@@ -11,9 +11,9 @@ use Neos\Neos\Domain\Service\SiteService;
 use Neos\ContentRepository\Exception\NodeException;
 use Neos\ContentRepository\Domain\Service\ContextFactoryInterface;
 use Neos\ContentRepository\Domain\Service\ContentDimensionCombinator;
-use Jonnitto\PrettyEmbedHelper\Service\Metadata;
 use Neos\Flow\Persistence\PersistenceManagerInterface;
 use Neos\ContentRepository\Domain\Repository\WorkspaceRepository;
+use Jonnitto\PrettyEmbedHelper\Service\MetadataService;
 
 /**
  * @Flow\Scope("singleton")
@@ -22,7 +22,7 @@ class PrettyEmbedCommandController extends CommandController
 {
     /**
      * @Flow\Inject
-     * @var Metadata
+     * @var MetadataService
      */
     protected $metadataService;
 
