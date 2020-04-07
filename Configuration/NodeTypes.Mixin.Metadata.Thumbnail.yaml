@@ -1,0 +1,12 @@
+'Jonnitto.PrettyEmbedHelper:Mixin.Metadata.Thumbnail':
+  abstract: true
+  properties:
+    metadataThumbnail:
+      type: Neos\Media\Domain\Model\ImageInterface
+      ui:
+        label: metadataThumbnail
+        reloadIfChanged: true
+        inspector:
+          group: image
+          position: 20
+          disabled: true

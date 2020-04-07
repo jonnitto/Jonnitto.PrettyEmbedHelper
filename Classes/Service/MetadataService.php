@@ -4,34 +4,42 @@ namespace Jonnitto\PrettyEmbedHelper\Service;
 
 use Neos\Flow\Annotations as Flow;
 use Neos\ContentRepository\Domain\Model\NodeInterface;
-use Jonnitto\PrettyEmbedHelper\Service\ParseIDService;
-use Jonnitto\PrettyEmbedHelper\Service\OembedService;
+use Jonnitto\PrettyEmbedHelper\Service\YoutubeService;
+use Jonnitto\PrettyEmbedHelper\Service\VimeoService;
 
 /**
  * @Flow\Scope("singleton")
  */
 class MetadataService
 {
+    /**
+     * @Flow\Inject
+     * @var YoutubeService
+     */
+    protected $youtubeService;
 
     /**
-     * @Flow\InjectConfiguration(package="Jonnitto.PrettyEmbedYoutube")
+     * @Flow\Inject
+     * @var VimeoService
+     */
+    protected $vimeoService;
+
+    /**
      * @var array
      */
-    protected $youtubeSettings;
+    protected $defaultReturn = ['node' => null];
+
 
     /**
      * @param NodeInterface $node
      * @return array Informations about the node
      */
-
     public function createDataFromService(NodeInterface $node, bool $remove = false): array
     {
         if ($node->hasProperty('videoID')) {
             return $this->dataFromService($node, $remove);
         }
-        return [
-            'node' => null
-        ];
+        return $this->defaultReturn;
     }
 
     /**
@@ -52,9 +60,7 @@ class MetadataService
         } else if ($propertyName === 'type' && $node->hasProperty('videoID')) {
             return $this->dataFromService($node);
         }
-        return [
-            'node' => null
-        ];
+        return $this->defaultReturn;
     }
 
     /**
@@ -64,139 +70,18 @@ class MetadataService
      */
     protected function dataFromService(NodeInterface $node, bool $remove = false): array
     {
+        $youtube = $this->youtubeService->getAndSaveDataFromOembed($node, $remove);
 
-        if ($node->getNodeType()->isOfType('Jonnitto.PrettyEmbedVimeo:Mixin.VideoID')) {
-            // Check Vimeo
-            $videoIDProperty = null;
-            $videoID = null;
-            $data = null;
-            $title = null;
-            $ratio = null;
-            $image = null;
-
-            if ($remove === false) {
-                $videoIDProperty = $node->getProperty('videoID');
-                $videoID = ParseIDService::vimeo($videoIDProperty);
-                $data = OembedService::vimeo($videoID);
-
-                if (isset($data)) {
-                    $title = $data->title ?? null;
-                    $ratio = $data->width && $data->height ? $this->calculatePaddingTop($data->width, $data->height) : null;
-                    $image = OembedService::removeProtocolFromUrl($data->thumbnail_url) ?? null;
-                }
-            }
-
-            $node->setProperty('metadataID', $videoID);
-            $node->setProperty('metadataTitle', $title);
-            $node->setProperty('metadataRatio', $ratio);
-            $node->setProperty('metadataImage', $image);
-
-            if ($videoIDProperty || $remove) {
-                return [
-                    'nodeTypeName' => $node->getNodeType()->getName(),
-                    'node' => 'Vimeo',
-                    'type' => 'Video',
-                    'id' => $videoID,
-                    'path' => $node->getPath(),
-                    'data' => isset($data)
-                ];
-            }
-
-            return [
-                'node' => null
-            ];
-        } else if ($node->getNodeType()->isOfType('Jonnitto.PrettyEmbedYoutube:Mixin.VideoID')) {
-            // Check Youtube
-            $videoIDProperty = null;
-            $videoID = null;
-            $data = null;
-            $title = null;
-            $ratio = null;
-            $image = null;
-            $type = null;
-
-            if ($remove === false) {
-                $type = $this->youtubeSettings['defaults']['type'];
-                if ($node->hasProperty('type')) {
-                    $typeFromProperty = $node->getProperty('type');
-                    if ($typeFromProperty == 'video' || $typeFromProperty == 'playlist') {
-                        $type = $typeFromProperty;
-                    }
-                }
-                $videoIDProperty = $node->getProperty('videoID');
-                $videoID = ParseIDService::youtube($videoIDProperty);
-                $data = OembedService::youtube($videoID, $type);
-
-                if (isset($data)) {
-                    $title = $data->title ?? null;
-                    $ratio = $data->width && $data->height ? $this->calculatePaddingTop($data->width, $data->height) : null;
-                    $image = $this->getBestPossibleYoutubeImage($videoID, $data->thumbnail_url);
-                } else {
-                    $image = $this->getBestPossibleYoutubeImage($videoID);
-                }
-            }
-
-            $node->setProperty('metadataID', $videoID);
-            $node->setProperty('metadataTitle', $title);
-            $node->setProperty('metadataRatio', $ratio);
-            $node->setProperty('metadataImage', $image);
-
-            if ($videoIDProperty || $remove) {
-                return [
-                    'nodeTypeName' => $node->getNodeType()->getName(),
-                    'node' => 'Youtube',
-                    'type' => ucfirst($type),
-                    'id' => $videoID,
-                    'path' => $node->getPath(),
-                    'data' => isset($data)
-                ];
-            }
-
-            return [
-                'node' => null
-            ];
-        }
-        return [
-            'node' => null
-        ];
-    }
-
-    /**
-     * Get the best possible image from youtube
-     *
-     * @param string|integer $videoID
-     * @param string|null $url
-     * @return string|null
-     */
-    protected function getBestPossibleYoutubeImage($videoID, ?string $url = null): ?string
-    {
-        if (!isset($url)) {
-            $url = "https://i.ytimg.com/vi/{$videoID}/maxresdefault.jpg";
+        if (isset($youtube)) {
+            return $youtube;
         }
 
-        $resulutions = ['maxresdefault', 'sddefault', 'hqdefault', 'mqdefault', 'default'];
+        $vimeo = $this->vimeoService->getAndSaveDataFromOembed($node, $remove);
 
-        foreach ($resulutions as $resultion) {
-            $url = preg_replace('/\/[\w]*\.([a-z]{3,})$/i', "/{$resultion}.$1", $url);
-            $headers = @get_headers($url);
-            if ($headers && strpos($headers[0], '200')) {
-                return OembedService::removeProtocolFromUrl($url);
-            }
+        if (isset($vimeo)) {
+            return $vimeo;
         }
 
-        return null;
-    }
-
-
-    /**
-     * This calculates the padding-top from width and height
-     *
-     * @param integer $width
-     * @param integer $height
-     * @return string The calculated value
-     */
-    protected function calculatePaddingTop(int $width, int $height): string
-    {
-        return (100 / ($width / $height)) . '%';
+        return $this->defaultReturn;
     }
 }

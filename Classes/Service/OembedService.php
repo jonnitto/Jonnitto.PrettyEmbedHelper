@@ -47,10 +47,13 @@ class OembedService
      * Remove the prototcol from a url and replace it with `//`
      *
      * @param string $url
-     * @return string
+     * @return mixed
      */
-    public static function removeProtocolFromUrl(string $url): string
+    public static function removeProtocolFromUrl(?string $url = null)
     {
+        if (!is_string($url)) {
+            return null;
+        }
         return preg_replace('/https?:\/\//i', '//', $url);
     }
 }
