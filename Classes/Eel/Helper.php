@@ -41,6 +41,9 @@ class Helper implements ProtectedContextAwareInterface
     function vimeoThumbnail($videoID): ?string
     {
         $data = OembedService::vimeo($videoID);
+        if (!isset($data)) {
+            return null;
+        }
         return OembedService::removeProtocolFromUrl($data->thumbnail_url) ?? null;
     }
 
