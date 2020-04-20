@@ -54,7 +54,9 @@ class PrettyEmbedCommandController extends CommandController
      * Generate metadata for the PrettyEmbed Vimeo and Youtube player
      *
      * This generates the metadata for all video player which has the mixin 
-     * Jonnitto.PrettyEmbedVimeo:Mixin.VideoID or Jonnitto.PrettyEmbedYoutube:Mixin.VideoID
+     * - Jonnitto.PrettyEmbedVideoPlatforms:Mixin.VideoID
+     * - Jonnitto.PrettyEmbedVimeo:Mixin.VideoID
+     * - Jonnitto.PrettyEmbedYoutube:Mixin.VideoID
      *
      * @param string $workspace Workspace name, default is 'live'
      * @param boolean $remove Is set, all metadata will be removed
@@ -106,7 +108,7 @@ class PrettyEmbedCommandController extends CommandController
                             $errorArray[] = $returnFromSiteNode;
                         }
                     }
-                    $nodes = $flowQuery->find('[instanceof Jonnitto.PrettyEmbedVimeo:Mixin.VideoID],[instanceof Jonnitto.PrettyEmbedYoutube:Mixin.VideoID]')->get();
+                    $nodes = $flowQuery->find('[instanceof Jonnitto.PrettyEmbedVideoPlatforms:Mixin.VideoID],[instanceof Jonnitto.PrettyEmbedVimeo:Mixin.VideoID],[instanceof Jonnitto.PrettyEmbedYoutube:Mixin.VideoID]')->get();
                     foreach ($nodes as $node) {
                         $returnFromNode = $this->metadataService->createDataFromService($node, $remove);
                         if ($returnFromNode['node']) {
