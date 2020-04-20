@@ -32,6 +32,7 @@ class YoutubeService
      */
     public function getAndSaveDataFromOembed(NodeInterface $node, bool $remove = false): ?array
     {
+        $isYoutubePackage = $node->getNodeType()->isOfType('Jonnitto.PrettyEmbedYoutube:Mixin.VideoID');
 
         $videoIDProperty = null;
         $videoID = null;
@@ -46,15 +47,22 @@ class YoutubeService
         $this->imageService->remove($node);
 
         if ($remove === false) {
-            $type = $this->youtubeSettings['defaults']['type'];
-            if ($node->hasProperty('type')) {
-                $typeFromProperty = $node->getProperty('type');
-                if ($typeFromProperty == 'video' || $typeFromProperty == 'playlist') {
-                    $type = $typeFromProperty;
-                }
-            }
             $videoIDProperty = $node->getProperty('videoID');
-            $videoID = ParseIDService::youtube($videoIDProperty);
+
+            if ($isYoutubePackage) {
+                $type = $this->youtubeSettings['defaults']['type'];
+                if ($node->hasProperty('type')) {
+                    $typeFromProperty = $node->getProperty('type');
+                    if ($typeFromProperty === 'video' || $typeFromProperty === 'playlist') {
+                        $type = $typeFromProperty;
+                    }
+                }
+            } else {
+                $type = ParseIDService::youtubeType($videoIDProperty) ?? 'video';
+                $node->setProperty('type', $type);
+            }
+
+            $videoID = ParseIDService::youtube($videoIDProperty, $type);
             $data = OembedService::youtube($videoID, $type);
 
             if (isset($data)) {
