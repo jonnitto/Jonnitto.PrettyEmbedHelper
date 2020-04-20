@@ -11,6 +11,35 @@ use Neos\Flow\Annotations as Flow;
 class ParseIDService
 {
     /**
+     * Get the type of videoplatform
+     *
+     * @param string|integer $url The URL or the plain id
+     * @return string|null The platform from the given url
+     */
+    public static function platform($url = null): ?string
+    {
+        $url = trim(strval($url));
+        if (!$url) {
+            return null;
+        }
+
+        if (strpos($url, 'vimeo.com') !== false) {
+            return 'vimeo';
+        }
+        if (strpos($url, 'youtu.be') !== false || strpos($url, 'youtube')) {
+            return 'youtube';
+        }
+
+        $isCompleteUrl = preg_match('/^https?:\/\//im', $url);
+        if (!$isCompleteUrl) {
+            // Vimeo has only numbers
+            return preg_match('/^\d+$/', $url) ? 'vimeo' : 'youtube';
+        }
+
+        return null;
+    }
+
+    /**
      * Get the type of a youtube video
      *
      * @param string $url
