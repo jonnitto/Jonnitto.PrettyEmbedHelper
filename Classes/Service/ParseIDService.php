@@ -10,6 +10,21 @@ use Neos\Flow\Annotations as Flow;
  */
 class ParseIDService
 {
+    /**
+     * Get the type of a youtube video
+     *
+     * @param string $url
+     * @return string|null The type of the link
+     */
+    public static function youtubeType(string $url): ?string
+    {
+        $url = trim(strval($url));
+        if (!$url) {
+            return null;
+        }
+
+        return strpos($url, 'list=') !== false ? 'playlist' : 'video';
+    }
 
     /**
      * Get Vimeo video id from url
