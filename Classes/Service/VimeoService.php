@@ -26,10 +26,6 @@ class VimeoService
      */
     public function getAndSaveDataFromOembed(NodeInterface $node, bool $remove = false): ?array
     {
-        if (!$node->getNodeType()->isOfType('Jonnitto.PrettyEmbedVimeo:Mixin.VideoID')) {
-            return null;
-        }
-
         $videoIDProperty = null;
         $videoID = null;
         $data = null;
