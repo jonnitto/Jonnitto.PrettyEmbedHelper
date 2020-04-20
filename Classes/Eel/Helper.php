@@ -48,7 +48,21 @@ class Helper implements ProtectedContextAwareInterface
     }
 
     /**
-     * Return the oembed data from vimeo
+     * Return the id from a video platform
+     *
+     * @param string|integer $videoID
+     * @return string|integer|null
+     */
+    function platformID($videoID, string $platform)
+    {
+        if ($platform === 'vimeo') {
+            return ParseIDService::vimeo($videoID);
+        }
+        return ParseIDService::youtube($videoID);
+    }
+
+    /**
+     * Return the id from vimeo
      *
      * @param string|integer $videoID
      * @return string|integer|null
@@ -59,7 +73,7 @@ class Helper implements ProtectedContextAwareInterface
     }
 
     /**
-     * Return the oembed data from vimeo
+     * Return the id from vimeo
      *
      * @param string|integer $videoID
      * @return array|null
