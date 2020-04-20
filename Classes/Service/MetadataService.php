@@ -70,18 +70,47 @@ class MetadataService
      */
     protected function dataFromService(NodeInterface $node, bool $remove = false): array
     {
-        $youtube = $this->youtubeService->getAndSaveDataFromOembed($node, $remove);
+        switch ($this->checkNodeAndSetPlatform($node)) {
+            case 'youtube':
+                $data = $this->youtubeService->getAndSaveDataFromOembed($node, $remove);
+                break;
 
-        if (isset($youtube)) {
-            return $youtube;
+            case 'vimeo':
+                $data = $this->vimeoService->getAndSaveDataFromOembed($node, $remove);
+                break;
+
+            default:
+                return $this->defaultReturn;
+                break;
         }
 
-        $vimeo = $this->vimeoService->getAndSaveDataFromOembed($node, $remove);
-
-        if (isset($vimeo)) {
-            return $vimeo;
+        if (isset($data)) {
+            return $data;
         }
 
         return $this->defaultReturn;
+    }
+
+    /**
+     * @param NodeInterface $node
+     * @return string|null
+     */
+    protected function checkNodeAndSetPlatform(NodeInterface $node): ?string
+    {
+        if ($node->getNodeType()->isOfType('Jonnitto.PrettyEmbedYoutube:Mixin.VideoID')) {
+            return 'youtube';
+        }
+
+        if ($node->getNodeType()->isOfType('Jonnitto.PrettyEmbedVimeo:Mixin.VideoID')) {
+            return 'vimeo';
+        }
+
+        if (!$node->getNodeType()->isOfType('Jonnitto.PrettyEmbedVideoPlatforms:Mixin.VideoID')) {
+            return null;
+        }
+
+        $platform = ParseIDService::platform($node->getProperty('videoID'));
+        $node->setProperty('platform', $platform);
+        return $platform;
     }
 }
