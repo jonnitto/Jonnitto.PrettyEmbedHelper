@@ -19,6 +19,10 @@
                 <source>YouTube</source>
                 <target>YouTube</target>
             </trans-unit>
+            <trans-unit id="groups.videoplatform" xml:space="preserve">
+                <source>Vimeo / YouTube</source>
+                <target>Vimeo / YouTube</target>
+            </trans-unit>
             <trans-unit id="groups.audio" xml:space="preserve">
                 <source>Audio</source>
                 <target>Audio</target>

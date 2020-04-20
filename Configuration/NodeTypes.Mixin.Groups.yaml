@@ -15,6 +15,10 @@
           label: i18n
           icon: 'fab fa-youtube'
           position: 12
+        videoplatform:
+          label: i18n
+          icon: 'fas fa-play-circle'
+          position: 13
         audio:
           label: i18n
           icon: 'fas fa-file-audio'
