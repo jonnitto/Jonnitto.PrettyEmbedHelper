@@ -32,9 +32,6 @@ class YoutubeService
      */
     public function getAndSaveDataFromOembed(NodeInterface $node, bool $remove = false): ?array
     {
-        if (!$node->getNodeType()->isOfType('Jonnitto.PrettyEmbedYoutube:Mixin.VideoID')) {
-            return null;
-        }
 
         $videoIDProperty = null;
         $videoID = null;
