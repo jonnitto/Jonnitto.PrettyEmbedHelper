@@ -14,7 +14,7 @@ class ParseIDService
     /**
      * Get Vimeo video id from url
      *
-     * Supported url formats -
+     * Supported url formats
      *
      * https://vimeo.com/11111111
      * http://vimeo.com/11111111
@@ -29,11 +29,11 @@ class ParseIDService
      * https://vimeo.com/11111111?param=test
      * http://vimeo.com/11111111?param=test
      *
-     * @param string|integer $url The URL od the plain id
+     * @param string|integer $url The URL or the plain id
      * @return string|null The video id extracted from url
      */
 
-    public static function vimeo($url = null)
+    public static function vimeo($url = null): ?string
     {
         if (!$url) {
             return null;
