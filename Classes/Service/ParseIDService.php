@@ -26,6 +26,7 @@ class ParseIDService
         if (strpos($url, 'vimeo.com') !== false) {
             return 'vimeo';
         }
+
         if (strpos($url, 'youtu.be') !== false || strpos($url, 'youtube')) {
             return 'youtube';
         }
@@ -33,7 +34,14 @@ class ParseIDService
         $isCompleteUrl = preg_match('/^https?:\/\//im', $url);
         if (!$isCompleteUrl) {
             // Vimeo has only numbers
-            return preg_match('/^\d+$/', $url) ? 'vimeo' : 'youtube';
+            if (preg_match('/^\d+$/', $url)) {
+                return 'vimeo';
+            }
+
+            // The ID has to start with a letter or an number
+            if (preg_match('/^[A-Za-z0-9]/', $url)) {
+                return 'youtube';
+            }
         }
 
         return null;
@@ -87,7 +95,11 @@ class ParseIDService
         if (preg_match('%^https?:\/\/(?:www\.|player\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/([^\/]*)\/videos\/|album\/(\d+)\/video\/|video\/|)(\d+)(?:$|\/|\?)(?:[?]?.*)$%im', $url, $regs)) {
             return $regs[3];
         }
-        return $url;
+        // The ID has to start with an number
+        if (preg_match('/^[0-9]/', $url)) {
+            return $url;
+        }
+        return null;
     }
 
     /**
@@ -140,6 +152,10 @@ class ParseIDService
             }
             return $array[$returnKey];
         }
-        return $url;
+        // The ID has to start with a letter or an number
+        if (preg_match('/^[A-Za-z0-9]/', $url)) {
+            return $url;
+        }
+        return null;
     }
 }
