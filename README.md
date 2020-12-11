@@ -6,6 +6,7 @@ This package contains helper mixins, prototypes and frontend resources for the P
 
 This package is used by following packages:
 
+-   [Jonnitto.PrettyEmbedVideoPlatforms]
 -   [Jonnitto.PrettyEmbedVideo]
 -   [Jonnitto.PrettyEmbedVimeo]
 -   [Jonnitto.PrettyEmbedYoutube]
@@ -30,6 +31,7 @@ This package is used by following packages:
 [subscription]: https://github.com/jonnitto/Jonnitto.PrettyEmbedHelper/subscription
 [followers]: https://github.com/jonnitto/followers
 [license]: LICENSE
+[jonnitto.prettyembedvideoplatforms]: https://github.com/jonnitto/Jonnitto.PrettyEmbedVideoPlatforms
 [jonnitto.prettyembedvideo]: https://github.com/jonnitto/Jonnitto.PrettyEmbedVideo
 [jonnitto.prettyembedvimeo]: https://github.com/jonnitto/Jonnitto.PrettyEmbedVimeo
 [jonnitto.prettyembedyoutube]: https://github.com/jonnitto/Jonnitto.PrettyEmbedYoutube
