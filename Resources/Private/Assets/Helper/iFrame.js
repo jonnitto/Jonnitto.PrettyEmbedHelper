@@ -35,7 +35,7 @@ function getImage(node) {
     const IMAGE = node.querySelector('img');
     return {
         node: IMAGE || null,
-        src: IMAGE ? IMAGE.getAttribute('src') : null
+        src: IMAGE ? IMAGE.getAttribute('src') : null,
     };
 }
 
@@ -101,7 +101,7 @@ function restore(element, playClass) {
 function lightbox(type) {
     const SELECTOR = `a.${BASE}--${type}.${BASE}--lightbox`;
 
-    lightboxHelper.init(SELECTOR, function(event) {
+    lightboxHelper.init(SELECTOR, function (event) {
         const HTML = markup(this);
         if (HTML) {
             event.preventDefault();
@@ -118,7 +118,7 @@ function embed(type) {
     const SELECTOR = `a.${BASE}--${type}.${BASE}--inline`;
     const PLAY_CLASS = `${BASE}--play`;
 
-    addEvent(SELECTOR, function(event) {
+    addEvent(SELECTOR, function (event) {
         event.preventDefault();
         write(this, PLAY_CLASS);
     });

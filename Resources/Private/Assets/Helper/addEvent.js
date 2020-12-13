@@ -21,8 +21,8 @@ function closest(element, selector) {
     return null;
 }
 
-export default function(selector, callback) {
-    document.documentElement.addEventListener('click', event => {
+export default function (selector, callback) {
+    document.documentElement.addEventListener('click', (event) => {
         const ELEMENT = closest(event.target, selector);
         if (!ELEMENT || typeof callback != 'function') {
             return;

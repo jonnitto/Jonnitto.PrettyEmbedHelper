@@ -40,7 +40,7 @@ function get(type, paddingTop) {
     if (typeof type != 'object') {
         type = type ? [type] : [];
     }
-    type.forEach(item => {
+    type.forEach((item) => {
         lighboxContent.classList.add(`${BASE_CLASS}--${item}`);
     });
 
@@ -52,7 +52,7 @@ function get(type, paddingTop) {
 
 function show(callback) {
     clearTimeout(timeout);
-    timeout = setTimeout(function() {
+    timeout = setTimeout(function () {
         if (typeof callback == 'function') {
             callback();
         }
@@ -83,7 +83,7 @@ function init(selector, callback) {
 }
 
 // Catch click event to prevent closing lightbox if some clicks on content
-addEvent(`.${CONTENT_CLASS}`, event => {
+addEvent(`.${CONTENT_CLASS}`, (event) => {
     event.stopImmediatePropagation();
 });
 

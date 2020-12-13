@@ -40,7 +40,7 @@ function init(element, autoplay = true) {
 }
 
 function pause(elements = ELEMENTS, current = null) {
-    elements.forEach(element => {
+    elements.forEach((element) => {
         if (element != current) {
             if (!element.hasAttribute('controls')) {
                 element.parentNode.classList.remove(PLAY_CLASS);
@@ -50,8 +50,8 @@ function pause(elements = ELEMENTS, current = null) {
     });
 }
 
-ELEMENTS.forEach(element => {
-    element.addEventListener('play', event => {
+ELEMENTS.forEach((element) => {
+    element.addEventListener('play', (event) => {
         pause(ELEMENTS, event.target);
     });
 });
