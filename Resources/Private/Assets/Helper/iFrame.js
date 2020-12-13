@@ -61,12 +61,16 @@ function write(link, playClass) {
     if (checkGdpr(link)) {
         const IFRAME = markup(link);
         const IMAGE = getImage(link);
-        if (IFRAME && IMAGE.src) {
-            const ELEMENT = replace(link, 'div');
+        if (!IFRAME) {
+            return;
+        }
+        const ELEMENT = replace(link, 'div');
+        ELEMENT.classList.add(playClass);
+        ELEMENT.style.paddingTop = getPaddingTop(link);
+        ELEMENT.innerHTML = IFRAME;
+
+        if (IMAGE.src) {
             ELEMENT.setAttribute('data-img', IMAGE.src);
-            ELEMENT.classList.add(playClass);
-            ELEMENT.style.paddingTop = getPaddingTop(link);
-            ELEMENT.innerHTML = IFRAME;
         }
     }
 }
