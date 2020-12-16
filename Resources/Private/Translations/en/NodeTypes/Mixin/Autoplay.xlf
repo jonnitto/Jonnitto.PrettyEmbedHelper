@@ -8,8 +8,8 @@
                 <target>Autoplay video</target>
             </trans-unit>
             <trans-unit id="properties.autoplay.ui.help.message" xml:space="preserve">
-                <source>If set, the video automatically begins to play back and set to muted. Not available on some devices.</source>
-                <target>If set, the video automatically begins to play back and set to muted. Not available on some devices.</target>
+                <source>If set, the video automatically begins to playback and set to mute. Not available on some devices.</source>
+                <target>If set, the video automatically begins to playback and set to mute. Not available on some devices.</target>
             </trans-unit>
         </body>
     </file>

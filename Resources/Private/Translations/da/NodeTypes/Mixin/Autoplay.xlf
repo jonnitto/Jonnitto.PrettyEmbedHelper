@@ -8,7 +8,7 @@
                 <target>Start video automatisk</target>
             </trans-unit>
             <trans-unit id="properties.autoplay.ui.help.message" xml:space="preserve">
-                <source>If set, the video automatically begins to play back and set to muted. Not available on some devices.</source>
+                <source>If set, the video automatically begins to playback and set to mute. Not available on some devices.</source>
                 <target>Hvis dette er indstillet, begynder videoen automatisk at afspilles, og lyden slukkes. Denne funktion er ikke tilgængelig på alle slutapparater.</target>
             </trans-unit>
         </body>
