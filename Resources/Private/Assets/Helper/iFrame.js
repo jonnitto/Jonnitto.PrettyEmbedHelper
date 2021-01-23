@@ -1,4 +1,5 @@
 import addEvent from './addEvent';
+import triggerEvent from './triggerEvent';
 import * as lightboxHelper from '../Helper/Lightbox';
 
 const BASE = 'jonnitto-prettyembed';
@@ -57,7 +58,7 @@ function getPaddingTop(node, fallback = '56.25%') {
     return RATIO + '%';
 }
 
-function write(link, playClass) {
+function write(link, playClass, type) {
     if (checkGdpr(link)) {
         const IFRAME = markup(link);
         const IMAGE = getImage(link);
@@ -72,6 +73,12 @@ function write(link, playClass) {
         if (IMAGE.src) {
             ELEMENT.setAttribute('data-img', IMAGE.src);
         }
+        triggerEvent({
+            type: type,
+            style: 'inline',
+            title: link.ariaLabel,
+            src: link.dataset.embed,
+        });
     }
 }
 
@@ -108,7 +115,17 @@ function lightbox(type) {
             if (checkGdpr(this)) {
                 const PADDING_TOP = getPaddingTop(this);
                 lightboxHelper.get([type, 'iframe'], PADDING_TOP).innerHTML = HTML;
-                lightboxHelper.show();
+                lightboxHelper.show(() => {
+                    if (!this.dataset.init) {
+                        this.dataset.init = true;
+                        triggerEvent({
+                            type: type,
+                            style: 'lightbox',
+                            title: this.ariaLabel,
+                            src: this.dataset.embed,
+                        });
+                    }
+                });
             }
         }
     });
@@ -120,7 +137,7 @@ function embed(type) {
 
     addEvent(SELECTOR, function (event) {
         event.preventDefault();
-        write(this, PLAY_CLASS);
+        write(this, PLAY_CLASS, type);
     });
 }
 

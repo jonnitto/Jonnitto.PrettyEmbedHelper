@@ -1,5 +1,6 @@
 import * as video from '../Helper/MediaInit';
 import * as lightbox from '../Helper/Lightbox';
+import triggerEvent from '../Helper/triggerEvent';
 
 const BASE_CLASS = 'jonnitto-prettyembed';
 const SELECTOR_CLASS = `.${BASE_CLASS}--video.${BASE_CLASS}--lightbox video`;
@@ -20,7 +21,19 @@ lightbox.init(SELECTOR_CLASS, function (event) {
     }
     lightbox.show(() => {
         video.init(VIDEO_NODE);
+        if (!this.dataset.init) {
+            this.dataset.init = true;
+            triggerEvent({
+                type: 'video',
+                style: 'lightbox',
+                src: (() => {
+                    const SOURCE = this.querySelector('source');
+                    return SOURCE ? SOURCE.src : null;
+                })(),
+            });
+        }
     });
+
     timeout = setTimeout(function () {
         // Make sure the VIDEO_NODE start playing
         VIDEO_NODE.play();
