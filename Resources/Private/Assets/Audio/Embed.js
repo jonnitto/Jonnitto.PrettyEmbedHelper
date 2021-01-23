@@ -1,8 +1,6 @@
 import { init } from '../Helper/MediaInit';
 import triggerEvent from '../Helper/triggerEvent';
 
-console.log(triggerEvent);
-
 const elements = document.querySelectorAll('.jonnitto-prettyembed--audio audio');
 Array.from(elements).forEach((element) => {
     init(element, false);
