@@ -26,6 +26,7 @@ lightbox.init(SELECTOR_CLASS, function (event) {
             triggerEvent({
                 type: 'video',
                 style: 'lightbox',
+                title: this.ariaLabel,
                 src: (() => {
                     const SOURCE = this.querySelector('source');
                     return SOURCE ? SOURCE.src : null;

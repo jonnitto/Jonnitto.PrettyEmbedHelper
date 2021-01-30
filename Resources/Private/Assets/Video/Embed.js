@@ -6,13 +6,15 @@ const SELECTOR = '.jonnitto-prettyembed--video.jonnitto-prettyembed--inline vide
 
 addEvent(SELECTOR, function (event) {
     event.preventDefault();
-    init(this);
-    triggerEvent({
-        type: 'video',
-        style: 'inline',
-        src: (() => {
-            const SOURCE = this.querySelector('source');
-            return SOURCE ? SOURCE.src : null;
-        })(),
+    init(this, true, () => {
+        triggerEvent({
+            type: 'video',
+            style: 'inline',
+            title: this.ariaLabel,
+            src: (() => {
+                const SOURCE = this.querySelector('source');
+                return SOURCE ? SOURCE.src : null;
+            })(),
+        });
     });
 });

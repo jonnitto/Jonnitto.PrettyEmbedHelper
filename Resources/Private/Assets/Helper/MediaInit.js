@@ -7,10 +7,14 @@ const VIDEOS = Array.from(document.querySelectorAll(`.${BASE}--video video:not([
 const AUDIOS = Array.from(document.querySelectorAll(`.${BASE}--audio audio:not([autoplay])`));
 const ELEMENTS = [].concat(VIDEOS, AUDIOS);
 
-function init(element, autoplay = true) {
+function init(element, autoplay = true, callback) {
     const CLASS_LIST = element.parentNode.classList;
     if (CLASS_LIST.contains(INIT_CLASS)) {
         return;
+    }
+
+    if (typeof callback == 'function') {
+        callback();
     }
 
     if (element.hasAttribute('data-controls')) {
