@@ -98,7 +98,7 @@
         content: "Click here to add captions";
         z-index: 1;
 
-        [lang^="de"] {
+        [lang^="de"] & {
           content: "Hier klicken um Inhalt hinzuzufügen";
         }
       }
