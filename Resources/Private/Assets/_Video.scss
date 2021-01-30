@@ -49,4 +49,21 @@
     width: auto;
     max-height: calc(99vh - #{round($prettyembed-lightbox-padding * 1.5 + $prettyembed-lightbox-close-size)});
   }
+
+  .jonnitto-prettyembed--video.jonnitto-prettyembed--lightbox {
+    video {
+      position: absolute;
+      inset: 0;
+      height: 100%;
+    }
+
+    img {
+      position: static;
+      top: auto;
+      left: auto;
+      width: 100%;
+      height: auto;
+      transform: none;
+    }
+  }
 }
