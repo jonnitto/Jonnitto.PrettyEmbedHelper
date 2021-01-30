@@ -7,10 +7,6 @@
                 <source>Title</source>
                 <target>Title</target>
             </trans-unit>
-            <trans-unit id="properties.title.ui.help.message" xml:space="preserve">
-                <source>This property is only for the purpose the easily identify the video in the content tree.</source>
-                <target>This property is only for the purpose the easily identify the video in the content tree.</target>
-            </trans-unit>
         </body>
     </file>
 </xliff>
