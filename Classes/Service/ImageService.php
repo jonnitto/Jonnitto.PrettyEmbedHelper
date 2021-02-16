@@ -155,7 +155,41 @@ class ImageService
                 unset($th);
             }
         }
-        $this->removeTagIfEmpty();
+
+        if (count($this->pendingThumbnailToDelete) > 0) {
+            // NOTE: this "if" condition is crucial to prevent a fatal error during an initial "./flow doctrine:migrate"
+            // if the database is completely empty at the start. Without this condition, the following happens (in Neos 7
+            // at least):
+            //
+            // Background:
+            // - in older Flow versions, the Neos\Flow\Mvc\Dispatcher was used BOTH for Web and CLI requests. Thus, the "afterControllerInvocation" signal was emitted for both cases.
+            // - With Flow 6.0, the Neos\Flow\Mvc\Dispatcher was split apart; so the CLI uses its separate Neos\Flow\Cli\Dispatcher.
+            // - however, *FOR BACKWARDS COMPATIBILITY REASONS* (probably) the CLI Dispatcher emits the "afterControllerInvocation" in the name of the Mvc\Dispatcher; effectively
+            //   keeping the old behavior as before.
+            //
+            // Problem Scenario:
+            // - The database is completely empty.
+            // - ./flow doctrine:migrate is triggered.
+            // - this triggers a sub request "./flow neos.flow:doctrine:compileproxies"
+            // - when this sub request ENDS, the signal afterControllerInvocation is invoked (see "Background" above).
+            // - this triggers PersistenceManagerInterface::persistAll() - see https://github.com/neos/flow-development-collection/blob/1493e0dfd96f9cb288b006917e0defe6e9449544/Neos.Flow/Classes/Package.php#L63
+            // - this, in turn, sends the signal "allObjectsPersisted" (which we listen to in the ../Package.php).
+            // - this triggers "deletePendingData" (this method).
+            // - (remember, at this point NO DATABASE TABLE WAS CREATED YET)
+            // - now, removeTagIfEmpty() unconditionally tries to query the database (via findTag())
+            // - findTag() crashes with "A table or view seems to be missing from the database."
+            //
+            // The FIX:
+            // - I believe the clean fix should be that PersistenceManagerInterface should not call allObjectsPersisted
+            //   when the database is not ready yet (though I do not know whether this is possible to efficiently detect this)
+            // - Thus, our workaround is to ensure we will only remove tags if there were thumbnails to delete (which
+            //   is, in the initial case, not possible, as we do not have a database yet :-) )
+            //
+            // To sum it up again, the if statement above is important to ensure this only runs with fully initialized
+            // databases.
+            $this->removeTagIfEmpty();
+        }
+        $this->pendingThumbnailToDelete = [];
     }
 
     /**
