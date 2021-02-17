@@ -97,10 +97,6 @@
         color: #fff;
         content: "Click here to add captions";
         z-index: 1;
-
-        [lang^="de"] & {
-          content: "Hier klicken um Inhalt hinzuzufügen";
-        }
       }
 
       &::after {
@@ -122,6 +118,16 @@
         &::before,
         &::after {
           opacity: 1;
+        }
+      }
+    }
+
+    &[data-lang="de"] {
+      &:empty,
+      > [data-__neos-fusion-path*="removedContent"]:first-child,
+      > [class^="style__addEmptyContentCollectionOverlay"] {
+        &::before {
+          content: "Hier klicken um Inhalt hinzuzufügen";
         }
       }
     }
