@@ -38,8 +38,8 @@ class ParseIDService
                 return 'vimeo';
             }
 
-            // The ID has to start with a letter or an number
-            if (preg_match('/^[A-Za-z0-9]/', $url)) {
+            // The ID has to start with a letter / number / _
+            if (preg_match('/^[_A-Za-z0-9]/', $url)) {
                 return 'youtube';
             }
         }
@@ -152,8 +152,8 @@ class ParseIDService
             }
             return $array[$returnKey];
         }
-        // The ID has to start with a letter or an number
-        if (preg_match('/^[A-Za-z0-9]/', $url)) {
+        // The ID has to start with a letter / number / _
+        if (preg_match('/^[A-Za-z0-9_]/', $url)) {
             return $url;
         }
         return null;
