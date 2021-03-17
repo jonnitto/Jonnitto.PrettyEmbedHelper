@@ -34,9 +34,36 @@ function init(element, autoplay = true, callback) {
         });
     }
 
-    CLASS_LIST.add(INIT_CLASS);
+    if (element.hasAttribute('data-streaming')) {
+        const SRC = element.getAttribute('data-streaming');
+        if (element.canPlayType('application/vnd.apple.mpegurl')) {
+            element.src = SRC;
+            addClassAndPlay(element, autoplay, CLASS_LIST);
+        } else {
+            if (typeof Hls === 'undefined') {
+                const HLS_SCRIPT = document.createElement('script');
+                HLS_SCRIPT.src = '/_Resources/Static/Packages/Jonnitto.PrettyEmbedHelper/Scripts/Hls.js?v=1';
+                document.head.appendChild(HLS_SCRIPT);
+                HLS_SCRIPT.addEventListener('load', () => {
+                    setTimeout(() => {
+                        loadHls(element, SRC);
+                        addClassAndPlay(element, autoplay, CLASS_LIST);
+                    }, 100);
+                });
+            } else {
+                loadHls(element, SRC);
+                addClassAndPlay(element, autoplay, CLASS_LIST);
+            }
+        }
+    } else {
+        addClassAndPlay(element, autoplay, CLASS_LIST);
+    }
+}
+
+function addClassAndPlay(element, autoplay, classList) {
+    classList.add(INIT_CLASS);
     if (autoplay) {
-        CLASS_LIST.add(PLAY_CLASS);
+        classList.add(PLAY_CLASS);
         setTimeout(() => {
             element.play();
         }, 0);
@@ -52,6 +79,14 @@ function pause(elements = ELEMENTS, current = null) {
             element.pause();
         }
     });
+}
+
+function loadHls(element, src) {
+    if (Hls.isSupported()) {
+        const HLS = new Hls();
+        HLS.loadSource(src);
+        HLS.attachMedia(element);
+    }
 }
 
 ELEMENTS.forEach((element) => {
