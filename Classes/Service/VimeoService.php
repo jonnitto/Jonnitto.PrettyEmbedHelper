@@ -73,33 +73,4 @@ class VimeoService
 
         return null;
     }
-
-    /**
-     * Get the best possible image from youtube
-     *
-     * @param string|integer $videoID
-     * @param string|null $url
-     * @return array|null
-     */
-    protected function getBestPossibleYoutubeImage($videoID, ?string $url = null): ?array
-    {
-        if (!isset($url)) {
-            $url = "https://i.ytimg.com/vi/{$videoID}/maxresdefault.jpg";
-        }
-
-        $resolutions = ['maxresdefault', 'sddefault', 'hqdefault', 'mqdefault', 'default'];
-
-        foreach ($resolutions as $resolution) {
-            $url = preg_replace('/\/[\w]*\.([a-z]{3,})$/i', "/{$resolution}.$1", $url);
-            $headers = @get_headers($url);
-            if ($headers && strpos($headers[0], '200')) {
-                return [
-                    'image' => $url,
-                    'resolution' => $resolution
-                ];
-            }
-        }
-
-        return null;
-    }
 }
