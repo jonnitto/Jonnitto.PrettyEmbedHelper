@@ -4,14 +4,21 @@ namespace Jonnitto\PrettyEmbedHelper\Service;
 
 use Neos\Flow\Annotations as Flow;
 use Neos\ContentRepository\Domain\Model\NodeInterface;
-use Jonnitto\PrettyEmbedHelper\Service\YoutubeService;
+use Jonnitto\PrettyEmbedHelper\Service\AssetService;
 use Jonnitto\PrettyEmbedHelper\Service\VimeoService;
+use Jonnitto\PrettyEmbedHelper\Service\YoutubeService;
 
 /**
  * @Flow\Scope("singleton")
  */
 class MetadataService
 {
+    /**
+     * @Flow\Inject
+     * @var AssetService
+     */
+    protected $assetService;
+
     /**
      * @Flow\Inject
      * @var YoutubeService
@@ -38,7 +45,7 @@ class MetadataService
      */
     public function createDataFromService(NodeInterface $node, bool $remove = false): array
     {
-        if ($node->hasProperty('videoID')) {
+        if ($node->hasProperty('videoID') || $node->getNodeType()->isOfType('Jonnitto.PrettyEmbedHelper:Mixin.Metadata.Duration')) {
             return $this->dataFromService($node, $remove);
         }
         return $this->defaultReturn;
@@ -59,9 +66,11 @@ class MetadataService
         $oldValue,
         $newValue
     ): array {
-        if ($propertyName === 'videoID' & $oldValue !== $newValue) {
-            return $this->dataFromService($node);
-        } else if ($propertyName === 'type' && $node->hasProperty('videoID')) {
+        if (
+            ($propertyName === 'videoID' && $oldValue !== $newValue) ||
+            ($propertyName === 'type' && $node->hasProperty('videoID')) ||
+            ($propertyName === 'assets' && $node->getNodeType()->isOfType('Jonnitto.PrettyEmbedHelper:Mixin.Metadata.Duration'))
+        ) {
             return $this->dataFromService($node);
         }
         return $this->defaultReturn;
@@ -77,6 +86,14 @@ class MetadataService
     protected function dataFromService(NodeInterface $node, bool $remove = false): array
     {
         switch ($this->checkNodeAndSetPlatform($node)) {
+            case 'audio':
+                $data = $this->assetService->getAndSaveDataId3($node, $remove, 'Audio');
+                break;
+
+            case 'video':
+                $data = $this->assetService->getAndSaveDataId3($node, $remove, 'Video');
+                break;
+
             case 'youtube':
                 $data = $this->youtubeService->getAndSaveDataFromOembed($node, $remove);
                 break;
@@ -105,6 +122,14 @@ class MetadataService
      */
     protected function checkNodeAndSetPlatform(NodeInterface $node): ?string
     {
+        if ($node->getNodeType()->isOfType('Jonnitto.PrettyEmbedAudio:Mixin.Assets')) {
+            return 'audio';
+        }
+
+        if ($node->getNodeType()->isOfType('Jonnitto.PrettyEmbedVideo:Mixin.Assets')) {
+            return 'video';
+        }
+
         if ($node->getNodeType()->isOfType('Jonnitto.PrettyEmbedYoutube:Mixin.VideoID')) {
             return 'youtube';
         }
@@ -118,6 +143,9 @@ class MetadataService
         }
 
         $platform = ParseIDService::platform($node->getProperty('videoID'));
+        if (!$platform) {
+            $node->setProperty('metadataDuration', null);
+        }
         $node->setProperty('platform', $platform);
         return $platform;
     }

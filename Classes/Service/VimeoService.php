@@ -4,9 +4,6 @@ namespace Jonnitto\PrettyEmbedHelper\Service;
 
 use Neos\Flow\Annotations as Flow;
 use Neos\ContentRepository\Domain\Model\NodeInterface;
-use Jonnitto\PrettyEmbedHelper\Service\ImageService;
-use Jonnitto\PrettyEmbedHelper\Service\ParseIDService;
-use Jonnitto\PrettyEmbedHelper\Service\OembedService;
 
 /**
  * @Flow\Scope("singleton")
@@ -35,6 +32,7 @@ class VimeoService
         $ratio = null;
         $image = null;
         $thumbnail = null;
+        $duration = null;
 
         $this->imageService->remove($node);
 
@@ -47,6 +45,7 @@ class VimeoService
                 $title = $data->title ?? null;
                 $ratio = $data->width && $data->height ? $this->imageService->calculatePaddingTop($data->width, $data->height) : null;
                 $image = $data->thumbnail_url ?? null;
+                $duration = $data->duration ?? null;
 
                 if (isset($image)) {
                     $thumbnail = $this->imageService->import($node, $image, $videoID, 'Vimeo');
@@ -57,6 +56,7 @@ class VimeoService
         $node->setProperty('metadataID', $videoID);
         $node->setProperty('metadataTitle', $title);
         $node->setProperty('metadataRatio', $ratio);
+        $node->setProperty('metadataDuration', $duration);
         $node->setProperty('metadataImage', OembedService::removeProtocolFromUrl($image));
         $node->setProperty('metadataThumbnail', $thumbnail);
 

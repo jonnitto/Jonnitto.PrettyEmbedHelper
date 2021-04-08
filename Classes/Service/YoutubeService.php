@@ -4,9 +4,6 @@ namespace Jonnitto\PrettyEmbedHelper\Service;
 
 use Neos\Flow\Annotations as Flow;
 use Neos\ContentRepository\Domain\Model\NodeInterface;
-use Jonnitto\PrettyEmbedHelper\Service\ImageService;
-use Jonnitto\PrettyEmbedHelper\Service\ParseIDService;
-use Jonnitto\PrettyEmbedHelper\Service\OembedService;
 
 /**
  * @Flow\Scope("singleton")
@@ -24,6 +21,12 @@ class YoutubeService
      * @var array
      */
     protected $youtubeSettings;
+
+    /**
+     * @Flow\InjectConfiguration
+     * @var array
+     */
+    protected $settings;
 
     /**
      * Get and save data from oembed service
@@ -45,6 +48,7 @@ class YoutubeService
         $type = null;
         $thumbnail = null;
         $resolution = null;
+        $duration = null;
 
         $this->imageService->remove($node);
 
@@ -65,7 +69,7 @@ class YoutubeService
             }
 
             $videoID = ParseIDService::youtube($videoIDProperty, $type);
-            $data = OembedService::youtube($videoID, $type);
+            $data = OembedService::youtube($videoID, $type, $this->settings['youtubeApiKey']);
 
             if (isset($data)) {
                 $title = $data->title ?? null;
@@ -73,6 +77,7 @@ class YoutubeService
                 $youtubeImageArray = $this->getBestPossibleYoutubeImage($videoID, $data->thumbnail_url);
                 $image = $youtubeImageArray['image'];
                 $resolution = $youtubeImageArray['resolution'];
+                $duration = $data->duration ?? null;
             } else {
                 $youtubeImageArray = $this->getBestPossibleYoutubeImage($videoID);
                 $image = $youtubeImageArray['image'];
@@ -89,6 +94,7 @@ class YoutubeService
         $node->setProperty('metadataRatio', $ratio);
         $node->setProperty('metadataImage', OembedService::removeProtocolFromUrl($image));
         $node->setProperty('metadataThumbnail', $thumbnail);
+        $node->setProperty('metadataDuration', $duration);
 
         $this->imageService->removeTagIfEmpty();
 

@@ -1,0 +1,5 @@
+'Jonnitto.PrettyEmbedHelper:Mixin.Metadata.Duration':
+  abstract: true
+  properties:
+    metadataDuration:
+      type: integer

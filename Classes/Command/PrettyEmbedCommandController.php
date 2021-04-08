@@ -51,12 +51,13 @@ class PrettyEmbedCommandController extends CommandController
     protected $workspaceRepository;
 
     /**
-     * Generate metadata for the PrettyEmbed Vimeo and Youtube player
+     * Generate metadata for the PrettyEmbed Vimeo/Youtube/Video or Audio player
      *
-     * This generates the metadata for all video player which has the mixin 
+     * This generates the metadata for all player which has the mixin 
      * - Jonnitto.PrettyEmbedVideoPlatforms:Mixin.VideoID
      * - Jonnitto.PrettyEmbedVimeo:Mixin.VideoID
      * - Jonnitto.PrettyEmbedYoutube:Mixin.VideoID
+     * - Jonnitto.PrettyEmbedHelper:Mixin.Metadata.Duration
      *
      * @param string $workspace Workspace name, default is 'live'
      * @param boolean $remove Is set, all metadata will be removed
@@ -108,7 +109,7 @@ class PrettyEmbedCommandController extends CommandController
                             $errorArray[] = $returnFromSiteNode;
                         }
                     }
-                    $nodes = $flowQuery->find('[instanceof Jonnitto.PrettyEmbedVideoPlatforms:Mixin.VideoID],[instanceof Jonnitto.PrettyEmbedVimeo:Mixin.VideoID],[instanceof Jonnitto.PrettyEmbedYoutube:Mixin.VideoID]')->get();
+                    $nodes = array_unique($flowQuery->find('[instanceof Jonnitto.PrettyEmbedHelper:Mixin.Metadata.Duration],[instanceof Jonnitto.PrettyEmbedVideoPlatforms:Mixin.VideoID],[instanceof Jonnitto.PrettyEmbedVimeo:Mixin.VideoID],[instanceof Jonnitto.PrettyEmbedYoutube:Mixin.VideoID]')->get());
                     foreach ($nodes as $node) {
                         $returnFromNode = $this->metadataService->createDataFromService($node, $remove);
                         if ($returnFromNode['node']) {
@@ -134,6 +135,8 @@ class PrettyEmbedCommandController extends CommandController
             $this->outputLine('');
             $this->outputEntris($successArray, 'Youtube', $output);
             $this->outputEntris($successArray, 'Vimeo', $output);
+            $this->outputEntris($successArray, 'Video', $output);
+            $this->outputEntris($successArray, 'Audio', $output);
         }
 
         if (count($errorArray)) {
@@ -143,6 +146,8 @@ class PrettyEmbedCommandController extends CommandController
                 $output = '<success>Removed the metadata from <b>%s %s</b> entries</success>';
                 $this->outputEntris($errorArray, 'Youtube', $output);
                 $this->outputEntris($errorArray, 'Vimeo', $output);
+                $this->outputEntris($errorArray, 'Video', $output);
+                $this->outputEntris($errorArray, 'Audio', $output);
             } else {
                 $this->outputLine('<error>There where <b>%s errors</b> fetching metadata:</error>', [count($errorArray)]);
                 $tableRows = [];
@@ -166,10 +171,10 @@ class PrettyEmbedCommandController extends CommandController
     }
 
     /**
-     * Count how many entris
+     * Count how many entris are given
      *
      * @param array $array
-     * @param string $type The type of the video (Youtube or Vimeo)
+     * @param string $type The type (Youtube/Vimeo/Video or Audio)
      * @param string $output The output in the console
      * @return integer Returns the amount of entries
      */
