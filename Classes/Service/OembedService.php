@@ -11,7 +11,9 @@ class OembedService
 {
     /**
      * Grab the data of a publicly embeddable video hosted on youtube
+     * 
      * @param string|integer $id The "id" of a video
+     * @param string $type
      * @return mixed The data or null if there's an error
      */
     public static function youtube($id, $type = 'video')
@@ -28,6 +30,7 @@ class OembedService
 
     /**
      * Grab the data of a publicly embeddable video hosted on vimeo
+     * 
      * @param string|integer $id The "id" of a video
      * @return mixed The data or null if there's an error
      */

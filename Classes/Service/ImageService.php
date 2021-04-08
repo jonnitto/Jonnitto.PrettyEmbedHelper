@@ -50,8 +50,9 @@ class ImageService
      */
     private $pendingThumbnailToDelete = [];
 
-
     /**
+     * Import image
+     * 
      * @param NodeInterface $node
      * @param string $url
      * @param string|integer $videoId
@@ -100,6 +101,8 @@ class ImageService
     }
 
     /**
+     * Remove image
+     * 
      * @param NodeInterface $node
      * @return void
      */
@@ -112,6 +115,8 @@ class ImageService
     }
 
     /**
+     * Remove the prettyembed tag if he is empty
+     * 
      * @return void
      * @throws IllegalObjectTypeException 
      */
@@ -129,6 +134,8 @@ class ImageService
     }
 
     /**
+     * This get's triggered after node publishing and put the data into the pending array
+     * 
      * @param NodeInterface $node
      * @param Workspace $targetWorkspace
      * @return void
@@ -143,6 +150,8 @@ class ImageService
     }
 
     /**
+     * Deletes the pending data
+     * 
      * @return void
      */
     public function deletePendingData(): void
@@ -205,6 +214,8 @@ class ImageService
     }
 
     /**
+     * Find the "PrettyEmbed" tag
+     * 
      * @return Tag|null
      */
     protected function findTag(): ?Tag
@@ -213,6 +224,8 @@ class ImageService
     }
 
     /**
+     * Create the "PrettyEmbed" tag
+     * 
      * @return Tag 
      * @throws IllegalObjectTypeException 
      */
@@ -229,6 +242,8 @@ class ImageService
     }
 
     /**
+     * Find/create the "PrettyEmbed" tag
+     * 
      * @return Tag
      */
     protected function findOrCreateTag(): Tag
