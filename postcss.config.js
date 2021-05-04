@@ -10,12 +10,11 @@ module.exports = {
     plugins: {
         'postcss-sort-media-queries': true,
         autoprefixer: true,
-        cssnano: {
-            preset: ['default', { discardComments: { removeAll: true } }]
-        },
         'postcss-banner': {
+            inline: false,
             important: true,
-            banner: BANNER_CONTENT
-        }
-    }
+            banner: BANNER_CONTENT,
+        },
+        cssnano: true,
+    },
 };
