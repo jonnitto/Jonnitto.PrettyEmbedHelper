@@ -2,8 +2,6 @@
 
 namespace Jonnitto\PrettyEmbedHelper\Service;
 
-use JamesHeinrich\GetID3\GetID3;
-use JamesHeinrich\GetID3\Utils as GetID3Utils;
 use Neos\ContentRepository\Domain\Model\NodeInterface;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\ResourceManagement\ResourceManager;
@@ -35,13 +33,17 @@ class AssetService
      */
     protected function setCacheDirectory(): void
     {
-        $cacheDirectory = Files::concatenatePaths([
-            $this->environment->getPathToTemporaryDirectory(),
-            (string) $this->environment->getContext(),
-            'Jonnitto_PrettyEmbedHelper_GetID3_Cache'
-        ]);
-        Files::createDirectoryRecursively($cacheDirectory);
-        GetID3Utils::setTempDirectory($cacheDirectory);
+        if (class_exists('JamesHeinrich\GetID3\Utils')) {
+            $cacheDirectory = Files::concatenatePaths(
+                [
+                    $this->environment->getPathToTemporaryDirectory(),
+                    (string) $this->environment->getContext(),
+                    'Jonnitto_PrettyEmbedHelper_GetID3_Cache'
+                ]
+            );
+            Files::createDirectoryRecursively($cacheDirectory);
+            \JamesHeinrich\GetID3\Utils::setTempDirectory($cacheDirectory);
+        }
     }
 
     /**
@@ -55,14 +57,14 @@ class AssetService
     public function getAndSaveDataId3(NodeInterface $node, bool $remove = false, string $type): array
     {
         $duration = null;
-        if ($remove === true) {
+        if ($remove === true || !class_exists('JamesHeinrich\GetID3\GetID3')) {
             $node->setProperty('metadataDuration', null);
         } else {
             $this->setCacheDirectory();
             $assets = $node->getProperty('assets');
 
             if (isset($assets) && !empty($assets)) {
-                $getID3 = new GetID3;
+                $getID3 = new \JamesHeinrich\GetID3\GetID3;
                 $file = $assets[0]->getResource()->createTemporaryLocalCopy();
                 if (\file_exists($file)) {
                     $fileInfo = $getID3->analyze($file);
