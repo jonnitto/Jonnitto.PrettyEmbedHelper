@@ -152,8 +152,8 @@ class ParseIDService
             }
             return $array[$returnKey];
         }
-        // The ID has to start with a letter / number / _
-        if (preg_match('/^[A-Za-z0-9_]/', $url)) {
+        // The ID has to start with a letter / number / _ / -
+        if (preg_match('/^[A-Za-z0-9_-]/', $url)) {
             return $url;
         }
         return null;
