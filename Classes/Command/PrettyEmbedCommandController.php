@@ -109,7 +109,7 @@ class PrettyEmbedCommandController extends CommandController
                             $errorArray[] = $returnFromSiteNode;
                         }
                     }
-                    $nodes = array_unique($flowQuery->find('[instanceof Jonnitto.PrettyEmbedHelper:Mixin.Metadata.Duration],[instanceof Jonnitto.PrettyEmbedVideoPlatforms:Mixin.VideoID],[instanceof Jonnitto.PrettyEmbedVimeo:Mixin.VideoID],[instanceof Jonnitto.PrettyEmbedYoutube:Mixin.VideoID]')->get());
+                    $nodes = $flowQuery->q($siteNode)->context(['dimensions' => $dimensionCombination, 'targetDimensions' => []])->find('[instanceof Jonnitto.PrettyEmbedHelper:Mixin.Metadata.Duration],[instanceof Jonnitto.PrettyEmbedVideoPlatforms:Mixin.VideoID],[instanceof Jonnitto.PrettyEmbedVimeo:Mixin.VideoID],[instanceof Jonnitto.PrettyEmbedYoutube:Mixin.VideoID]')->get();
                     foreach ($nodes as $node) {
                         $returnFromNode = $this->metadataService->createDataFromService($node, $remove);
                         if ($returnFromNode['node']) {
