@@ -80,8 +80,8 @@ class YoutubeService
                 $duration = $data->duration ?? null;
             } else {
                 $youtubeImageArray = $this->getBestPossibleYoutubeImage($videoID);
-                $image = $youtubeImageArray['image'];
-                $resolution = $youtubeImageArray['resolution'];
+                $image = $youtubeImageArray['image'] ?? null;
+                $resolution = $youtubeImageArray['resolution'] ?? null;
             }
 
             if (isset($image)) {
