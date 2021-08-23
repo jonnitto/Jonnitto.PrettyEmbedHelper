@@ -1,5 +1,6 @@
 import addEvent from './addEvent';
 import triggerEvent from './triggerEvent';
+import getAriaLabel from './getAriaLabel';
 import * as lightboxHelper from '../Helper/Lightbox';
 
 const BASE = 'jonnitto-prettyembed';
@@ -76,7 +77,7 @@ function write(link, playClass, type) {
         triggerEvent({
             type: type,
             style: 'inline',
-            title: link.ariaLabel,
+            title: getAriaLabel(link),
             src: link.dataset.embed,
         });
     }
@@ -121,7 +122,7 @@ function lightbox(type) {
                         triggerEvent({
                             type: type,
                             style: 'lightbox',
-                            title: this.ariaLabel,
+                            title: getAriaLabel(this),
                             src: this.dataset.embed,
                         });
                     }

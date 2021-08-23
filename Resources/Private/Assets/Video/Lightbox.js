@@ -1,6 +1,7 @@
 import * as video from '../Helper/MediaInit';
 import * as lightbox from '../Helper/Lightbox';
 import triggerEvent from '../Helper/triggerEvent';
+import getAriaLabel from '../Helper/getAriaLabel';
 
 const BASE_CLASS = 'jonnitto-prettyembed';
 const SELECTOR_CLASS = `.${BASE_CLASS}--video.${BASE_CLASS}--lightbox video`;
@@ -26,7 +27,7 @@ lightbox.init(SELECTOR_CLASS, function (event) {
             triggerEvent({
                 type: 'video',
                 style: 'lightbox',
-                title: this.ariaLabel,
+                title: getAriaLabel(this),
                 src: (() => {
                     const SOURCE = this.querySelector('source');
                     return SOURCE ? SOURCE.src : null;
