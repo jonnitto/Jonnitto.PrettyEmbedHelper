@@ -22,28 +22,15 @@ class OembedService
         if (!$id || ($type !== 'video' && $type !== 'playlist')) {
             return null;
         }
-        $pathAndQuery = $type === 'video' ? "watch?v={$id}" : "playlist?list={$id}";
-        $url = urlencode("https://youtube.com/{$pathAndQuery}");
-        $data = json_decode(@file_get_contents("https://www.youtube.com/oembed?url={$url}"));
-
-        if (!$data) {
-            return null;
-        }
-
         if ($apiKey) {
-            if ($type === 'video') {
-                $data->duration = self::getDurationFromYoutubeVideo($id, $apiKey);
-            } else {
-                $videos = self::getVideosFromYoutubePlaylist($id, $apiKey);
-                $duration = 0;
-                foreach ($videos as $video) {
-                    $duration += self::getDurationFromYoutubeVideo($video, $apiKey);
-                }
-                $data->duration = $duration;
-            }
+            return self::getDataFromYoutubeVideoWithApi($id, $apiKey, $type);
         }
 
-        return $data;
+        $pathAndQuery = $type === 'video' ? "watch?v={$id}" : "playlist?list={$id}";
+        $url = \urlencode("https://youtube.com/{$pathAndQuery}");
+        $data = \json_decode(@file_get_contents("https://www.youtube.com/oembed?url={$url}"));
+
+        return $data ?? null;
     }
 
     /**
@@ -58,8 +45,8 @@ class OembedService
             return null;
         }
 
-        $url = urlencode("https://vimeo.com/{$id}");
-        $data = json_decode(@file_get_contents("https://vimeo.com/api/oembed.json?url={$url}&width=2560"));
+        $url = \urlencode("https://vimeo.com/{$id}");
+        $data = \json_decode(@file_get_contents("https://vimeo.com/api/oembed.json?url={$url}&width=2560"));
 
         return $data ?? null;
     }
@@ -79,35 +66,92 @@ class OembedService
     }
 
     /**
-     * Get video ids from youtube playlist
-     * 
-     * @param string $id
-     * @param string $apiKey
-     * @return array
+     * Convert an ISO8601 duration to seconds
+     *
+     * @param string $ISO8601duration
+     * @return integer
      */
-    protected static function getVideosFromYoutubePlaylist(string $id, string $apiKey): array
+    protected static function convertToSeconds(string $ISO8601duration): int
     {
-        $videos = [];
-        $data = json_decode(@file_get_contents("https://www.googleapis.com/youtube/v3/playlistItems?part=contentDetails&playlistId={$id}&key={$apiKey}"), true);
-        foreach ($data['items'] as $item) {
-            $videos[] = $item['contentDetails']['videoId'];
+        if (!$ISO8601duration) {
+            return 0;
         }
-        return $videos;
+        $interval = new \DateInterval($ISO8601duration);
+        $ref = new \DateTimeImmutable;
+        return $ref->add($interval)->getTimestamp() - $ref->getTimestamp();
     }
 
     /**
-     * Get duration of an youtube video
+     * Make the call the the YouTube V3 API
      *
      * @param string $id
      * @param string $apiKey
-     * @return integer
+     * @param string $type
+     * @return mixed
      */
-    protected static function getDurationFromYoutubeVideo(string $id, string $apiKey): int
+    protected static function makeCallToApi(string $id, string $apiKey, string $type)
     {
-        $data = json_decode(@file_get_contents("https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id={$id}&key={$apiKey}"), true);
-        $duration = $data['items'][0]['contentDetails']['duration'];
-        $start = new \DateTime('@0'); // Unix epoch
-        $start->add(new \DateInterval($duration));
-        return $start->getTimestamp();
+        $url = "https://www.googleapis.com/youtube/v3/{$type}s?key={$apiKey}&part=contentDetails";
+
+        if ($type != 'playlistItem') {
+            $url .= ',snippet,player&id=';
+        } else {
+            $url .= '&playlistId=';
+        }
+        $data =  \json_decode(@file_get_contents($url . $id), true);
+        return $data['items'];
+    }
+
+    /**
+     * Get the video data using the youtube api
+     *
+     * @param string $id
+     * @param string $apiKey
+     * @param string $type
+     * @return object
+     */
+    protected static function getDataFromYoutubeVideoWithApi(string $id, string $apiKey, string $type): object
+    {
+        $data = self::makeCallToApi($id, $apiKey, $type);
+        $item = $data[0];
+
+        // Get the title
+        $title = $item['snippet']['title'];
+
+        // Get the dimensions
+        $dom = new \DOMDocument();
+        $dom->loadHTML($item['player']['embedHtml']);
+        $iframe = $dom->getElementsByTagName('iframe')[0];
+        $width = $iframe ? (int) $iframe->getAttribute("width") : null;
+        $height = $iframe ? (int) $iframe->getAttribute("height") : null;
+
+        // Get the best possible image
+        $thumbnail = end($item['snippet']['thumbnails']);
+        $imageUrl = $thumbnail['url'];
+        $imageResolution = $imageUrl ? explode('.', basename($imageUrl))[0] : null;
+
+        // Get the duration
+        $duration = 0;
+        if ($type == 'video') {
+            // From a single video
+            $duration = self::convertToSeconds($item['contentDetails']['duration']);
+        } else {
+            // From a playlist, get every video ID and read the duration
+            $playlistItems = self::makeCallToApi($id, $apiKey, 'playlistItem');
+            foreach ($playlistItems as $playlistItem) {
+                $videoId = $playlistItem['contentDetails']['videoId'];
+                $videoEntry = self::makeCallToApi($videoId, $apiKey, 'video');
+                $duration += self::convertToSeconds($videoEntry[0]['contentDetails']['duration']);
+            }
+        }
+
+        return (object) [
+            'title' => $title,
+            'width' => $width,
+            'height' => $height,
+            'duration' => $duration,
+            'imageUrl' => $imageUrl,
+            'imageResolution' => $imageResolution,
+        ];
     }
 }

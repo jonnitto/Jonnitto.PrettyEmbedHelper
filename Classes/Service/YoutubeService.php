@@ -74,10 +74,15 @@ class YoutubeService
             if (isset($data)) {
                 $title = $data->title ?? null;
                 $ratio = $data->width && $data->height ? $this->imageService->calculatePaddingTop($data->width, $data->height) : null;
-                $youtubeImageArray = $this->getBestPossibleYoutubeImage($videoID, $data->thumbnail_url);
-                $image = $youtubeImageArray['image'];
-                $resolution = $youtubeImageArray['resolution'];
                 $duration = $data->duration ?? null;
+                if (isset($data->imageUrl) && isset($data->imageResolution)) {
+                    $image = $data->imageUrl;
+                    $resolution = $data->imageResolution;
+                } else {
+                    $youtubeImageArray = $this->getBestPossibleYoutubeImage($videoID, $data->thumbnail_url);
+                    $image = $youtubeImageArray['image'];
+                    $resolution = $youtubeImageArray['resolution'];
+                }
             } else {
                 $youtubeImageArray = $this->getBestPossibleYoutubeImage($videoID);
                 $image = $youtubeImageArray['image'] ?? null;
