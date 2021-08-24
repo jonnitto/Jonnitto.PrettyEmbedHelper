@@ -68,10 +68,10 @@ class OembedService
     /**
      * Convert an ISO8601 duration to seconds
      *
-     * @param string $ISO8601duration
+     * @param string|null  $ISO8601duration
      * @return integer
      */
-    protected static function convertToSeconds(string $ISO8601duration): int
+    protected static function convertToSeconds(?string $ISO8601duration = null): int
     {
         if (!$ISO8601duration) {
             return 0;
