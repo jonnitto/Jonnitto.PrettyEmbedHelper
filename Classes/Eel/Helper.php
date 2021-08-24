@@ -73,7 +73,7 @@ class Helper implements ProtectedContextAwareInterface
     }
 
     /**
-     * Return the id from vimeo
+     * Return the id from youtube
      *
      * @param string|integer $videoID
      * @return array|null
