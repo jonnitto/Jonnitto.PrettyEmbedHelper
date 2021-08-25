@@ -5,14 +5,32 @@ namespace Jonnitto\PrettyEmbedHelper\Eel;
 
 use Neos\Flow\Annotations as Flow;
 use Neos\Eel\ProtectedContextAwareInterface;
-use Jonnitto\PrettyEmbedHelper\Service\OembedService;
+use Jonnitto\PrettyEmbedHelper\Service\ApiService;
 use Jonnitto\PrettyEmbedHelper\Service\ParseIDService;
+use Jonnitto\PrettyEmbedHelper\Utility\Utility;
 
 /**
  * @Flow\Proxy(false)
  */
 class Helper implements ProtectedContextAwareInterface
 {
+    /**
+     * @Flow\Inject
+     * @var ParseIDService
+     */
+    protected $parseID;
+
+    /**
+     * @Flow\Inject
+     * @var ApiService
+     */
+    protected $api;
+
+    /**
+     * @Flow\Inject
+     * @var Utility
+     */
+    protected $utility;
 
     /**
      * This helper calcualtes the padding from a given ratio or width and height
@@ -20,7 +38,7 @@ class Helper implements ProtectedContextAwareInterface
      * @param float|integer|string $ratio
      * @return string|null The calculated value
      */
-    function paddingTop($ratio = null): ?string
+    public function paddingTop($ratio = null): ?string
     {
         if ($ratio === null) {
             return null;
@@ -38,27 +56,27 @@ class Helper implements ProtectedContextAwareInterface
      * @param string|integer $videoID
      * @return string|null
      */
-    function vimeoThumbnail($videoID): ?string
+    public function vimeoThumbnail($videoID): ?string
     {
-        $data = OembedService::vimeo($videoID);
+        $data = $this->api->vimeo($videoID);
         if (!isset($data)) {
             return null;
         }
-        return OembedService::removeProtocolFromUrl($data->thumbnail_url) ?? null;
+        return $this->utility->removeProtocolFromUrl($data['thumbnail_url']) ?? null;
     }
 
     /**
      * Return the id from a video platform
      *
      * @param string|integer $videoID
-     * @return string|integer|null
+     * @return string|null
      */
-    function platformID($videoID, string $platform)
+    public function platformID($videoID, string $platform): ?string
     {
         if ($platform === 'vimeo') {
-            return ParseIDService::vimeo($videoID);
+            return $this->parseID->vimeo($videoID);
         }
-        return ParseIDService::youtube($videoID);
+        return $this->parseID->youtube($videoID);
     }
 
     /**
@@ -67,20 +85,20 @@ class Helper implements ProtectedContextAwareInterface
      * @param string|integer $videoID
      * @return string|integer|null
      */
-    function vimeoID($videoID)
+    public function vimeoID($videoID): ?string
     {
-        return ParseIDService::vimeo($videoID);
+        return $this->parseID->vimeo($videoID);
     }
 
     /**
      * Return the id from youtube
      *
      * @param string|integer $videoID
-     * @return array|null
+     * @return string|null
      */
-    function youtubeID($videoID)
+    public function youtubeID($videoID): ?string
     {
-        return ParseIDService::youtube($videoID);
+        return $this->parseID->youtube($videoID);
     }
 
 

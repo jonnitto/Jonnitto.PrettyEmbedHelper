@@ -8,7 +8,6 @@ use Neos\Flow\ResourceManagement\ResourceManager;
 use Neos\Flow\Utility\Environment;
 use Neos\Utility\Files;
 
-
 /**
  * @Flow\Scope("singleton")
  */
@@ -54,8 +53,11 @@ class AssetService
      * @param string $type
      * @return array
      */
-    public function getAndSaveDataId3(NodeInterface $node, bool $remove = false, string $type): array
-    {
+    public function getAndSaveDataId3(
+        NodeInterface $node,
+        bool $remove = false,
+        string $type
+    ): array {
         $duration = null;
         if ($remove === true || !class_exists('JamesHeinrich\GetID3\GetID3')) {
             $node->setProperty('metadataDuration', null);

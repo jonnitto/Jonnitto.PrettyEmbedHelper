@@ -4,7 +4,6 @@ namespace Jonnitto\PrettyEmbedHelper\Service;
 
 use Neos\Flow\Annotations as Flow;
 
-
 /**
  * @Flow\Scope("singleton")
  */
@@ -16,51 +15,35 @@ class ParseIDService
      * @param string|integer $url The URL or the plain id
      * @return string|null The platform from the given url
      */
-    public static function platform($url = null): ?string
+    public function platform($url = null): ?string
     {
-        $url = trim(strval($url));
+        $url = \trim(\strval($url));
         if (!$url) {
             return null;
         }
 
-        if (strpos($url, 'vimeo.com') !== false) {
+        if (\strpos($url, 'vimeo.com') !== false) {
             return 'vimeo';
         }
 
-        if (strpos($url, 'youtu.be') !== false || strpos($url, 'youtube')) {
+        if (\strpos($url, 'youtu.be') !== false || \strpos($url, 'youtube')) {
             return 'youtube';
         }
 
-        $isCompleteUrl = preg_match('/^https?:\/\//im', $url);
+        $isCompleteUrl = \preg_match('/^https?:\/\//im', $url);
         if (!$isCompleteUrl) {
             // Vimeo has only numbers
-            if (preg_match('/^\d+$/', $url)) {
+            if (\preg_match('/^\d+$/', $url)) {
                 return 'vimeo';
             }
 
             // The ID has to start with a letter / number / _
-            if (preg_match('/^[_A-Za-z0-9]/', $url)) {
+            if (\preg_match('/^[_A-Za-z0-9]/', $url)) {
                 return 'youtube';
             }
         }
 
         return null;
-    }
-
-    /**
-     * Get the type of a youtube video
-     *
-     * @param string $url
-     * @return string|null The type of the link
-     */
-    public static function youtubeType(string $url): ?string
-    {
-        $url = trim(strval($url));
-        if (!$url) {
-            return null;
-        }
-
-        return strpos($url, 'list=') !== false ? 'playlist' : 'video';
     }
 
     /**
@@ -84,20 +67,19 @@ class ParseIDService
      * @param string|integer $url The URL or the plain id
      * @return string|null The video id extracted from url
      */
-
-    public static function vimeo($url = null): ?string
+    public function vimeo($url = null): ?string
     {
         if (!$url) {
             return null;
         }
-        $regs = array();
+        $regs = [];
         $url = trim(strval($url));
         if (preg_match('%^https?:\/\/(?:www\.|player\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/([^\/]*)\/videos\/|album\/(\d+)\/video\/|video\/|)(\d+)(?:$|\/|\?)(?:[?]?.*)$%im', $url, $regs)) {
-            return $regs[3];
+            return (string) $regs[3];
         }
         // The ID has to start with an number
         if (preg_match('/^[0-9]/', $url)) {
-            return $url;
+            return (string) $url;
         }
         return null;
     }
@@ -126,35 +108,34 @@ class ParseIDService
      * @param string|integer $url The URL or the plain id
      * @return string|null The video id extracted from url
      */
-
-    public static function youtube($url = null, string $type = 'video'): ?string
+    public function youtube($url = null, string $type = 'video'): ?string
     {
         if (!$url) {
             return null;
         }
-        $regs = array();
-        $url = trim(strval($url));
+        $regs = [];
+        $url = \trim(\strval($url));
 
-        if (preg_match_all('/(?<=(?:(?<=v)|(?<=i)|(?<=list))=)[a-zA-Z0-9-]+(?=&)|(?<=(?:(?<=v)|(?<=i)|(?<=list))\/)[^&\n]+|(?<=embed\/)[^"&\n]+|(?<=(?:(?<=v)|(?<=i)|(?<=list))=)[^&\n]+|(?<=youtu.be\/)[^&\n]+/im', $url, $regs)) {
+        if (\preg_match_all('/(?<=(?:(?<=v)|(?<=i)|(?<=list))=)[a-zA-Z0-9-]+(?=&)|(?<=(?:(?<=v)|(?<=i)|(?<=list))\/)[^&\n]+|(?<=embed\/)[^"&\n]+|(?<=(?:(?<=v)|(?<=i)|(?<=list))=)[^&\n]+|(?<=youtu.be\/)[^&\n]+/im', $url, $regs)) {
             $array = $regs[0];
 
-            if (count($array) == 1) {
-                return $array[0];
+            if (\count($array) == 1) {
+                return (string) $array[0];
             }
 
             $returnKey = 0;
             // Playlist have always longer IDs
-            if (strcmp($array[0], $array[1])) {
+            if (\strcmp($array[0], $array[1])) {
                 // String 2 is longer
                 $returnKey = $type === 'video' ? 0 : 1;
             } else {
                 $returnKey = $type === 'video' ? 1 : 0;
             }
-            return $array[$returnKey];
+            return (string) $array[$returnKey];
         }
         // The ID has to start with a letter / number / _ / -
         if (preg_match('/^[A-Za-z0-9_-]/', $url)) {
-            return $url;
+            return (string) $url;
         }
         return null;
     }

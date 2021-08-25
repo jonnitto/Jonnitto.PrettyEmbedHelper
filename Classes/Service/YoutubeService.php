@@ -4,6 +4,7 @@ namespace Jonnitto\PrettyEmbedHelper\Service;
 
 use Neos\Flow\Annotations as Flow;
 use Neos\ContentRepository\Domain\Model\NodeInterface;
+use Jonnitto\PrettyEmbedHelper\Utility\Utility;
 
 /**
  * @Flow\Scope("singleton")
@@ -12,9 +13,27 @@ class YoutubeService
 {
     /**
      * @Flow\Inject
+     * @var Utility
+     */
+    protected $utility;
+
+    /**
+     * @Flow\Inject
      * @var ImageService
      */
     protected $imageService;
+
+    /**
+     * @Flow\Inject
+     * @var ParseIDService
+     */
+    protected $parseID;
+
+    /**
+     * @Flow\Inject
+     * @var ApiService
+     */
+    protected $api;
 
     /**
      * @Flow\InjectConfiguration(package="Jonnitto.PrettyEmbedYoutube")
@@ -35,9 +54,11 @@ class YoutubeService
      * @param boolean $remove
      * @return array|null
      */
-    public function getAndSaveDataFromOembed(NodeInterface $node, bool $remove = false): ?array
+    public function getAndSaveDataFromApi(NodeInterface $node, bool $remove = false): ?array
     {
-        $isYoutubePackage = $node->getNodeType()->isOfType('Jonnitto.PrettyEmbedYoutube:Mixin.VideoID');
+        $isYoutubePackage = $node->getNodeType()->isOfType(
+            'Jonnitto.PrettyEmbedYoutube:Mixin.VideoID'
+        );
 
         $videoIDProperty = null;
         $videoID = null;
@@ -64,22 +85,30 @@ class YoutubeService
                     }
                 }
             } else {
-                $type = ParseIDService::youtubeType($videoIDProperty) ?? 'video';
+                $type = $this->type($videoIDProperty);
                 $node->setProperty('type', $type);
             }
 
-            $videoID = ParseIDService::youtube($videoIDProperty, $type);
-            $data = OembedService::youtube($videoID, $type, $this->settings['youtubeApiKey']);
+            $videoID = $this->parseID->youtube($videoIDProperty, $type);
+            $data = $this->api->youtube(
+                $videoID,
+                $type,
+                $this->settings['youtubeApiKey']
+            );
 
             if (isset($data)) {
-                $title = $data->title ?? null;
-                $ratio = $data->width && $data->height ? $this->imageService->calculatePaddingTop($data->width, $data->height) : null;
-                $duration = $data->duration ?? null;
-                if (isset($data->imageUrl) && isset($data->imageResolution)) {
-                    $image = $data->imageUrl;
-                    $resolution = $data->imageResolution;
+                $title = $data['title'] ?? null;
+                $ratio = $data['width'] && $data['height'] ?
+                    $this->utility->calculatePaddingTop(
+                        $data['width'],
+                        $data['height']
+                    ) : null;
+                $duration = $data['duration'] ?? null;
+                if (isset($data['imageUrl']) && isset($data['imageResolution'])) {
+                    $image = $data['imageUrl'];
+                    $resolution = $data['imageResolution'];
                 } else {
-                    $youtubeImageArray = $this->getBestPossibleYoutubeImage($videoID, $data->thumbnail_url);
+                    $youtubeImageArray = $this->getBestPossibleYoutubeImage($videoID, $data['thumbnail_url']);
                     $image = $youtubeImageArray['image'];
                     $resolution = $youtubeImageArray['resolution'];
                 }
@@ -90,14 +119,23 @@ class YoutubeService
             }
 
             if (isset($image)) {
-                $thumbnail = $this->imageService->import($node, $image, $videoID, 'Youtube', $resolution);
+                $thumbnail = $this->imageService->import(
+                    $node,
+                    $image,
+                    $videoID,
+                    'Youtube',
+                    $resolution
+                );
             }
         }
 
         $node->setProperty('metadataID', $videoID);
         $node->setProperty('metadataTitle', $title);
         $node->setProperty('metadataRatio', $ratio);
-        $node->setProperty('metadataImage', OembedService::removeProtocolFromUrl($image));
+        $node->setProperty(
+            'metadataImage',
+            $this->utility->removeProtocolFromUrl($image)
+        );
         $node->setProperty('metadataThumbnail', $thumbnail);
         $node->setProperty('metadataDuration', $duration);
 
@@ -118,24 +156,47 @@ class YoutubeService
     }
 
     /**
+     * Get the type of a video
+     *
+     * @param string $url
+     * @return string The type of the link
+     */
+    protected function type(string $url): string
+    {
+        $url = \trim(\strval($url));
+        if (!$url) {
+            return 'video';
+        }
+        return \strpos($url, 'list=') !== false ? 'playlist' : 'video';
+    }
+
+    /**
      * Get the best possible image from youtube
      *
      * @param string|integer $videoID
      * @param string|null $url
      * @return array|null
      */
-    protected function getBestPossibleYoutubeImage($videoID, ?string $url = null): ?array
-    {
+    protected function getBestPossibleYoutubeImage(
+        $videoID,
+        ?string $url = null
+    ): ?array {
         if (!isset($url)) {
             $url = "https://i.ytimg.com/vi/{$videoID}/maxresdefault.jpg";
         }
 
-        $resolutions = ['maxresdefault', 'sddefault', 'hqdefault', 'mqdefault', 'default'];
+        $resolutions = [
+            'maxresdefault', 'sddefault', 'hqdefault', 'mqdefault', 'default'
+        ];
 
         foreach ($resolutions as $resolution) {
-            $url = preg_replace('/\/[\w]*\.([a-z]{3,})$/i', "/{$resolution}.$1", $url);
-            $headers = @get_headers($url);
-            if ($headers && strpos($headers[0], '200')) {
+            $url = \preg_replace(
+                '/\/[\w]*\.([a-z]{3,})$/i',
+                "/{$resolution}.$1",
+                $url
+            );
+            $headers = @\get_headers($url);
+            if ($headers && \strpos($headers[0], '200')) {
                 return [
                     'image' => $url,
                     'resolution' => $resolution

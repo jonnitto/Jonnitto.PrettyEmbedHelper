@@ -2,15 +2,15 @@
 
 namespace Jonnitto\PrettyEmbedHelper\Service;
 
-use Neos\Flow\Annotations as Flow;
 use Doctrine\Common\Collections\ArrayCollection;
+use Neos\ContentRepository\Domain\Model\NodeInterface;
+use Neos\ContentRepository\Domain\Model\Workspace;
+use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Persistence\Exception\IllegalObjectTypeException;
 use Neos\Flow\Persistence\PersistenceManagerInterface;
 use Neos\Flow\ResourceManagement\ResourceManager;
-use Neos\ContentRepository\Domain\Model\Workspace;
-use Neos\ContentRepository\Domain\Model\NodeInterface;
-use Neos\Media\Domain\Model\Tag;
 use Neos\Media\Domain\Model\Image;
+use Neos\Media\Domain\Model\Tag;
 use Neos\Media\Domain\Repository\AssetRepository;
 use Neos\Media\Domain\Repository\TagRepository;
 
@@ -60,9 +60,18 @@ class ImageService
      * @param string|null $filenameSuffix
      * @return Image|null
      */
-    public function import(NodeInterface $node, string $url, $videoId, string $type, ?string $filenameSuffix = null): ?Image
-    {
-        if (!$node->getNodeType()->isOfType('Jonnitto.PrettyEmbedHelper:Mixin.Metadata.Thumbnail')) {
+    public function import(
+        NodeInterface $node,
+        string $url,
+        $videoId,
+        string $type,
+        ?string $filenameSuffix = null
+    ): ?Image {
+        if (
+            !$node->getNodeType()->isOfType(
+                'Jonnitto.PrettyEmbedHelper:Mixin.Metadata.Thumbnail'
+            )
+        ) {
             return null;
         }
 
@@ -71,8 +80,8 @@ class ImageService
         }
 
         $assetOriginal = $url; //original asset may have get parameters in the url
-        $asset = preg_replace('/(^.*\.(jpg|jpeg|png|gif|webp)).*$/', '$1', $assetOriginal); //asset witout get parametes for neos import
-        $extension = preg_replace('/^.*\.(jpg|jpeg|png|gif|webp)$/', '$1', $asset); // asset extension
+        $asset = \preg_replace('/(^.*\.(jpg|jpeg|png|gif|webp)).*$/', '$1', $assetOriginal); //asset witout get parametes for neos import
+        $extension = \preg_replace('/^.*\.(jpg|jpeg|png|gif|webp)$/', '$1', $asset); // asset extension
 
         $filename = "{$type}-{$videoId}{$filenameSuffix}.{$extension}";
 
@@ -140,7 +149,7 @@ class ImageService
      * @param Workspace $targetWorkspace
      * @return void
      */
-    public function removeDataAfterNodePublishing(NodeInterface $node, Workspace $targetWorkspace)
+    public function removeDataAfterNodePublishing(NodeInterface $node, Workspace $targetWorkspace): void
     {
         if (!$targetWorkspace->isPublicWorkspace() || !$node->isRemoved() || !$node->getNodeType()->isOfType('Jonnitto.PrettyEmbedHelper:Mixin.Metadata.Thumbnail')) {
             return;
@@ -199,18 +208,6 @@ class ImageService
             $this->removeTagIfEmpty();
         }
         $this->pendingThumbnailToDelete = [];
-    }
-
-    /**
-     * This calculates the padding-top from width and height
-     *
-     * @param integer $width
-     * @param integer $height
-     * @return string The calculated value
-     */
-    public function calculatePaddingTop(int $width, int $height): string
-    {
-        return (100 / ($width / $height)) . '%';
     }
 
     /**

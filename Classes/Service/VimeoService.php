@@ -4,6 +4,7 @@ namespace Jonnitto\PrettyEmbedHelper\Service;
 
 use Neos\Flow\Annotations as Flow;
 use Neos\ContentRepository\Domain\Model\NodeInterface;
+use Jonnitto\PrettyEmbedHelper\Utility\Utility;
 
 /**
  * @Flow\Scope("singleton")
@@ -12,9 +13,27 @@ class VimeoService
 {
     /**
      * @Flow\Inject
+     * @var Utility
+     */
+    protected $utility;
+
+    /**
+     * @Flow\Inject
      * @var ImageService
      */
     protected $imageService;
+
+    /**
+     * @Flow\Inject
+     * @var ParseIDService
+     */
+    protected $parseID;
+
+    /**
+     * @Flow\Inject
+     * @var ApiService
+     */
+    protected $api;
 
     /**
      * Get and save data from oembed service
@@ -23,8 +42,10 @@ class VimeoService
      * @param boolean $remove
      * @return array|null
      */
-    public function getAndSaveDataFromOembed(NodeInterface $node, bool $remove = false): ?array
-    {
+    public function getAndSaveDataFromApi(
+        NodeInterface $node,
+        bool $remove = false
+    ): ?array {
         $videoIDProperty = null;
         $videoID = null;
         $data = null;
@@ -38,17 +59,27 @@ class VimeoService
 
         if ($remove === false) {
             $videoIDProperty = $node->getProperty('videoID');
-            $videoID = ParseIDService::vimeo($videoIDProperty);
-            $data = OembedService::vimeo($videoID);
+            $videoID = $this->parseID->vimeo($videoIDProperty);
+            $data = $this->api->vimeo($videoID);
 
             if (isset($data)) {
-                $title = $data->title ?? null;
-                $ratio = $data->width && $data->height ? $this->imageService->calculatePaddingTop($data->width, $data->height) : null;
-                $image = $data->thumbnail_url ?? null;
-                $duration = $data->duration ?? null;
+                $title = $data['title'] ?? null;
+                $ratio = $data['width'] && $data['height'] ?
+                    $this->utility->calculatePaddingTop(
+                        $data['width'],
+                        $data['height']
+                    ) :
+                    null;
+                $image = $data['thumbnail_url'] ?? null;
+                $duration = $data['duration'] ?? null;
 
                 if (isset($image)) {
-                    $thumbnail = $this->imageService->import($node, $image, $videoID, 'Vimeo');
+                    $thumbnail = $this->imageService->import(
+                        $node,
+                        $image,
+                        $videoID,
+                        'Vimeo'
+                    );
                 }
             }
         }
@@ -57,7 +88,10 @@ class VimeoService
         $node->setProperty('metadataTitle', $title);
         $node->setProperty('metadataRatio', $ratio);
         $node->setProperty('metadataDuration', $duration);
-        $node->setProperty('metadataImage', OembedService::removeProtocolFromUrl($image));
+        $node->setProperty(
+            'metadataImage',
+            $this->utility->removeProtocolFromUrl($image)
+        );
         $node->setProperty('metadataThumbnail', $thumbnail);
 
         $this->imageService->removeTagIfEmpty();

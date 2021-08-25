@@ -2,18 +2,20 @@
 
 namespace Jonnitto\PrettyEmbedHelper\Command;
 
+use Jonnitto\PrettyEmbedHelper\Service\MetadataService;
+use Neos\ContentRepository\Domain\Repository\WorkspaceRepository;
+use Neos\ContentRepository\Domain\Service\ContentDimensionCombinator;
+use Neos\ContentRepository\Domain\Service\ContextFactoryInterface;
+use Neos\ContentRepository\Exception\NodeException;
+use Neos\Eel\Exception as EelException;
+use Neos\Eel\FlowQuery\FlowQuery;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Cli\CommandController;
-use Neos\Eel\FlowQuery\FlowQuery;
-use Neos\Eel\Exception as EelException;
-use Neos\Neos\Exception as NeosException;
-use Neos\Neos\Domain\Service\SiteService;
-use Neos\ContentRepository\Exception\NodeException;
-use Neos\ContentRepository\Domain\Service\ContextFactoryInterface;
-use Neos\ContentRepository\Domain\Service\ContentDimensionCombinator;
+use Neos\Flow\Log\Utility\LogEnvironment;
 use Neos\Flow\Persistence\PersistenceManagerInterface;
-use Neos\ContentRepository\Domain\Repository\WorkspaceRepository;
-use Jonnitto\PrettyEmbedHelper\Service\MetadataService;
+use Neos\Neos\Domain\Service\SiteService;
+use Neos\Neos\Exception as NeosException;
+use Psr\Log\LoggerInterface;
 
 /**
  * @Flow\Scope("singleton")
@@ -51,6 +53,12 @@ class PrettyEmbedCommandController extends CommandController
     protected $workspaceRepository;
 
     /**
+     * @Flow\Inject
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * Generate metadata for the PrettyEmbed Vimeo/Youtube/Video or Audio player
      *
      * This generates the metadata for all player which has the mixin 
@@ -67,41 +75,63 @@ class PrettyEmbedCommandController extends CommandController
      * @throws NeosException
      */
 
-    public function metadataCommand(string $workspace = 'live', bool $remove = false): void
-    {
+    public function metadataCommand(
+        string $workspace = 'live',
+        bool $remove = false
+    ): void {
         $this->outputLine('');
         /** @noinspection PhpUndefinedMethodInspection */
         if ($this->workspaceRepository->countByName($workspace) === 0) {
-            $this->outputLine('<error>Workspace "%s" does not exist</error>', [$workspace]);
+            $this->outputLine(
+                '<error>Workspace "%s" does not exist</error>',
+                [$workspace]
+            );
             exit(1);
         }
 
         $contextProperties = [
             'workspaceName' => $workspace,
-            'dimensions' => array(),
+            'dimensions' => [],
             'invisibleContentShown' => true,
             'inaccessibleContentShown' => true
         ];
         $baseContext = $this->contextFactory->create($contextProperties);
         $baseContextSitesNode = $baseContext->getNode(SiteService::SITES_ROOT_PATH);
         if (!$baseContextSitesNode) {
-            $this->outputFormatted(sprintf('<error>Could not find "%s" root node</error>', SiteService::SITES_ROOT_PATH));
+            $this->outputFormatted(
+                sprintf(
+                    '<error>Could not find "%s" root node</error>',
+                    SiteService::SITES_ROOT_PATH
+                )
+            );
             $this->quit(1);
         }
         $baseContextSiteNodes = $baseContextSitesNode->getChildNodes();
         if ($baseContextSiteNodes === []) {
-            $this->outputFormatted(sprintf('<error>Could not find any site nodes in "%s" root node</error>', SiteService::SITES_ROOT_PATH));
+            $this->outputFormatted(
+                sprintf(
+                    '<error>Could not find any site nodes in "%s" root node</error>',
+                    SiteService::SITES_ROOT_PATH
+                )
+            );
             $this->quit(1);
         }
-        $this->outputFormatted('Searching for PrettyEmbed nodes which are able to save metadata');
-        $successArray = array();
-        $errorArray = array();
+        $this->outputFormatted(
+            'Searching for PrettyEmbed nodes which are able to save metadata'
+        );
+        $successArray = [];
+        $errorArray = [];
         foreach ($this->dimensionCombinator->getAllAllowedCombinations() as $dimensionCombination) {
             $flowQuery = new FlowQuery($baseContextSiteNodes);
-            $siteNodes = $flowQuery->context(['dimensions' => $dimensionCombination, 'targetDimensions' => []])->get();
+            $siteNodes = $flowQuery->context(
+                ['dimensions' => $dimensionCombination, 'targetDimensions' => []]
+            )->get();
             if (count($siteNodes) > 0) {
                 foreach ($siteNodes as $siteNode) {
-                    $returnFromSiteNode = $this->metadataService->createDataFromService($siteNode, $remove);
+                    $returnFromSiteNode = $this->metadataService->createDataFromService(
+                        $siteNode,
+                        $remove
+                    );
                     if ($returnFromSiteNode['node']) {
                         if ($returnFromSiteNode['data']) {
                             $successArray[] = $returnFromSiteNode;
@@ -109,9 +139,19 @@ class PrettyEmbedCommandController extends CommandController
                             $errorArray[] = $returnFromSiteNode;
                         }
                     }
-                    $nodes = $flowQuery->q($siteNode)->context(['dimensions' => $dimensionCombination, 'targetDimensions' => []])->find('[instanceof Jonnitto.PrettyEmbedHelper:Mixin.Metadata.Duration],[instanceof Jonnitto.PrettyEmbedVideoPlatforms:Mixin.VideoID],[instanceof Jonnitto.PrettyEmbedVimeo:Mixin.VideoID],[instanceof Jonnitto.PrettyEmbedYoutube:Mixin.VideoID]')->get();
+                    $nodes = $flowQuery->q($siteNode)->context(
+                        [
+                            'dimensions' => $dimensionCombination,
+                            'targetDimensions' => []
+                        ]
+                    )->find(
+                        '[instanceof Jonnitto.PrettyEmbedHelper:Mixin.Metadata.Duration],[instanceof Jonnitto.PrettyEmbedVideoPlatforms:Mixin.VideoID],[instanceof Jonnitto.PrettyEmbedVimeo:Mixin.VideoID],[instanceof Jonnitto.PrettyEmbedYoutube:Mixin.VideoID]'
+                    )->get();
                     foreach ($nodes as $node) {
-                        $returnFromNode = $this->metadataService->createDataFromService($node, $remove);
+                        $returnFromNode = $this->metadataService->createDataFromService(
+                            $node,
+                            $remove
+                        );
                         if ($returnFromNode['node']) {
                             if ($returnFromNode['data']) {
                                 $successArray[] = $returnFromNode;
@@ -131,27 +171,77 @@ class PrettyEmbedCommandController extends CommandController
         }
 
         if (count($successArray)) {
-            $output = '<success>Saved the metadata from <b>%s %s</b> entries</success>';
             $this->outputLine('');
-            $this->outputEntris($successArray, 'Youtube', $output);
-            $this->outputEntris($successArray, 'Vimeo', $output);
-            $this->outputEntris($successArray, 'Video', $output);
-            $this->outputEntris($successArray, 'Audio', $output);
+            $countEntries = [
+                'YouTube' => $this->countEntries($successArray, 'Youtube'),
+                'Vimeo' => $this->countEntries($successArray, 'Vimeo'),
+                'Video' => $this->countEntries($successArray, 'Video'),
+                'Audio' => $this->countEntries($successArray, 'Audio'),
+            ];
+
+            foreach ($countEntries as $platform => $count) {
+                if ($count) {
+                    $this->outputFormatted(
+                        '<success>Saved the metadata from <b>%s %s</b> entries</success>',
+                        [$count, $platform]
+                    );
+                    $this->logger->debug(
+                        sprintf(
+                            'Saved the metadata from "%s %s" entries',
+                            $count,
+                            $platform
+                        ),
+                        LogEnvironment::fromMethodName(__METHOD__)
+                    );
+                }
+            }
         }
 
         if (count($errorArray)) {
             $this->outputLine('');
 
             if ($remove === true) {
-                $output = '<success>Removed the metadata from <b>%s %s</b> entries</success>';
-                $this->outputEntris($errorArray, 'Youtube', $output);
-                $this->outputEntris($errorArray, 'Vimeo', $output);
-                $this->outputEntris($errorArray, 'Video', $output);
-                $this->outputEntris($errorArray, 'Audio', $output);
+                $countEntries = [
+                    'YouTube' => $this->countEntries($errorArray, 'Youtube'),
+                    'Vimeo' => $this->countEntries($errorArray, 'Vimeo'),
+                    'Video' => $this->countEntries($errorArray, 'Video'),
+                    'Audio' => $this->countEntries($errorArray, 'Audio'),
+                ];
+
+                foreach ($countEntries as $platform => $count) {
+                    if ($count) {
+                        $this->outputFormatted(
+                            '<success>Removed the metadata from <b>%s %s</b> entries</success>',
+                            [$count, $platform]
+                        );
+                        $this->logger->debug(
+                            sprintf(
+                                'Removed the metadata from "%s %s" entries',
+                                $count,
+                                $platform
+                            ),
+                            LogEnvironment::fromMethodName(__METHOD__)
+                        );
+                    }
+                }
             } else {
-                $this->outputLine('<error>There where <b>%s errors</b> fetching metadata:</error>', [count($errorArray)]);
+                $this->outputLine(
+                    '<error>There where <b>%s errors</b> fetching metadata:</error>',
+                    [count($errorArray)]
+                );
                 $tableRows = [];
                 foreach ($errorArray as $error) {
+                    $this->logger->error(
+                        sprintf(
+                            'Error fetching metadata for "%s %s" with the id %s and the node type "%" on the path "%s"',
+                            $error['node'],
+                            $error['type'],
+                            $error['id'],
+                            $error['nodeTypeName'],
+                            $error['path']
+                        ),
+                        LogEnvironment::fromMethodName(__METHOD__)
+                    );
                     $tableRows[] = [
                         $error['nodeTypeName'],
                         "{$error['node']} {$error['type']}",
@@ -159,7 +249,10 @@ class PrettyEmbedCommandController extends CommandController
                         $error['path']
                     ];
                 }
-                $this->output->outputTable($tableRows, ['Name of the node type', 'Type', 'Video ID', 'Node Path']);
+                $this->output->outputTable(
+                    $tableRows,
+                    ['Name of the node type', 'Type', 'Video ID', 'Node Path']
+                );
 
                 $this->outputFormatted('
 <error>Possible errors that data cannot be fetched are:</error>
@@ -171,24 +264,23 @@ class PrettyEmbedCommandController extends CommandController
     }
 
     /**
-     * Count how many entris are given
+     * Count entries of the given platform
      *
-     * @param array $array
+     * @param array $entries
      * @param string $type The type (Youtube/Vimeo/Video or Audio)
-     * @param string $output The output in the console
      * @return integer Returns the amount of entries
      */
-    protected function outputEntris(array $array, string $type, string $output): int
+    protected function countEntries(array $entries, string $type): int
     {
-        $count = array_reduce($array, function ($carry, $item) use ($type) {
-            if ($item['node'] === $type) {
-                $carry++;
+        $count = \array_reduce(
+            $entries,
+            function ($carry, $item) use ($type) {
+                if ($item['node'] === $type) {
+                    $carry++;
+                }
+                return $carry;
             }
-            return $carry;
-        });
-        if (isset($count)) {
-            $this->outputFormatted($output, [$count, $type]);
-        }
+        );
         return $count ?? 0;
     }
 }

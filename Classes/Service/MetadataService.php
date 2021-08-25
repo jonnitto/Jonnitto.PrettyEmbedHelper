@@ -4,9 +4,6 @@ namespace Jonnitto\PrettyEmbedHelper\Service;
 
 use Neos\Flow\Annotations as Flow;
 use Neos\ContentRepository\Domain\Model\NodeInterface;
-use Jonnitto\PrettyEmbedHelper\Service\AssetService;
-use Jonnitto\PrettyEmbedHelper\Service\VimeoService;
-use Jonnitto\PrettyEmbedHelper\Service\YoutubeService;
 
 /**
  * @Flow\Scope("singleton")
@@ -32,6 +29,12 @@ class MetadataService
     protected $vimeoService;
 
     /**
+     * @Flow\Inject
+     * @var ParseIDService
+     */
+    protected $parseID;
+
+    /**
      * @var array
      */
     protected $defaultReturn = ['node' => null];
@@ -43,8 +46,10 @@ class MetadataService
      * @param NodeInterface $node
      * @return array Informations about the node
      */
-    public function createDataFromService(NodeInterface $node, bool $remove = false): array
-    {
+    public function createDataFromService(
+        NodeInterface $node,
+        bool $remove = false
+    ): array {
         if ($node->hasProperty('videoID') || $node->getNodeType()->isOfType('Jonnitto.PrettyEmbedHelper:Mixin.Metadata.Duration')) {
             return $this->dataFromService($node, $remove);
         }
@@ -83,8 +88,10 @@ class MetadataService
      * @param boolean $remove
      * @return array Informations about the node
      */
-    protected function dataFromService(NodeInterface $node, bool $remove = false): array
-    {
+    protected function dataFromService(
+        NodeInterface $node,
+        bool $remove = false
+    ): array {
         switch ($this->checkNodeAndSetPlatform($node)) {
             case 'audio':
                 $data = $this->assetService->getAndSaveDataId3($node, $remove, 'Audio');
@@ -95,11 +102,11 @@ class MetadataService
                 break;
 
             case 'youtube':
-                $data = $this->youtubeService->getAndSaveDataFromOembed($node, $remove);
+                $data = $this->youtubeService->getAndSaveDataFromApi($node, $remove);
                 break;
 
             case 'vimeo':
-                $data = $this->vimeoService->getAndSaveDataFromOembed($node, $remove);
+                $data = $this->vimeoService->getAndSaveDataFromApi($node, $remove);
                 break;
 
             default:
@@ -142,7 +149,7 @@ class MetadataService
             return null;
         }
 
-        $platform = ParseIDService::platform($node->getProperty('videoID'));
+        $platform = $this->parseID->platform($node->getProperty('videoID'));
         if (!$platform) {
             $node->setProperty('metadataDuration', null);
         }
