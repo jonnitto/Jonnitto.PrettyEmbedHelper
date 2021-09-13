@@ -128,7 +128,10 @@ class YoutubeService
                 $image = $data['imageUrl'];
                 $resolution = $data['imageResolution'];
             } else {
-                $youtubeImageArray = $this->getBestPossibleYoutubeImage($videoID, $data['thumbnail_url']);
+                $youtubeImageArray = $this->getBestPossibleYoutubeImage(
+                    $videoID,
+                    $data['thumbnail_url'] ?? null
+                );
                 $image = $youtubeImageArray['image'];
                 $resolution = $youtubeImageArray['resolution'];
             }

@@ -55,7 +55,7 @@ class Helper implements ProtectedContextAwareInterface
             return null;
         }
         $utility = new Utility();
-        return $utility->removeProtocolFromUrl($data['thumbnail_url']);
+        return $utility->removeProtocolFromUrl($data['thumbnail_url'] ?? null);
     }
 
     /**
