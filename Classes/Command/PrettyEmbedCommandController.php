@@ -11,11 +11,13 @@ use Neos\Eel\Exception as EelException;
 use Neos\Eel\FlowQuery\FlowQuery;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Cli\CommandController;
+use Neos\Flow\Cli\Exception\StopCommandException;
 use Neos\Flow\Log\Utility\LogEnvironment;
+use Neos\Flow\Persistence\Exception\IllegalObjectTypeException;
 use Neos\Flow\Persistence\PersistenceManagerInterface;
 use Neos\Neos\Domain\Service\SiteService;
-use Neos\Neos\Exception as NeosException;
 use Psr\Log\LoggerInterface;
+use function array_reduce;
 
 /**
  * @Flow\Scope("singleton")
@@ -71,15 +73,13 @@ class PrettyEmbedCommandController extends CommandController
      * @param boolean $remove Is set, all metadata will be removed
      * @return void
      * @throws EelException
-     * @throws NodeException
-     * @throws NeosException
+     * @throws StopCommandException
      */
-
     public function metadataCommand(
         string $workspace = 'live',
         bool $remove = false
     ): void {
-        $this->outputLine('');
+        $this->outputLine();
         /** @noinspection PhpUndefinedMethodInspection */
         if ($this->workspaceRepository->countByName($workspace) === 0) {
             $this->outputLine(
@@ -128,16 +128,19 @@ class PrettyEmbedCommandController extends CommandController
             )->get();
             if (count($siteNodes) > 0) {
                 foreach ($siteNodes as $siteNode) {
-                    $returnFromSiteNode = $this->metadataService->createDataFromService(
-                        $siteNode,
-                        $remove
-                    );
-                    if ($returnFromSiteNode['node']) {
-                        if ($returnFromSiteNode['data']) {
-                            $successArray[] = $returnFromSiteNode;
-                        } else {
-                            $errorArray[] = $returnFromSiteNode;
+                    try {
+                        $returnFromSiteNode = $this->metadataService->createDataFromService(
+                            $siteNode,
+                            $remove
+                        );
+                        if ($returnFromSiteNode['node']) {
+                            if ($returnFromSiteNode['data']) {
+                                $successArray[] = $returnFromSiteNode;
+                            } else {
+                                $errorArray[] = $returnFromSiteNode;
+                            }
                         }
+                    } catch (NodeException | IllegalObjectTypeException $e) {
                     }
                     $nodes = $flowQuery->q($siteNode)->context(
                         [
@@ -145,19 +148,25 @@ class PrettyEmbedCommandController extends CommandController
                             'targetDimensions' => []
                         ]
                     )->find(
-                        '[instanceof Jonnitto.PrettyEmbedHelper:Mixin.Metadata.Duration],[instanceof Jonnitto.PrettyEmbedVideoPlatforms:Mixin.VideoID],[instanceof Jonnitto.PrettyEmbedVimeo:Mixin.VideoID],[instanceof Jonnitto.PrettyEmbedYoutube:Mixin.VideoID]'
+                        '[instanceof Jonnitto.PrettyEmbedHelper:Mixin.Metadata.Duration],' .
+                        '[instanceof Jonnitto.PrettyEmbedVideoPlatforms:Mixin.VideoID],' .
+                        '[instanceof Jonnitto.PrettyEmbedVimeo:Mixin.VideoID],' .
+                        '[instanceof Jonnitto.PrettyEmbedYoutube:Mixin.VideoID]'
                     )->get();
                     foreach ($nodes as $node) {
-                        $returnFromNode = $this->metadataService->createDataFromService(
-                            $node,
-                            $remove
-                        );
-                        if ($returnFromNode['node']) {
-                            if ($returnFromNode['data']) {
-                                $successArray[] = $returnFromNode;
-                            } else {
-                                $errorArray[] = $returnFromNode;
+                        try {
+                            $returnFromNode = $this->metadataService->createDataFromService(
+                                $node,
+                                $remove
+                            );
+                            if ($returnFromNode['node']) {
+                                if ($returnFromNode['data']) {
+                                    $successArray[] = $returnFromNode;
+                                } else {
+                                    $errorArray[] = $returnFromNode;
+                                }
                             }
+                        } catch (NodeException | IllegalObjectTypeException $e) {
                         }
                     }
                 }
@@ -167,11 +176,11 @@ class PrettyEmbedCommandController extends CommandController
 
         if (count($errorArray) === 0 && count($successArray) === 0) {
             $this->outputFormatted('<error>There were no node types found</error>');
-            $this->quit(0);
+            $this->quit();
         }
 
         if (count($successArray)) {
-            $this->outputLine('');
+            $this->outputLine();
             $countEntries = [
                 'YouTube' => $this->countEntries($successArray, 'Youtube'),
                 'Vimeo' => $this->countEntries($successArray, 'Vimeo'),
@@ -198,7 +207,7 @@ class PrettyEmbedCommandController extends CommandController
         }
 
         if (count($errorArray)) {
-            $this->outputLine('');
+            $this->outputLine();
 
             if ($remove === true) {
                 $countEntries = [
@@ -272,9 +281,9 @@ class PrettyEmbedCommandController extends CommandController
      */
     protected function countEntries(array $entries, string $type): int
     {
-        $count = \array_reduce(
+        $count = array_reduce(
             $entries,
-            function ($carry, $item) use ($type) {
+            static function ($carry, $item) use ($type) {
                 if ($item['node'] === $type) {
                     $carry++;
                 }
