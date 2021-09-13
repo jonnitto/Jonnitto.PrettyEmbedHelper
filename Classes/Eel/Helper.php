@@ -3,11 +3,13 @@
 namespace Jonnitto\PrettyEmbedHelper\Eel;
 
 
+use JsonException;
 use Neos\Flow\Annotations as Flow;
 use Neos\Eel\ProtectedContextAwareInterface;
 use Jonnitto\PrettyEmbedHelper\Service\ApiService;
 use Jonnitto\PrettyEmbedHelper\Service\ParseIDService;
 use Jonnitto\PrettyEmbedHelper\Utility\Utility;
+use Neos\Flow\Http\Client\InfiniteRedirectionException;
 
 /**
  * @Flow\Proxy(false)
@@ -55,6 +57,8 @@ class Helper implements ProtectedContextAwareInterface
      *
      * @param string|integer $videoID
      * @return string|null
+     * @throws InfiniteRedirectionException
+     * @throws JsonException
      */
     public function vimeoThumbnail($videoID): ?string
     {
@@ -114,7 +118,7 @@ class Helper implements ProtectedContextAwareInterface
      * @param string $methodName
      * @return boolean
      */
-    public function allowsCallOfMethod($methodName)
+    public function allowsCallOfMethod($methodName): bool
     {
         return true;
     }

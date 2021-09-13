@@ -5,14 +5,19 @@ namespace Jonnitto\PrettyEmbedHelper\Service;
 use Doctrine\Common\Collections\ArrayCollection;
 use Neos\ContentRepository\Domain\Model\NodeInterface;
 use Neos\ContentRepository\Domain\Model\Workspace;
+use Neos\ContentRepository\Exception\NodeException;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Persistence\Exception\IllegalObjectTypeException;
+use Neos\Flow\Persistence\Exception\InvalidQueryException;
 use Neos\Flow\Persistence\PersistenceManagerInterface;
+use Neos\Flow\ResourceManagement\Exception;
 use Neos\Flow\ResourceManagement\ResourceManager;
 use Neos\Media\Domain\Model\Image;
 use Neos\Media\Domain\Model\Tag;
 use Neos\Media\Domain\Repository\AssetRepository;
 use Neos\Media\Domain\Repository\TagRepository;
+use Throwable;
+use function preg_replace;
 
 /**
  * @Flow\Scope("singleton")
@@ -52,13 +57,16 @@ class ImageService
 
     /**
      * Import image
-     * 
+     *
      * @param NodeInterface $node
      * @param string $url
      * @param string|integer $videoId
      * @param string $type
      * @param string|null $filenameSuffix
-     * @return Image|null
+     * @return object|null
+     * @throws IllegalObjectTypeException
+     * @throws Exception|InvalidQueryException
+     * @throws \Exception
      */
     public function import(
         NodeInterface $node,
@@ -66,7 +74,8 @@ class ImageService
         $videoId,
         string $type,
         ?string $filenameSuffix = null
-    ): ?Image {
+    ): ?object
+    {
         if (
             !$node->getNodeType()->isOfType(
                 'Jonnitto.PrettyEmbedHelper:Mixin.Metadata.Thumbnail'
@@ -76,14 +85,14 @@ class ImageService
         }
 
         if (isset($filenameSuffix)) {
-            $filenameSuffix = "-{$filenameSuffix}";
+            $filenameSuffix = '-' . $filenameSuffix;
         }
 
         $assetOriginal = $url; //original asset may have get parameters in the url
-        $asset = \preg_replace('/(^.*\.(jpg|jpeg|png|gif|webp)).*$/', '$1', $assetOriginal); //asset witout get parametes for neos import
-        $extension = \preg_replace('/^.*\.(jpg|jpeg|png|gif|webp)$/', '$1', $asset); // asset extension
+        $asset = preg_replace('/(^.*\.(jpg|jpeg|png|gif|webp)).*$/', '$1', $assetOriginal); //asset without get parameters for Neos import
+        $extension = preg_replace('/^.*\.(jpg|jpeg|png|gif|webp)$/', '$1', $asset); // asset extension
 
-        $filename = "{$type}-{$videoId}{$filenameSuffix}.{$extension}";
+        $filename = sprintf("%s-%d%s.%s", $type, $videoId, $filenameSuffix, $extension);
 
         $availableImage = $this->assetRepository->findBySearchTermOrTags($filename)->getFirst();
         if (isset($availableImage)) {
@@ -102,7 +111,7 @@ class ImageService
          */
         $image = new Image($resource);
         $image->getResource()->setFilename($filename);
-        $image->getResource()->setMediaType("image/{$extension}");
+        $image->getResource()->setMediaType('image/' . $extension);
         $image->setTags($tags);
         $this->assetRepository->add($image);
         $this->persistenceManager->persistAll();
@@ -111,9 +120,10 @@ class ImageService
 
     /**
      * Remove image
-     * 
+     *
      * @param NodeInterface $node
      * @return void
+     * @throws NodeException
      */
     public function remove(NodeInterface $node): void
     {
@@ -148,10 +158,15 @@ class ImageService
      * @param NodeInterface $node
      * @param Workspace $targetWorkspace
      * @return void
+     * @throws NodeException
      */
     public function removeDataAfterNodePublishing(NodeInterface $node, Workspace $targetWorkspace): void
     {
-        if (!$targetWorkspace->isPublicWorkspace() || !$node->isRemoved() || !$node->getNodeType()->isOfType('Jonnitto.PrettyEmbedHelper:Mixin.Metadata.Thumbnail')) {
+        if (
+            !$targetWorkspace->isPublicWorkspace() ||
+            !$node->isRemoved() ||
+            !$node->getNodeType()->isOfType('Jonnitto.PrettyEmbedHelper:Mixin.Metadata.Thumbnail')
+        ) {
             return;
         }
 
@@ -160,8 +175,9 @@ class ImageService
 
     /**
      * Deletes the pending data
-     * 
+     *
      * @return void
+     * @throws IllegalObjectTypeException
      */
     public function deletePendingData(): void
     {
@@ -169,7 +185,7 @@ class ImageService
             // If the video is multiple times on the page, don't delete the thumbnail
             try {
                 $this->assetRepository->remove($thumbnail);
-            } catch (\Throwable $th) {
+            } catch (Throwable $th) {
                 unset($th);
             }
         }
@@ -242,8 +258,9 @@ class ImageService
 
     /**
      * Find/create the "PrettyEmbed" tag
-     * 
+     *
      * @return Tag
+     * @throws IllegalObjectTypeException
      */
     protected function findOrCreateTag(): Tag
     {
@@ -253,10 +270,6 @@ class ImageService
         $tag = $this->findTag();
 
 
-        if ($tag === null) {
-            return $this->createTag();
-        }
-
-        return $tag;
+        return $tag ?? $this->createTag();
     }
 }

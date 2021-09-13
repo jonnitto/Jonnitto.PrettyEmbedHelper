@@ -2,9 +2,19 @@
 
 namespace Jonnitto\PrettyEmbedHelper\Service;
 
+use JsonException;
+use Neos\ContentRepository\Exception\NodeException;
 use Neos\Flow\Annotations as Flow;
 use Neos\ContentRepository\Domain\Model\NodeInterface;
 use Jonnitto\PrettyEmbedHelper\Utility\Utility;
+use Neos\Flow\Http\Client\InfiniteRedirectionException;
+use Neos\Flow\Persistence\Exception\IllegalObjectTypeException;
+use Neos\Flow\Persistence\Exception\InvalidQueryException;
+use Neos\Flow\ResourceManagement\Exception;
+use function get_headers;
+use function preg_replace;
+use function strpos;
+use function trim;
 
 /**
  * @Flow\Scope("singleton")
@@ -53,6 +63,10 @@ class YoutubeService
      * @param NodeInterface $node
      * @param boolean $remove
      * @return array|null
+     * @throws NodeException
+     * @throws IllegalObjectTypeException
+     * @throws Exception|InfiniteRedirectionException
+     * @throws JsonException|InvalidQueryException
      */
     public function getAndSaveDataFromApi(NodeInterface $node, bool $remove = false): ?array
     {
@@ -68,7 +82,6 @@ class YoutubeService
         $image = null;
         $type = null;
         $thumbnail = null;
-        $resolution = null;
         $duration = null;
 
         $this->imageService->remove($node);
@@ -104,7 +117,7 @@ class YoutubeService
                         $data['height']
                     ) : null;
                 $duration = $data['duration'] ?? null;
-                if (isset($data['imageUrl']) && isset($data['imageResolution'])) {
+                if (isset($data['imageUrl'], $data['imageResolution'])) {
                     $image = $data['imageUrl'];
                     $resolution = $data['imageResolution'];
                 } else {
@@ -163,11 +176,11 @@ class YoutubeService
      */
     protected function type(string $url): string
     {
-        $url = \trim(\strval($url));
+        $url = trim($url);
         if (!$url) {
             return 'video';
         }
-        return \strpos($url, 'list=') !== false ? 'playlist' : 'video';
+        return strpos($url, 'list=') !== false ? 'playlist' : 'video';
     }
 
     /**
@@ -182,7 +195,7 @@ class YoutubeService
         ?string $url = null
     ): ?array {
         if (!isset($url)) {
-            $url = "https://i.ytimg.com/vi/{$videoID}/maxresdefault.jpg";
+            $url = sprintf("https://i.ytimg.com/vi/%s/maxresdefault.jpg", $videoID);
         }
 
         $resolutions = [
@@ -190,13 +203,13 @@ class YoutubeService
         ];
 
         foreach ($resolutions as $resolution) {
-            $url = \preg_replace(
+            $url = preg_replace(
                 '/\/[\w]*\.([a-z]{3,})$/i',
-                "/{$resolution}.$1",
+                sprintf("/%s.$1", $resolution),
                 $url
             );
-            $headers = @\get_headers($url);
-            if ($headers && \strpos($headers[0], '200')) {
+            $headers = @get_headers($url);
+            if ($headers && strpos($headers[0], '200')) {
                 return [
                     'image' => $url,
                     'resolution' => $resolution

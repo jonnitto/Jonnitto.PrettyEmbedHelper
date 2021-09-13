@@ -3,10 +3,15 @@
 namespace Jonnitto\PrettyEmbedHelper\Service;
 
 use Neos\ContentRepository\Domain\Model\NodeInterface;
+use Neos\ContentRepository\Exception\NodeException;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\ResourceManagement\ResourceManager;
 use Neos\Flow\Utility\Environment;
+use Neos\Flow\Utility\Exception;
+use Neos\Utility\Exception\FilesException;
 use Neos\Utility\Files;
+use function file_exists;
+use function round;
 
 /**
  * @Flow\Scope("singleton")
@@ -33,15 +38,18 @@ class AssetService
     protected function setCacheDirectory(): void
     {
         if (class_exists('JamesHeinrich\GetID3\Utils')) {
-            $cacheDirectory = Files::concatenatePaths(
-                [
-                    $this->environment->getPathToTemporaryDirectory(),
-                    (string) $this->environment->getContext(),
-                    'Jonnitto_PrettyEmbedHelper_GetID3_Cache'
-                ]
-            );
-            Files::createDirectoryRecursively($cacheDirectory);
-            \JamesHeinrich\GetID3\Utils::setTempDirectory($cacheDirectory);
+            try {
+                $cacheDirectory = Files::concatenatePaths(
+                    [
+                        $this->environment->getPathToTemporaryDirectory(),
+                        (string)$this->environment->getContext(),
+                        'Jonnitto_PrettyEmbedHelper_GetID3_Cache'
+                    ]
+                );
+                Files::createDirectoryRecursively($cacheDirectory);
+                \JamesHeinrich\GetID3\Utils::setTempDirectory($cacheDirectory);
+            } catch (Exception | FilesException $e) {
+            }
         }
     }
 
@@ -52,6 +60,7 @@ class AssetService
      * @param boolean $remove
      * @param string $type
      * @return array
+     * @throws NodeException
      */
     public function getAndSaveDataId3(
         NodeInterface $node,
@@ -68,9 +77,9 @@ class AssetService
             if (isset($assets) && !empty($assets)) {
                 $getID3 = new \JamesHeinrich\GetID3\GetID3;
                 $file = $assets[0]->getResource()->createTemporaryLocalCopy();
-                if (\file_exists($file)) {
+                if (file_exists($file)) {
                     $fileInfo = $getID3->analyze($file);
-                    $duration = (int) \round($fileInfo['playtime_seconds']);
+                    $duration = (int) round($fileInfo['playtime_seconds']);
                 }
             }
             $node->setProperty('metadataDuration', $duration);

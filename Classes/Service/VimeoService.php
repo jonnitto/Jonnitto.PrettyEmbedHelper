@@ -2,9 +2,15 @@
 
 namespace Jonnitto\PrettyEmbedHelper\Service;
 
+use JsonException;
+use Neos\ContentRepository\Exception\NodeException;
 use Neos\Flow\Annotations as Flow;
 use Neos\ContentRepository\Domain\Model\NodeInterface;
 use Jonnitto\PrettyEmbedHelper\Utility\Utility;
+use Neos\Flow\Http\Client\InfiniteRedirectionException;
+use Neos\Flow\Persistence\Exception\IllegalObjectTypeException;
+use Neos\Flow\Persistence\Exception\InvalidQueryException;
+use Neos\Flow\ResourceManagement\Exception;
 
 /**
  * @Flow\Scope("singleton")
@@ -41,6 +47,8 @@ class VimeoService
      * @param NodeInterface $node
      * @param boolean $remove
      * @return array|null
+     * @throws NodeException
+     * @throws IllegalObjectTypeException
      */
     public function getAndSaveDataFromApi(
         NodeInterface $node,
@@ -60,7 +68,10 @@ class VimeoService
         if ($remove === false) {
             $videoIDProperty = $node->getProperty('videoID');
             $videoID = $this->parseID->vimeo($videoIDProperty);
-            $data = $this->api->vimeo($videoID);
+            try {
+                $data = $this->api->vimeo($videoID);
+            } catch (JsonException | InfiniteRedirectionException $e) {
+            }
 
             if (isset($data)) {
                 $title = $data['title'] ?? null;
@@ -74,12 +85,15 @@ class VimeoService
                 $duration = $data['duration'] ?? null;
 
                 if (isset($image)) {
-                    $thumbnail = $this->imageService->import(
-                        $node,
-                        $image,
-                        $videoID,
-                        'Vimeo'
-                    );
+                    try {
+                        $thumbnail = $this->imageService->import(
+                            $node,
+                            $image,
+                            $videoID,
+                            'Vimeo'
+                        );
+                    } catch (IllegalObjectTypeException | InvalidQueryException | Exception | \Exception $e) {
+                    }
                 }
             }
         }

@@ -2,8 +2,14 @@
 
 namespace Jonnitto\PrettyEmbedHelper\Service;
 
+use JsonException;
+use Neos\ContentRepository\Exception\NodeException;
 use Neos\Flow\Annotations as Flow;
 use Neos\ContentRepository\Domain\Model\NodeInterface;
+use Neos\Flow\Http\Client\InfiniteRedirectionException;
+use Neos\Flow\Persistence\Exception\IllegalObjectTypeException;
+use Neos\Flow\Persistence\Exception\InvalidQueryException;
+use Neos\Flow\ResourceManagement\Exception;
 
 /**
  * @Flow\Scope("singleton")
@@ -46,6 +52,8 @@ class MetadataService
      * @param NodeInterface $node
      * @param bool $remove
      * @return array Information about the node
+     * @throws NodeException
+     * @throws IllegalObjectTypeException
      */
     public function createDataFromService(
         NodeInterface $node,
@@ -65,6 +73,8 @@ class MetadataService
      * @param mixed $oldValue
      * @param mixed $newValue
      * @return array Information about the node
+     * @throws NodeException
+     * @throws IllegalObjectTypeException
      */
     public function updateDataFromService(
         NodeInterface $node,
@@ -88,6 +98,8 @@ class MetadataService
      * @param NodeInterface $node
      * @param boolean $remove
      * @return array Information about the node
+     * @throws NodeException
+     * @throws IllegalObjectTypeException
      */
     protected function dataFromService(
         NodeInterface $node,
@@ -103,7 +115,10 @@ class MetadataService
                 break;
 
             case 'youtube':
-                $data = $this->youtubeService->getAndSaveDataFromApi($node, $remove);
+                try {
+                    $data = $this->youtubeService->getAndSaveDataFromApi($node, $remove);
+                } catch (JsonException | NodeException | InfiniteRedirectionException | IllegalObjectTypeException | InvalidQueryException | Exception $e) {
+                }
                 break;
 
             case 'vimeo':
@@ -112,21 +127,17 @@ class MetadataService
 
             default:
                 return $this->defaultReturn;
-                break;
         }
 
-        if (isset($data)) {
-            return $data;
-        }
-
-        return $this->defaultReturn;
+        return $data ?? $this->defaultReturn;
     }
 
     /**
      * Check the node and return the platform/type
-     * 
+     *
      * @param NodeInterface $node
      * @return string|null
+     * @throws NodeException
      */
     protected function checkNodeAndSetPlatform(NodeInterface $node): ?string
     {

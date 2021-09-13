@@ -2,11 +2,20 @@
 
 namespace Jonnitto\PrettyEmbedHelper\Service;
 
+use DateInterval;
+use DateTimeImmutable;
+use DOMDocument;
+use Exception;
+use JsonException;
+use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Http\Client\Browser;
 use Neos\Flow\Http\Client\CurlEngine;
-use Neos\Flow\Annotations as Flow;
+use Neos\Flow\Http\Client\InfiniteRedirectionException;
 use Neos\Flow\Log\Utility\LogEnvironment;
 use Psr\Log\LoggerInterface;
+use function json_decode;
+use function json_encode;
+use function urlencode;
 
 /**
  * @Flow\Scope("singleton")
@@ -36,6 +45,8 @@ class ApiService
      * @param string $type
      * @param string|null $apiKey for fetching the duration
      * @return array|null The data or null if there's an error
+     * @throws InfiniteRedirectionException|JsonException
+     * @throws Exception
      */
     public function youtube(
         $id,
@@ -51,8 +62,8 @@ class ApiService
                 return $data;
             }
         }
-        $pathAndQuery = $type === 'video' ? "watch?v={$id}" : "playlist?list={$id}";
-        $url = \urlencode("https://youtube.com/{$pathAndQuery}");
+        $pathAndQuery = ($type === 'video' ? 'watch?v=' : 'playlist?list=') . $id;
+        $url = urlencode('https://youtube.com/' . $pathAndQuery);
         $data = $this->getJson(
             'https://www.youtube.com/oembed?url=' . $url,
             $type,
@@ -65,17 +76,18 @@ class ApiService
 
     /**
      * Grab the data of a publicly embeddable video hosted on vimeo
-     * 
-     * @param string|integer $id The "id" of a video
+     *
+     * @param string $id The "id" of a video
      * @return array|null The data or null if there's an error
+     * @throws InfiniteRedirectionException|JsonException
      */
-    public function vimeo($id): ?array
+    public function vimeo(string $id): ?array
     {
         if (!$id) {
             return null;
         }
 
-        $url = \urlencode("https://vimeo.com/{$id}");
+        $url = urlencode('https://vimeo.com/' . $id);
         $data = $this->getJson(
             'https://vimeo.com/api/oembed.json?width=2560&url=' . $url,
             'video',
@@ -89,7 +101,12 @@ class ApiService
      * Get json from url
      *
      * @param string $url
+     * @param string $type
+     * @param string $service
+     * @param string $id
      * @return array|null The data or null if there's an error
+     * @throws InfiniteRedirectionException
+     * @throws JsonException
      */
     protected function getJson(
         string $url,
@@ -103,6 +120,7 @@ class ApiService
             $service,
             $id
         );
+
         $request = $this->browser->request($url);
         if ($request->getReasonPhrase() !== 'OK') {
             $code = $request->getStatusCode();
@@ -117,10 +135,10 @@ class ApiService
             return null;
         }
         $content = $request->getBody()->getContents();
-        $data = \json_decode($content, true);
+        $data = json_decode($content, true, 512, JSON_THROW_ON_ERROR);
         if ($service === 'Google API Service' && (!isset($data['pageInfo']) || $data['pageInfo']['totalResults'] === 0)) {
             $this->logger->error(
-                "Error while get $message. Returned data: " . \json_encode($data),
+                "Error while get $message. Returned data: " . json_encode($data, JSON_THROW_ON_ERROR),
                 LogEnvironment::fromMethodName(__METHOD__)
             );
             return null;
@@ -137,16 +155,17 @@ class ApiService
     /**
      * Convert an ISO8601 duration to seconds
      *
-     * @param string|null  $ISO8601duration
+     * @param string|null $ISO8601duration
      * @return integer
+     * @throws Exception
      */
     protected function convertToSeconds(?string $ISO8601duration = null): int
     {
         if (!$ISO8601duration) {
             return 0;
         }
-        $interval = new \DateInterval($ISO8601duration);
-        $ref = new \DateTimeImmutable;
+        $interval = new DateInterval($ISO8601duration);
+        $ref = new DateTimeImmutable;
         return $ref->add($interval)->getTimestamp() - $ref->getTimestamp();
     }
 
@@ -163,21 +182,24 @@ class ApiService
         string $apiKey,
         string $type
     ): ?array {
-        $url = "https://www.googleapis.com/youtube/v3/{$type}s?key={$apiKey}&part=contentDetails";
-        $typeForLogger = $type == 'playlistItem' ? 'playlist items' : $type;
+        $url = sprintf('https://www.googleapis.com/youtube/v3/%ss?key=%s&part=contentDetails', $type, $apiKey);
+        $typeForLogger = $type === 'playlistItem' ? 'playlist items' : $type;
 
-        if ($type != 'playlistItem') {
+        if ($type !== 'playlistItem') {
             $url .= ',snippet,player&id=';
         } else {
             $url .= '&playlistId=';
         }
-        $data = $this->getJson(
-            $url . $id,
-            $typeForLogger,
-            'Google API Service',
-            $id
-        );
-        return $data ? $data['items'] : null;
+        try {
+            $data = $this->getJson(
+                $url . $id,
+                $typeForLogger,
+                'Google API Service',
+                $id
+            );
+        } catch (JsonException | InfiniteRedirectionException $e) {
+        }
+        return isset($data) ? $data['items'] : null;
     }
 
     /**
@@ -187,6 +209,7 @@ class ApiService
      * @param string $apiKey
      * @param string $type
      * @return array|null The array with the data or null if there's an error
+     * @throws Exception
      */
     protected function getDataFromYoutubeVideoWithApi(
         string $id,
@@ -203,7 +226,7 @@ class ApiService
         $title = $item['snippet']['title'];
 
         // Get the dimensions
-        $dom = new \DOMDocument();
+        $dom = new DOMDocument();
         $dom->loadHTML($item['player']['embedHtml']);
         $iframe = $dom->getElementsByTagName('iframe')[0];
         $width = $iframe ? (int) $iframe->getAttribute("width") : null;
@@ -216,7 +239,7 @@ class ApiService
 
         // Get the duration
         $duration = 0;
-        if ($type == 'video') {
+        if ($type === 'video') {
             // From a single video
             $duration = $this->convertToSeconds($item['contentDetails']['duration']);
         } else {

@@ -3,6 +3,12 @@
 namespace Jonnitto\PrettyEmbedHelper\Service;
 
 use Neos\Flow\Annotations as Flow;
+use function count;
+use function preg_match;
+use function preg_match_all;
+use function strcmp;
+use function strpos;
+use function trim;
 
 /**
  * @Flow\Scope("singleton")
@@ -17,28 +23,28 @@ class ParseIDService
      */
     public function platform($url = null): ?string
     {
-        $url = \trim(\strval($url));
+        $url = trim((string)$url);
         if (!$url) {
             return null;
         }
 
-        if (\strpos($url, 'vimeo.com') !== false) {
+        if (strpos($url, 'vimeo.com') !== false) {
             return 'vimeo';
         }
 
-        if (\strpos($url, 'youtu.be') !== false || \strpos($url, 'youtube')) {
+        if (strpos($url, 'youtu.be') !== false || strpos($url, 'youtube')) {
             return 'youtube';
         }
 
-        $isCompleteUrl = \preg_match('/^https?:\/\//im', $url);
+        $isCompleteUrl = preg_match('/^https?:\/\//im', $url);
         if (!$isCompleteUrl) {
             // Vimeo has only numbers
-            if (\preg_match('/^\d+$/', $url)) {
+            if (preg_match('/^\d+$/', $url)) {
                 return 'vimeo';
             }
 
             // The ID has to start with a letter / number / _
-            if (\preg_match('/^[_A-Za-z0-9]/', $url)) {
+            if (preg_match('/^[_A-Za-z0-9]/', $url)) {
                 return 'youtube';
             }
         }
@@ -73,11 +79,11 @@ class ParseIDService
             return null;
         }
         $regs = [];
-        $url = trim(strval($url));
+        $url = trim((string)$url);
         if (preg_match('%^https?:\/\/(?:www\.|player\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/([^\/]*)\/videos\/|album\/(\d+)\/video\/|video\/|)(\d+)(?:$|\/|\?)(?:[?]?.*)$%im', $url, $regs)) {
             return (string) $regs[3];
         }
-        // The ID has to start with an number
+        // The ID has to start with a number
         if (preg_match('/^[0-9]/', $url)) {
             return (string) $url;
         }
@@ -114,18 +120,17 @@ class ParseIDService
             return null;
         }
         $regs = [];
-        $url = \trim(\strval($url));
+        $url = trim((string)$url);
 
-        if (\preg_match_all('/(?<=(?:(?<=v)|(?<=i)|(?<=list))=)[a-zA-Z0-9-]+(?=&)|(?<=(?:(?<=v)|(?<=i)|(?<=list))\/)[^&\n]+|(?<=embed\/)[^"&\n]+|(?<=(?:(?<=v)|(?<=i)|(?<=list))=)[^&\n]+|(?<=youtu.be\/)[^&\n]+/im', $url, $regs)) {
+        if (preg_match_all('/(?<=(?:(?<=v)|(?<=i)|(?<=list))=)[a-zA-Z0-9-]+(?=&)|(?<=(?:(?<=v)|(?<=i)|(?<=list))\/)[^&\n]+|(?<=embed\/)[^"&\n]+|(?<=(?:(?<=v)|(?<=i)|(?<=list))=)[^&\n]+|(?<=youtu.be\/)[^&\n]+/im', $url, $regs)) {
             $array = $regs[0];
 
-            if (\count($array) == 1) {
+            if (count($array) === 1) {
                 return (string) $array[0];
             }
 
-            $returnKey = 0;
             // Playlist have always longer IDs
-            if (\strcmp($array[0], $array[1])) {
+            if (strcmp($array[0], $array[1])) {
                 // String 2 is longer
                 $returnKey = $type === 'video' ? 0 : 1;
             } else {
