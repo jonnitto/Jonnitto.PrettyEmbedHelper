@@ -30,6 +30,11 @@ class ApiService
     protected $logger;
 
     /**
+     * @var Browser
+     */
+    protected $browser;
+
+    /**
      * Constructor
      */
     public function __construct()
