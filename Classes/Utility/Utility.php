@@ -3,6 +3,7 @@
 namespace Jonnitto\PrettyEmbedHelper\Utility;
 
 use Neos\Flow\Annotations as Flow;
+use function preg_replace;
 
 /**
  * @Flow\Scope("singleton")
@@ -10,7 +11,7 @@ use Neos\Flow\Annotations as Flow;
 class Utility
 {
     /**
-     * Remove the prototcol from a url and replace it with `//`
+     * Remove the protocol from url and replace it with `//`
      *
      * @param string|null $url
      * @return string|null
@@ -20,7 +21,7 @@ class Utility
         if (!is_string($url)) {
             return null;
         }
-        return \preg_replace('/https?:\/\//i', '//', $url);
+        return preg_replace('/https?:\/\//i', '//', $url);
     }
 
     /**
