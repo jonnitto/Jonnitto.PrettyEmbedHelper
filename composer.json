@@ -25,6 +25,7 @@
     "require": {
         "php": "^7.3",
         "ext-json": "*",
+        "ext-dom": "*",
         "neos/neos": "^5.3 || ^7.0",
         "neos/fusion-afx": "^1.2 || ^7.0",
         "carbon/includeassets": "^3.5 || ^4.0 || ^5.0",
