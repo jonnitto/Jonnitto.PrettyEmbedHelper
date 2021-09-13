@@ -17,24 +17,6 @@ use Neos\Flow\Http\Client\InfiniteRedirectionException;
 class Helper implements ProtectedContextAwareInterface
 {
     /**
-     * @Flow\Inject
-     * @var ParseIDService
-     */
-    protected $parseID;
-
-    /**
-     * @Flow\Inject
-     * @var ApiService
-     */
-    protected $api;
-
-    /**
-     * @Flow\Inject
-     * @var Utility
-     */
-    protected $utility;
-
-    /**
      * This helper calculates the padding from a given ratio or width and height
      *
      * @param float|integer|string $ratio
@@ -62,16 +44,18 @@ class Helper implements ProtectedContextAwareInterface
      */
     public function vimeoThumbnail($videoID): ?string
     {
-        if (!$videoID || !isset($this->api)) {
+        if (!$videoID) {
             return null;
         }
 
-        $data = $this->api->vimeo($videoID);
+        $api = new ApiService();
+        $data = $api->vimeo($videoID);
 
         if (!isset($data)) {
             return null;
         }
-        return $this->utility->removeProtocolFromUrl($data['thumbnail_url']);
+        $utility = new Utility();
+        return $utility->removeProtocolFromUrl($data['thumbnail_url']);
     }
 
     /**
@@ -84,20 +68,21 @@ class Helper implements ProtectedContextAwareInterface
     public function platformID($videoID, string $platform): ?string
     {
         if ($platform === 'vimeo') {
-            return $this->parseID->vimeo($videoID);
+            return $this->vimeoID($videoID);
         }
-        return $this->parseID->youtube($videoID);
+        return $this->youtubeID($videoID);
     }
 
     /**
      * Return the id from Vimeo
      *
      * @param string|integer $videoID
-     * @return string|integer|null
+     * @return string|null
      */
     public function vimeoID($videoID): ?string
     {
-        return $this->parseID->vimeo($videoID);
+        $parseID = new ParseIDService();
+        return $parseID->vimeo($videoID);
     }
 
     /**
@@ -108,7 +93,8 @@ class Helper implements ProtectedContextAwareInterface
      */
     public function youtubeID($videoID): ?string
     {
-        return $this->parseID->youtube($videoID);
+        $parseID = new ParseIDService();
+        return $parseID->youtube($videoID);
     }
 
 
