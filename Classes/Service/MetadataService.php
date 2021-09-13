@@ -41,6 +41,12 @@ class MetadataService
     protected $parseID;
 
     /**
+     * @Flow\Inject
+     * @var ImageService
+     */
+    protected $imageService;
+
+    /**
      * @var array
      */
     protected $defaultReturn = ['node' => null];
@@ -63,6 +69,23 @@ class MetadataService
             return $this->dataFromService($node, $remove);
         }
         return $this->defaultReturn;
+    }
+
+    /**
+     * Removes the metadata
+     * @throws IllegalObjectTypeException
+     */
+    public function removeMetaData(NodeInterface $node): void {
+        $node->setProperty('metadataID', null);
+        $node->setProperty('metadataTitle', null);
+        $node->setProperty('metadataRatio', null);
+        $node->setProperty('metadataDuration', null);
+        $node->setProperty(
+            'metadataImage',
+            null
+        );
+        $node->setProperty('metadataThumbnail', null);
+        $this->imageService->removeTagIfEmpty();
     }
 
     /**

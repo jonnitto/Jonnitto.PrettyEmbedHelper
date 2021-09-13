@@ -2,11 +2,11 @@
 
 namespace Jonnitto\PrettyEmbedHelper\Service;
 
+use Jonnitto\PrettyEmbedHelper\Utility\Utility;
 use JsonException;
+use Neos\ContentRepository\Domain\Model\NodeInterface;
 use Neos\ContentRepository\Exception\NodeException;
 use Neos\Flow\Annotations as Flow;
-use Neos\ContentRepository\Domain\Model\NodeInterface;
-use Jonnitto\PrettyEmbedHelper\Utility\Utility;
 use Neos\Flow\Http\Client\InfiniteRedirectionException;
 use Neos\Flow\Persistence\Exception\IllegalObjectTypeException;
 use Neos\Flow\Persistence\Exception\InvalidQueryException;
@@ -46,6 +46,12 @@ class YoutubeService
     protected $api;
 
     /**
+     * @Flow\Inject
+     * @var MetadataService
+     */
+    protected $metadataService;
+
+    /**
      * @Flow\InjectConfiguration(package="Jonnitto.PrettyEmbedYoutube")
      * @var array
      */
@@ -70,102 +76,99 @@ class YoutubeService
      */
     public function getAndSaveDataFromApi(NodeInterface $node, bool $remove = false): ?array
     {
+        $this->imageService->remove($node);
+
+        $returnArray = [
+            'nodeTypeName' => $node->getNodeType()->getName(),
+            'node' => 'Youtube',
+            'path' => $node->getPath(),
+            'data' => false,
+        ];
+
+        if ($remove === true) {
+            $this->metadataService->removeMetaData($node);
+            return $returnArray;
+        }
+
         $isYoutubePackage = $node->getNodeType()->isOfType(
             'Jonnitto.PrettyEmbedYoutube:Mixin.VideoID'
         );
 
-        $videoIDProperty = null;
-        $videoID = null;
-        $data = null;
-        $title = null;
-        $ratio = null;
-        $image = null;
-        $type = null;
-        $thumbnail = null;
-        $duration = null;
+        $videoIDProperty = $node->getProperty('videoID');
 
-        $this->imageService->remove($node);
-
-        if ($remove === false) {
-            $videoIDProperty = $node->getProperty('videoID');
-
-            if ($isYoutubePackage) {
-                $type = $this->youtubeSettings['defaults']['type'];
-                if ($node->hasProperty('type')) {
-                    $typeFromProperty = $node->getProperty('type');
-                    if ($typeFromProperty === 'video' || $typeFromProperty === 'playlist') {
-                        $type = $typeFromProperty;
-                    }
+        if ($isYoutubePackage) {
+            $type = $this->youtubeSettings['defaults']['type'];
+            if ($node->hasProperty('type')) {
+                $typeFromProperty = $node->getProperty('type');
+                if ($typeFromProperty === 'video' || $typeFromProperty === 'playlist') {
+                    $type = $typeFromProperty;
                 }
-            } else {
-                $type = $this->type($videoIDProperty);
-                $node->setProperty('type', $type);
             }
-
-            $videoID = $this->parseID->youtube($videoIDProperty, $type);
-            $data = $this->api->youtube(
-                $videoID,
-                $type,
-                $this->settings['youtubeApiKey']
-            );
-
-            if (isset($data)) {
-                $title = $data['title'] ?? null;
-                $ratio = $data['width'] && $data['height'] ?
-                    $this->utility->calculatePaddingTop(
-                        $data['width'],
-                        $data['height']
-                    ) : null;
-                $duration = $data['duration'] ?? null;
-                if (isset($data['imageUrl'], $data['imageResolution'])) {
-                    $image = $data['imageUrl'];
-                    $resolution = $data['imageResolution'];
-                } else {
-                    $youtubeImageArray = $this->getBestPossibleYoutubeImage($videoID, $data['thumbnail_url']);
-                    $image = $youtubeImageArray['image'];
-                    $resolution = $youtubeImageArray['resolution'];
-                }
-            } else {
-                $youtubeImageArray = $this->getBestPossibleYoutubeImage($videoID);
-                $image = $youtubeImageArray['image'] ?? null;
-                $resolution = $youtubeImageArray['resolution'] ?? null;
-            }
-
-            if (isset($image)) {
-                $thumbnail = $this->imageService->import(
-                    $node,
-                    $image,
-                    $videoID,
-                    'Youtube',
-                    $resolution
-                );
-            }
+        } else {
+            $type = $this->type($videoIDProperty);
+            $node->setProperty('type', $type);
         }
 
+        $videoID = $this->parseID->youtube($videoIDProperty, $type);
+        $data = $this->api->youtube(
+            $videoID,
+            $type,
+            $this->settings['youtubeApiKey']
+        );
+
+        if (isset($data)) {
+            $title = $data['title'] ?? null;
+            $ratio = $data['width'] && $data['height'] ?
+                $this->utility->calculatePaddingTop(
+                    $data['width'],
+                    $data['height']
+                ) : null;
+            $duration = $data['duration'] ?? null;
+            if (isset($data['imageUrl'], $data['imageResolution'])) {
+                $image = $data['imageUrl'];
+                $resolution = $data['imageResolution'];
+            } else {
+                $youtubeImageArray = $this->getBestPossibleYoutubeImage($videoID, $data['thumbnail_url']);
+                $image = $youtubeImageArray['image'];
+                $resolution = $youtubeImageArray['resolution'];
+            }
+        } else {
+            $youtubeImageArray = $this->getBestPossibleYoutubeImage($videoID);
+            $image = $youtubeImageArray['image'] ?? null;
+            $resolution = $youtubeImageArray['resolution'] ?? null;
+        }
+
+        if (isset($image)) {
+            $thumbnail = $this->imageService->import(
+                $node,
+                $image,
+                $videoID,
+                'Youtube',
+                $resolution
+            );
+        }
+
+
         $node->setProperty('metadataID', $videoID);
-        $node->setProperty('metadataTitle', $title);
-        $node->setProperty('metadataRatio', $ratio);
+        $node->setProperty('metadataTitle', $title ?? null);
+        $node->setProperty('metadataRatio', $ratio ?? null);
         $node->setProperty(
             'metadataImage',
             $this->utility->removeProtocolFromUrl($image)
         );
-        $node->setProperty('metadataThumbnail', $thumbnail);
-        $node->setProperty('metadataDuration', $duration);
+        $node->setProperty('metadataThumbnail', $thumbnail ?? null);
+        $node->setProperty('metadataDuration', $duration ?? null);
 
         $this->imageService->removeTagIfEmpty();
 
-        if ($videoIDProperty || $remove) {
-            return [
-                'nodeTypeName' => $node->getNodeType()->getName(),
-                'node' => 'Youtube',
-                'type' => ucfirst($type),
-                'id' => $videoID,
-                'path' => $node->getPath(),
-                'data' => isset($data)
-            ];
+        if (!$videoIDProperty) {
+            return null;
         }
 
-        return null;
+        $returnArray['id'] = $videoID;
+        $returnArray['type'] = ucfirst($type);
+        $returnArray['data'] = isset($data);
+        return $returnArray;
     }
 
     /**
