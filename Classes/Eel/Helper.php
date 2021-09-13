@@ -58,11 +58,16 @@ class Helper implements ProtectedContextAwareInterface
      */
     public function vimeoThumbnail($videoID): ?string
     {
+        if (!$videoID || !isset($this->api)) {
+            return null;
+        }
+
         $data = $this->api->vimeo($videoID);
+
         if (!isset($data)) {
             return null;
         }
-        return $this->utility->removeProtocolFromUrl($data['thumbnail_url']) ?? null;
+        return $this->utility->removeProtocolFromUrl($data['thumbnail_url']);
     }
 
     /**
