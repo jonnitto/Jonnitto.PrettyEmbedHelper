@@ -69,6 +69,7 @@ class ParseIDService
      * http://vimeo.com/album/2222222/video/11111111
      * https://vimeo.com/11111111?param=test
      * http://vimeo.com/11111111?param=test
+     * https://vimeo.com/jonnitto/carbonplausible
      *
      * @param string|integer $url The URL or the plain id
      * @return string|null The video id extracted from url
@@ -83,11 +84,7 @@ class ParseIDService
         if (preg_match('%^https?:\/\/(?:www\.|player\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/([^\/]*)\/videos\/|album\/(\d+)\/video\/|video\/|)(\d+)(?:$|\/|\?)(?:[?]?.*)$%im', $url, $regs)) {
             return (string) $regs[3];
         }
-        // The ID has to start with a number
-        if (preg_match('/^[0-9]/', $url)) {
-            return (string) $url;
-        }
-        return null;
+        return str_replace('https://vimeo.com/', '', (string) $url);
     }
 
     /**

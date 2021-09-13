@@ -82,17 +82,23 @@ class ApiService
     /**
      * Grab the data of a publicly embeddable video hosted on vimeo
      *
-     * @param string $id The "id" of a video
+     * @param string|null $id The "id" of a video
      * @return array|null The data or null if there's an error
-     * @throws InfiniteRedirectionException|JsonException
+     * @throws InfiniteRedirectionException
+     * @throws JsonException
      */
-    public function vimeo(string $id): ?array
+    public function vimeo(?string $id = null): ?array
     {
         if (!$id) {
             return null;
         }
 
+        if (!strpos($id, 'https://vimeo.com/')) {
+            $id = str_replace('https://vimeo.com/', '', $id);
+        }
+
         $url = urlencode('https://vimeo.com/' . $id);
+
         $data = $this->getJson(
             'https://vimeo.com/api/oembed.json?width=2560&url=' . $url,
             'video',
