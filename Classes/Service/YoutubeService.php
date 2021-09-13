@@ -49,7 +49,7 @@ class YoutubeService
 
     /**
      * Get and save data from oembed service
-     * 
+     *
      * @param NodeInterface $node
      * @param boolean $remove
      * @return array|null
@@ -156,7 +156,7 @@ class YoutubeService
     }
 
     /**
-     * Get the type of a video
+     * Get the type of video
      *
      * @param string $url
      * @return string The type of the link
@@ -171,7 +171,7 @@ class YoutubeService
     }
 
     /**
-     * Get the best possible image from youtube
+     * Get the best possible image from YouTube
      *
      * @param string|integer $videoID
      * @param string|null $url

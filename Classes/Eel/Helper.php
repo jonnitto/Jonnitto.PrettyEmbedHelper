@@ -33,7 +33,7 @@ class Helper implements ProtectedContextAwareInterface
     protected $utility;
 
     /**
-     * This helper calcualtes the padding from a given ratio or width and height
+     * This helper calculates the padding from a given ratio or width and height
      *
      * @param float|integer|string $ratio
      * @return string|null The calculated value
@@ -69,6 +69,7 @@ class Helper implements ProtectedContextAwareInterface
      * Return the id from a video platform
      *
      * @param string|integer $videoID
+     * @param string $platform
      * @return string|null
      */
     public function platformID($videoID, string $platform): ?string
@@ -80,7 +81,7 @@ class Helper implements ProtectedContextAwareInterface
     }
 
     /**
-     * Return the id from vimeo
+     * Return the id from Vimeo
      *
      * @param string|integer $videoID
      * @return string|integer|null
@@ -91,7 +92,7 @@ class Helper implements ProtectedContextAwareInterface
     }
 
     /**
-     * Return the id from youtube
+     * Return the id from YouTube
      *
      * @param string|integer $videoID
      * @return string|null

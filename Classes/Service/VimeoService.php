@@ -37,7 +37,7 @@ class VimeoService
 
     /**
      * Get and save data from oembed service
-     * 
+     *
      * @param NodeInterface $node
      * @param boolean $remove
      * @return array|null

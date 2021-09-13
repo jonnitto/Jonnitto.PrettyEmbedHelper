@@ -42,9 +42,10 @@ class MetadataService
 
     /**
      * Create data
-     * 
+     *
      * @param NodeInterface $node
-     * @return array Informations about the node
+     * @param bool $remove
+     * @return array Information about the node
      */
     public function createDataFromService(
         NodeInterface $node,
@@ -58,12 +59,12 @@ class MetadataService
 
     /**
      * Update data
-     * 
+     *
      * @param NodeInterface $node
      * @param string $propertyName
      * @param mixed $oldValue
      * @param mixed $newValue
-     * @return array Informations about the node
+     * @return array Information about the node
      */
     public function updateDataFromService(
         NodeInterface $node,
@@ -83,10 +84,10 @@ class MetadataService
 
     /**
      * Saves and returns the metadata
-     * 
+     *
      * @param NodeInterface $node
      * @param boolean $remove
-     * @return array Informations about the node
+     * @return array Information about the node
      */
     protected function dataFromService(
         NodeInterface $node,

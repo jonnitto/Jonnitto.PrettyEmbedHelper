@@ -59,7 +59,7 @@ class PrettyEmbedCommandController extends CommandController
     protected $logger;
 
     /**
-     * Generate metadata for the PrettyEmbed Vimeo/Youtube/Video or Audio player
+     * Generate metadata for the PrettyEmbed Vimeo/YouTube/Video or Audio player
      *
      * This generates the metadata for all player which has the mixin 
      * - Jonnitto.PrettyEmbedVideoPlatforms:Mixin.VideoID
@@ -233,7 +233,7 @@ class PrettyEmbedCommandController extends CommandController
                 foreach ($errorArray as $error) {
                     $this->logger->error(
                         sprintf(
-                            'Error fetching metadata for "%s %s" with the id %s and the node type "%" on the path "%s"',
+                            'Error fetching metadata for "%s %s" with the id %s and the node type "%s" on the path "%s"',
                             $error['node'],
                             $error['type'],
                             $error['id'],
@@ -267,7 +267,7 @@ class PrettyEmbedCommandController extends CommandController
      * Count entries of the given platform
      *
      * @param array $entries
-     * @param string $type The type (Youtube/Vimeo/Video or Audio)
+     * @param string $type The type (YouTube/Vimeo/Video or Audio)
      * @return integer Returns the amount of entries
      */
     protected function countEntries(array $entries, string $type): int

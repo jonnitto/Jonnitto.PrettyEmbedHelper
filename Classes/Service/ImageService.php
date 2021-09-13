@@ -143,8 +143,8 @@ class ImageService
     }
 
     /**
-     * This get's triggered after node publishing and put the data into the pending array
-     * 
+     * This gets triggered after node publishing and put the data into the pending array
+     *
      * @param NodeInterface $node
      * @param Workspace $targetWorkspace
      * @return void
@@ -180,17 +180,19 @@ class ImageService
             // at least):
             //
             // Background:
-            // - in older Flow versions, the Neos\Flow\Mvc\Dispatcher was used BOTH for Web and CLI requests. Thus, the "afterControllerInvocation" signal was emitted for both cases.
+            // - in older Flow versions, the Neos\Flow\Mvc\Dispatcher was used BOTH for Web and CLI requests.
+            //   Thus, the "afterControllerInvocation" signal was emitted for both cases.
             // - With Flow 6.0, the Neos\Flow\Mvc\Dispatcher was split apart; so the CLI uses its separate Neos\Flow\Cli\Dispatcher.
-            // - however, *FOR BACKWARDS COMPATIBILITY REASONS* (probably) the CLI Dispatcher emits the "afterControllerInvocation" in the name of the Mvc\Dispatcher; effectively
-            //   keeping the old behavior as before.
+            // - however, *FOR BACKWARDS COMPATIBILITY REASONS* (probably) the CLI Dispatcher emits the "afterControllerInvocation"
+            //   in the name of the Mvc\Dispatcher; effectively keeping the old behavior as before.
             //
             // Problem Scenario:
             // - The database is completely empty.
             // - ./flow doctrine:migrate is triggered.
             // - this triggers a sub request "./flow neos.flow:doctrine:compileproxies"
             // - when this sub request ENDS, the signal afterControllerInvocation is invoked (see "Background" above).
-            // - this triggers PersistenceManagerInterface::persistAll() - see https://github.com/neos/flow-development-collection/blob/1493e0dfd96f9cb288b006917e0defe6e9449544/Neos.Flow/Classes/Package.php#L63
+            // - this triggers PersistenceManagerInterface::persistAll() -
+            //   see https://github.com/neos/flow-development-collection/blob/1493e0dfd96f9cb288b006917e0defe6e9449544/Neos.Flow/Classes/Package.php#L63
             // - this, in turn, sends the signal "allObjectsPersisted" (which we listen to in the ../Package.php).
             // - this triggers "deletePendingData" (this method).
             // - (remember, at this point NO DATABASE TABLE WAS CREATED YET)

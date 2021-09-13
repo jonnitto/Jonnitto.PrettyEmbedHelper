@@ -20,6 +20,9 @@ class ApiService
      */
     protected $logger;
 
+    /**
+     * Constructor
+     */
     public function __construct()
     {
         $this->browser = new Browser();
@@ -27,11 +30,11 @@ class ApiService
     }
 
     /**
-     * Grab the data of a publicly embeddable video hosted on youtube
-     * 
+     * Grab the data of a publicly embeddable video hosted on YouTube
+     *
      * @param string|integer $id The "id" of a video
      * @param string $type
-     * @param string $apiKey for fetching the duration
+     * @param string|null $apiKey for fetching the duration
      * @return array|null The data or null if there's an error
      */
     public function youtube(
@@ -148,7 +151,7 @@ class ApiService
     }
 
     /**
-     * Make the call the the YouTube V3 API
+     * Make the call the YouTube V3 API
      *
      * @param string $id
      * @param string $apiKey
@@ -178,7 +181,7 @@ class ApiService
     }
 
     /**
-     * Get the video data using the youtube api
+     * Get the video data using the YouTube api
      *
      * @param string $id
      * @param string $apiKey

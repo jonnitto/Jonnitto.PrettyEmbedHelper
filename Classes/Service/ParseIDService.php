@@ -10,7 +10,7 @@ use Neos\Flow\Annotations as Flow;
 class ParseIDService
 {
     /**
-     * Get the type of videoplatform
+     * Get the type of video platform
      *
      * @param string|integer $url The URL or the plain id
      * @return string|null The platform from the given url
@@ -85,7 +85,7 @@ class ParseIDService
     }
 
     /**
-     * Get Youtube video id from url
+     * Get YouTube video id from url
      * 
      * Supported url formats
      *
