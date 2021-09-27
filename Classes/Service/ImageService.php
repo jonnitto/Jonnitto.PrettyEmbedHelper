@@ -74,8 +74,7 @@ class ImageService
         $videoId,
         string $type,
         ?string $filenameSuffix = null
-    ): ?object
-    {
+    ): ?object {
         if (
             !$node->getNodeType()->isOfType(
                 'Jonnitto.PrettyEmbedHelper:Mixin.Metadata.Thumbnail'
@@ -92,7 +91,13 @@ class ImageService
         $asset = preg_replace('/(^.*\.(jpg|jpeg|png|gif|webp)).*$/', '$1', $assetOriginal); //asset without get parameters for Neos import
         $extension = preg_replace('/^.*\.(jpg|jpeg|png|gif|webp)$/', '$1', $asset); // asset extension
 
-        $filename = sprintf("%s-%d%s.%s", $type, $videoId, $filenameSuffix, $extension);
+        $filename = sprintf(
+            "%s-%s%s.%s",
+            $type,
+            $videoId,
+            $filenameSuffix,
+            $extension
+        );
 
         $availableImage = $this->assetRepository->findBySearchTermOrTags($filename)->getFirst();
         if (isset($availableImage)) {
