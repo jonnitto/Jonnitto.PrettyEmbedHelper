@@ -190,15 +190,17 @@ class PrettyEmbedCommandController extends CommandController
 
             foreach ($countEntries as $platform => $count) {
                 if ($count) {
+                    $entriesPlural = $count === 1 ? 'entry' : 'entries';
                     $this->outputFormatted(
-                        '<success>Saved the metadata from <b>%s %s</b> entries</success>',
-                        [$count, $platform]
+                        '<success>Saved the metadata from <b>%s %s</b> %s</success>',
+                        [$count, $platform, $entriesPlural]
                     );
                     $this->logger->debug(
                         sprintf(
-                            'Saved the metadata from "%s %s" entries',
+                            'Saved the metadata from "%s %s" %s',
                             $count,
-                            $platform
+                            $platform,
+                            $entriesPlural
                         ),
                         LogEnvironment::fromMethodName(__METHOD__)
                     );
@@ -219,15 +221,17 @@ class PrettyEmbedCommandController extends CommandController
 
                 foreach ($countEntries as $platform => $count) {
                     if ($count) {
+                        $entriesPlural = $count === 1 ? 'entry' : 'entries';
                         $this->outputFormatted(
-                            '<success>Removed the metadata from <b>%s %s</b> entries</success>',
-                            [$count, $platform]
+                            '<success>Removed the metadata from <b>%s %s</b> %s</success>',
+                            [$count, $platform, $entriesPlural]
                         );
                         $this->logger->debug(
                             sprintf(
-                                'Removed the metadata from "%s %s" entries',
+                                'Removed the metadata from "%s %s" %s',
                                 $count,
-                                $platform
+                                $platform,
+                                $entriesPlural
                             ),
                             LogEnvironment::fromMethodName(__METHOD__)
                         );
