@@ -70,7 +70,7 @@ class PrettyEmbedCommandController extends CommandController
      * - Jonnitto.PrettyEmbedHelper:Mixin.Metadata.Duration
      *
      * @param string $workspace Workspace name, default is 'live'
-     * @param boolean $remove Is set, all metadata will be removed
+     * @param boolean $remove If set, all metadata will be removed
      * @return void
      * @throws EelException
      * @throws StopCommandException
