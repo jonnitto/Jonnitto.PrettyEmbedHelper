@@ -94,7 +94,7 @@ class ImageService
         $filename = sprintf(
             "%s-%s%s.%s",
             $type,
-            $videoId,
+            str_replace('/', '-', $videoId),
             $filenameSuffix,
             $extension
         );
