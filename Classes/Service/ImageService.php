@@ -17,7 +17,9 @@ use Neos\Media\Domain\Model\Tag;
 use Neos\Media\Domain\Repository\AssetRepository;
 use Neos\Media\Domain\Repository\TagRepository;
 use Throwable;
-use function preg_replace;
+use function explode;
+use function pathinfo;
+use function strtolower;
 
 /**
  * @Flow\Scope("singleton")
@@ -87,9 +89,18 @@ class ImageService
             $filenameSuffix = '-' . $filenameSuffix;
         }
 
-        $assetOriginal = $url; //original asset may have get parameters in the url
-        $asset = preg_replace('/(^.*\.(jpg|jpeg|png|gif|webp)).*$/', '$1', $assetOriginal); //asset without get parameters for Neos import
-        $extension = preg_replace('/^.*\.(jpg|jpeg|png|gif|webp)$/', '$1', $asset); // asset extension
+        $pathParts = pathinfo(strtolower($url));
+        $extension = isset($pathParts['extension']) ? explode('?', $pathParts['extension'])[0] : null;
+
+        if (!$extension) {
+            // If no extension is set, set it to jpg
+            $extension = 'jpg';
+            if ($type === 'Vimeo') {
+                // Vimeo don't give us an extension, as they offer avif, webp and jpg based on the browser support
+                // Because of that, we add .jpg to ensure we got the jpg variant
+                $url .= '.jpg';
+            }
+        }
 
         $filename = sprintf(
             "%s-%s%s.%s",
@@ -109,7 +120,7 @@ class ImageService
          */
         $tags = new ArrayCollection([$this->findOrCreateTag()]);
 
-        $resource = $this->resourceManager->importResource($assetOriginal);
+        $resource = $this->resourceManager->importResource($url);
 
         /** 
          * @var Image $image
