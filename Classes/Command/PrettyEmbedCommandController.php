@@ -3,6 +3,7 @@
 namespace Jonnitto\PrettyEmbedHelper\Command;
 
 use Jonnitto\PrettyEmbedHelper\Service\MetadataService;
+use Jonnitto\PrettyEmbedHelper\Service\ImageService;
 use Neos\ContentRepository\Domain\Repository\WorkspaceRepository;
 use Neos\ContentRepository\Domain\Service\ContentDimensionCombinator;
 use Neos\ContentRepository\Domain\Service\ContextFactoryInterface;
@@ -59,6 +60,27 @@ class PrettyEmbedCommandController extends CommandController
      * @var LoggerInterface
      */
     protected $logger;
+
+    /**
+     * @Flow\Inject
+     * @var ImageService
+     */
+    protected $imageService;
+
+    /**
+     * @var array
+     */
+    protected $success = [];
+
+    /**
+     * @var array
+     */
+    protected $error = [];
+
+    /**
+     * @var array
+     */
+    protected $nodes = [];
 
     /**
      * Generate metadata for the PrettyEmbed Vimeo/YouTube/Video or Audio player
@@ -119,73 +141,53 @@ class PrettyEmbedCommandController extends CommandController
         $this->outputFormatted(
             'Searching for PrettyEmbed nodes which are able to save metadata'
         );
-        $successArray = [];
-        $errorArray = [];
+
         foreach ($this->dimensionCombinator->getAllAllowedCombinations() as $dimensionCombination) {
             $flowQuery = new FlowQuery($baseContextSiteNodes);
             $siteNodes = $flowQuery->context(
                 ['dimensions' => $dimensionCombination, 'targetDimensions' => []]
             )->get();
+
             if (count($siteNodes) > 0) {
+                $nodes = [$siteNodes];
                 foreach ($siteNodes as $siteNode) {
-                    try {
-                        $returnFromSiteNode = $this->metadataService->createDataFromService(
-                            $siteNode,
-                            $remove
-                        );
-                        if ($returnFromSiteNode['node']) {
-                            if ($returnFromSiteNode['data']) {
-                                $successArray[] = $returnFromSiteNode;
-                            } else {
-                                $errorArray[] = $returnFromSiteNode;
-                            }
-                        }
-                    } catch (NodeException | IllegalObjectTypeException $e) {
-                    }
-                    $nodes = $flowQuery->q($siteNode)->context(
+                    $nodes[] = $flowQuery->q($siteNode)->context(
                         [
                             'dimensions' => $dimensionCombination,
                             'targetDimensions' => []
                         ]
                     )->find(
                         '[instanceof Jonnitto.PrettyEmbedHelper:Mixin.Metadata.Duration],' .
-                        '[instanceof Jonnitto.PrettyEmbedVideoPlatforms:Mixin.VideoID],' .
-                        '[instanceof Jonnitto.PrettyEmbedVimeo:Mixin.VideoID],' .
-                        '[instanceof Jonnitto.PrettyEmbedYoutube:Mixin.VideoID]'
+                            '[instanceof Jonnitto.PrettyEmbedVideoPlatforms:Mixin.VideoID],' .
+                            '[instanceof Jonnitto.PrettyEmbedVimeo:Mixin.VideoID],' .
+                            '[instanceof Jonnitto.PrettyEmbedYoutube:Mixin.VideoID]'
                     )->get();
-                    foreach ($nodes as $node) {
-                        try {
-                            $returnFromNode = $this->metadataService->createDataFromService(
-                                $node,
-                                $remove
-                            );
-                            if ($returnFromNode['node']) {
-                                if ($returnFromNode['data']) {
-                                    $successArray[] = $returnFromNode;
-                                } else {
-                                    $errorArray[] = $returnFromNode;
-                                }
-                            }
-                        } catch (NodeException | IllegalObjectTypeException $e) {
-                        }
-                    }
                 }
+                $this->nodes = array_merge(...$nodes);
             }
         }
-        $this->persistenceManager->persistAll();
 
-        if (count($errorArray) === 0 && count($successArray) === 0) {
+        $this->processNodes(true);
+        $this->imageService->removeAllUnusedImages();
+
+        if (!$remove) {
+            $this->error = [];
+            $this->success = [];
+            $this->processNodes(false);
+        }
+
+        if (count($this->error) === 0 && count($this->success) === 0) {
             $this->outputFormatted('<error>There were no node types found</error>');
             $this->quit();
         }
 
-        if (count($successArray)) {
+        if (count($this->success)) {
             $this->outputLine();
             $countEntries = [
-                'YouTube' => $this->countEntries($successArray, 'Youtube'),
-                'Vimeo' => $this->countEntries($successArray, 'Vimeo'),
-                'Video' => $this->countEntries($successArray, 'Video'),
-                'Audio' => $this->countEntries($successArray, 'Audio'),
+                'YouTube' => $this->countEntries($this->success, 'Youtube'),
+                'Vimeo' => $this->countEntries($this->success, 'Vimeo'),
+                'Video' => $this->countEntries($this->success, 'Video'),
+                'Audio' => $this->countEntries($this->success, 'Audio'),
             ];
 
             foreach ($countEntries as $platform => $count) {
@@ -208,15 +210,15 @@ class PrettyEmbedCommandController extends CommandController
             }
         }
 
-        if (count($errorArray)) {
+        if (count($this->error)) {
             $this->outputLine();
 
             if ($remove === true) {
                 $countEntries = [
-                    'YouTube' => $this->countEntries($errorArray, 'Youtube'),
-                    'Vimeo' => $this->countEntries($errorArray, 'Vimeo'),
-                    'Video' => $this->countEntries($errorArray, 'Video'),
-                    'Audio' => $this->countEntries($errorArray, 'Audio'),
+                    'YouTube' => $this->countEntries($this->error, 'Youtube'),
+                    'Vimeo' => $this->countEntries($this->error, 'Vimeo'),
+                    'Video' => $this->countEntries($this->error, 'Video'),
+                    'Audio' => $this->countEntries($this->error, 'Audio'),
                 ];
 
                 foreach ($countEntries as $platform => $count) {
@@ -240,10 +242,10 @@ class PrettyEmbedCommandController extends CommandController
             } else {
                 $this->outputLine(
                     '<error>There where <b>%s errors</b> fetching metadata:</error>',
-                    [count($errorArray)]
+                    [count($this->error)]
                 );
                 $tableRows = [];
-                foreach ($errorArray as $error) {
+                foreach ($this->error as $error) {
                     $this->logger->error(
                         sprintf(
                             'Error fetching metadata for "%s %s" with the id %s and the node type "%s" on the path "%s"',
@@ -295,5 +297,43 @@ class PrettyEmbedCommandController extends CommandController
             }
         );
         return $count ?? 0;
+    }
+
+    /**
+     * Process nodes
+     *
+     * @param boolean $remove
+     * @return void
+     */
+    protected function processNodes(bool $remove): void
+    {
+        $nodesCount = count($this->nodes);
+        if ($nodesCount === 0) {
+            return;
+        }
+        $this->outputLine();
+        $this->outputLine($remove ? 'Remove metadata' : 'Add metadata');
+        $this->output->progressStart($nodesCount);
+
+        foreach ($this->nodes as $node) {
+            try {
+                $returnFromNode = $this->metadataService->createDataFromService(
+                    $node,
+                    $remove
+                );
+                if ($returnFromNode['node']) {
+                    if ($returnFromNode['data']) {
+                        $this->success[] = $returnFromNode;
+                    } else {
+                        $this->error[] = $returnFromNode;
+                    }
+                }
+            } catch (NodeException | IllegalObjectTypeException $e) {
+            }
+            $this->output->progressAdvance();
+        }
+        $this->output->progressFinish();
+        $this->outputLine();
+        $this->persistenceManager->persistAll();
     }
 }

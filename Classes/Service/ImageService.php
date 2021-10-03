@@ -169,6 +169,36 @@ class ImageService
     }
 
     /**
+     * Remove all unused images
+     *
+     * @return void
+     * @throws IllegalObjectTypeException
+     * @throws InvalidQueryException
+     */
+    public function removeAllUnusedImages(): void
+    {
+        /** 
+         * @var Tag $tag
+         */
+        $tag = $this->findTag();
+
+        if (isset($tag)) {
+            $images = $this->assetRepository->findByTag($tag)->toArray();
+            foreach ($images as $image) {
+                try {
+                    $this->assetRepository->remove($image);
+                } catch (Throwable $th) {
+                }
+            }
+
+            if ($this->assetRepository->countByTag($tag) === 0) {
+                $this->tagRepository->remove($tag);
+            }
+            $this->persistenceManager->persistAll();
+        }
+    }
+
+    /**
      * This gets triggered after node publishing and put the data into the pending array
      *
      * @param NodeInterface $node
