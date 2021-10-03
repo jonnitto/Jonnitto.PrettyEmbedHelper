@@ -75,7 +75,8 @@ class MetadataService
      * Removes the metadata
      * @throws IllegalObjectTypeException
      */
-    public function removeMetaData(NodeInterface $node): void {
+    public function removeMetaData(NodeInterface $node): void
+    {
         $node->setProperty('metadataID', null);
         $node->setProperty('metadataTitle', null);
         $node->setProperty('metadataRatio', null);

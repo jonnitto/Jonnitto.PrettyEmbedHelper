@@ -80,7 +80,6 @@ class VimeoService
         try {
             $data = $this->api->vimeo($videoID);
         } catch (JsonException | InfiniteRedirectionException $e) {
-
         }
 
         if (isset($data)) {
