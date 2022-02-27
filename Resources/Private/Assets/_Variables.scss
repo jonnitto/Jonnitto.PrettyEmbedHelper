@@ -1,7 +1,7 @@
 // Buttons (play / pause)
 $prettyembed-button-play-size: 72px !default;
-$prettyembed-button-pause-size: round($prettyembed-button-play-size / 2) !default;
-$prettyembed-button-pause-margin: round($prettyembed-button-pause-size / 2) !default;
+$prettyembed-button-pause-size: calc($prettyembed-button-play-size / 2) !default;
+$prettyembed-button-pause-margin: calc($prettyembed-button-pause-size / 2) !default;
 $prettyembed-button-opacity: 0.9 !default;
 $prettyembed-button-scale: 0.8 !default;
 $prettyembed-button-scale-hover: 1 !default;
