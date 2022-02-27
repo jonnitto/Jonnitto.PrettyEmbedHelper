@@ -64,7 +64,7 @@ class AssetService
      */
     public function getAndSaveDataId3(
         NodeInterface $node,
-        bool $remove = false,
+        bool $remove,
         string $type
     ): array {
         $duration = null;
