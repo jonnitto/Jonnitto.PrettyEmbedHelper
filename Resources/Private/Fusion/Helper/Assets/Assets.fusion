@@ -1,0 +1,40 @@
+prototype(Jonnitto.PrettyEmbedHelper:Assets) < prototype(Neos.Fusion:Component) {
+    generalCSS = ${['Main.css']}
+    generalJS = ${[]}
+
+    backendCSS = ${['Backend.css']}
+    backendJS = ${['Backend.css']}
+
+    liveCSS= ${[]}
+    liveJS= ${['Main.js']}
+
+    inBackend = ${node.context.inBackend}
+
+    renderer = afx`
+        <Neos.Fusion:Loop @key='generalCSS' items={props.generalCSS}>
+            <Jonnitto.PrettyEmbedHelper:Assets.Fragment.Style filename={item} />
+        </Neos.Fusion:Loop>
+
+        <Neos.Fusion:Loop @key='generalJS' items={props.generalJS}>
+            <Jonnitto.PrettyEmbedHelper:Assets.Fragment.Script filename={item} />
+        </Neos.Fusion:Loop>
+
+
+        <Neos.Fusion:Loop @key='backendCSS' @if.set={props.inBackend} items={props.backendCSS}>
+            <Jonnitto.PrettyEmbedHelper:Assets.Fragment.Style filename={item} />
+        </Neos.Fusion:Loop>
+
+        <Neos.Fusion:Loop @key='backendJS' @if.set={props.inBackend} items={props.backendJS}>
+            <Jonnitto.PrettyEmbedHelper:Assets.Fragment.Script filename={item} />
+        </Neos.Fusion:Loop>
+
+
+        <Neos.Fusion:Loop @key='liveCSS' @if.set={!props.inBackend} items={props.liveCSS}>
+            <Jonnitto.PrettyEmbedHelper:Assets.Fragment.Style filename={item} />
+        </Neos.Fusion:Loop>
+
+        <Neos.Fusion:Loop @key='liveJS' @if.set={!props.inBackend} items={props.liveJS}>
+            <Jonnitto.PrettyEmbedHelper:Assets.Fragment.Script filename={item} />
+        </Neos.Fusion:Loop>
+    `
+}

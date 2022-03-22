@@ -1,0 +1,23 @@
+prototype(Jonnitto.PrettyEmbedHelper:Assets.Fragment.Script) < prototype(Neos.Fusion:Component) {
+    basePath = 'resource://Jonnitto.PrettyEmbedHelper/Public/Scripts/'
+    filename = null
+    defer = true
+    fullPath = ${this.basePath + this.filename}
+
+    renderer = Neos.Fusion:Tag {
+        tagName = 'script'
+        attributes {
+            data-slipstream = true
+            defer = ${props.defer}
+            src = Neos.Fusion:Join {
+                path = Neos.Fusion:ResourceUri {
+                    path = ${props.fullPath}
+                }
+                hash = ${'?v=' + Carbon.FileContent.pathHash(props.fullPath)}
+            }
+        }
+    }
+}
+
+
+

@@ -1,4 +1,4 @@
-prototype(Jonnitto.PrettyEmbedHelper:IncludeAssets) < prototype(Carbon.IncludeAssets:Case) {
-    package = 'Helper'
-    mixin = ${'Jonnitto.PrettyEmbed' + this.package + ':Mixin.IncludeAssets'}
+# Deprected, we now use Sitegeist.Slipstream to include assets
+prototype(Jonnitto.PrettyEmbedHelper:IncludeAssets) < prototype(Neos.Fusion:Value) {
+    value = ''
 }
