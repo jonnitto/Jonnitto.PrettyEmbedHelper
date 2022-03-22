@@ -60,7 +60,7 @@ function getPaddingTop(node, fallback = '56.25%') {
 }
 
 function write(link, playClass, type) {
-    if (checkGdpr(link)) {
+    if (checkGdpr(link, type)) {
         const IFRAME = markup(link);
         const IMAGE = getImage(link);
         if (!IFRAME) {
@@ -83,14 +83,19 @@ function write(link, playClass, type) {
     }
 }
 
-function checkGdpr(element) {
+function checkGdpr(element, type) {
     const GDPR = element.dataset.gdpr;
 
     if (!GDPR) {
         return true;
     }
-    if (GDPR && confirm(GDPR)) {
+
+    const LOCAL_STORAGE = window.localStorage;
+    const STORAGE_KEY = `jonnittoprettyembed_gdpr_${type}`;
+
+    if (LOCAL_STORAGE[STORAGE_KEY] === 'true' || confirm(GDPR)) {
         element.removeAttribute('data-gdpr');
+        LOCAL_STORAGE[STORAGE_KEY] = 'true';
         return true;
     }
     return false;
@@ -113,7 +118,7 @@ function lightbox(type) {
         const HTML = markup(this);
         if (HTML) {
             event.preventDefault();
-            if (checkGdpr(this)) {
+            if (checkGdpr(this, type)) {
                 const PADDING_TOP = getPaddingTop(this);
                 lightboxHelper.get([type, 'iframe'], PADDING_TOP).innerHTML = HTML;
                 lightboxHelper.show(() => {
