@@ -1,3 +1,0 @@
-# Deprected, we now use Sitegeist.Slipstream to include assets
-'Jonnitto.PrettyEmbedHelper:Mixin.IncludeAssets':
-  abstract: true
