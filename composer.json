@@ -33,7 +33,7 @@
         "carbon/eel": "^1.10 || ^2.0"
     },
     "suggest": {
-        "james-heinrich/getid3": "Get duration of internal audio and video files. You need to install the 2.0-beta version"
+        "james-heinrich/getid3": "Get the duration of internal audio and video files. You need to install the 2.0-beta version"
     },
     "autoload": {
         "psr-4": {
