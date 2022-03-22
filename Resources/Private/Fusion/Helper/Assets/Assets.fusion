@@ -1,8 +1,18 @@
 prototype(Jonnitto.PrettyEmbedHelper:Assets) < prototype(Neos.Fusion:Component) {
     includeAssets = ${Configuration.setting('Jonnitto.PrettyEmbedHelper.includeAssets')}
     inBackend = ${node.context.inBackend}
+    youtubeAPI = false
 
     renderer = Neos.Fusion:Join {
+        youtubeAPI = Neos.Fusion:Tag {
+            @if.set = ${!props.inBackend && props.youtubeAPI}
+            tagName = 'script'
+            attributes {
+                data-slipstream = true
+                defer = true
+                src="https://www.youtube.com/iframe_api"
+            }
+        }
         generalCSS = Jonnitto.PrettyEmbedHelper:Assets.Fragment.Style {
             @if.set = ${props.includeAssets.css}
             filename = 'Main.css'
