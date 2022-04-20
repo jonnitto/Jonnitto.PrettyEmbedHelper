@@ -23,6 +23,3 @@ prototype(Jonnitto.PrettyEmbedHelper:Assets.Fragment.Script) < prototype(Neos.Fu
         }
     }
 }
-
-
-
