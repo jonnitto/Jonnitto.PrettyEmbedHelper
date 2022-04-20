@@ -4,11 +4,16 @@ prototype(Jonnitto.PrettyEmbedHelper:Assets.Fragment.Script) < prototype(Neos.Fu
     defer = true
     fullPath = ${this.basePath + this.filename}
 
+    // https://github.com/sandstorm/Sandstorm.CookiePunch is installed
+    sandstormCookiePunchIsInstalled = ${Configuration.setting('Neos.Neos.fusion.autoInclude')['Sandstorm.CookiePunch']}
+    dataNeverBlock = ${!!this.sandstormCookiePunchIsInstalled}
+
     renderer = Neos.Fusion:Tag {
         tagName = 'script'
         attributes {
             data-slipstream = true
             defer = ${props.defer}
+            data-never-block = ${props.dataNeverBlock}
             src = Neos.Fusion:Join {
                 path = Neos.Fusion:ResourceUri {
                     path = ${props.fullPath}
