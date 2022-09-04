@@ -1,6 +1,6 @@
 prototype(Jonnitto.PrettyEmbedHelper:Assets.Fragment.Style) < prototype(Neos.Fusion:Component) {
     basePath = 'resource://Jonnitto.PrettyEmbedHelper/Public/Styles/'
-    filename = null
+    filename = ${null}
     fullPath = ${this.basePath + this.filename}
 
     renderer = Neos.Fusion:Tag {

@@ -1,5 +1,5 @@
 prototype(Jonnitto.PrettyEmbedHelper:Wrapper) < prototype(Neos.Fusion:Component) {
-    wrapper = null
+    wrapper = ${null}
     content = ${value}
 
     tagName = 'div'

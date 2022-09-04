@@ -1,5 +1,5 @@
 prototype(Jonnitto.PrettyEmbedHelper:GetProperty) < prototype(Neos.Fusion:Component) {
-    property = null
+    property = ${null}
     node = ${node}
     value = ${q(this.node).property(this.property)}
     package = ${package}

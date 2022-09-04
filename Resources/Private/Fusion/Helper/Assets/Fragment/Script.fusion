@@ -1,6 +1,6 @@
 prototype(Jonnitto.PrettyEmbedHelper:Assets.Fragment.Script) < prototype(Neos.Fusion:Component) {
     basePath = 'resource://Jonnitto.PrettyEmbedHelper/Public/Scripts/'
-    filename = null
+    filename = ${null}
     defer = true
     fullPath = ${this.basePath + this.filename}
 
