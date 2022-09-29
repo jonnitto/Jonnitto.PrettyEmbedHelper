@@ -44,7 +44,7 @@ class ParseIDService
             }
 
             // The ID has to start with a letter / number / _
-            if (preg_match('/^[_A-Za-z0-9]/', $url)) {
+            if (preg_match('/^[-_A-Za-z0-9]/', $url)) {
                 return 'youtube';
             }
         }
