@@ -1,5 +1,6 @@
 prototype(Jonnitto.PrettyEmbedHelper:Assets) < prototype(Neos.Fusion:Component) {
     includeAssets = ${Configuration.setting('Jonnitto.PrettyEmbedHelper.includeAssets')}
+    openInNewWindow = ${Configuration.setting('Jonnitto.PrettyEmbedHelper.openInNewWindow')}
     inBackend = ${node.context.inBackend}
     youtubeAPI = false
 
@@ -27,6 +28,8 @@ prototype(Jonnitto.PrettyEmbedHelper:Assets) < prototype(Neos.Fusion:Component) 
         }
         liveJS = Jonnitto.PrettyEmbedHelper:Assets.Fragment.Script {
             @if.set = ${!props.inBackend && props.includeAssets.js}
+            openYoutubeInNewWindow = ${props.openInNewWindow.youtube}
+            openVimeoInNewWindow = ${props.openInNewWindow.vimeo}
             filename = 'Main.js'
         }
     }

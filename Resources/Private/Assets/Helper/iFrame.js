@@ -3,6 +3,11 @@ import triggerEvent from './triggerEvent';
 import getAriaLabel from './getAriaLabel';
 import * as lightboxHelper from '../Helper/Lightbox';
 
+const openexternal = (() => {
+    const value = document.currentScript.dataset.openexternal;
+    return value ? value.split(',') : [];
+})();
+
 const BASE = 'jonnitto-prettyembed';
 
 function markup(node) {
@@ -112,6 +117,10 @@ function restore(element, playClass) {
 }
 
 function lightbox(type) {
+    if (openexternal.includes(type)) {
+        return;
+    }
+
     const SELECTOR = `a.${BASE}--${type}.${BASE}--lightbox`;
 
     lightboxHelper.init(SELECTOR, function (event) {
@@ -138,6 +147,9 @@ function lightbox(type) {
 }
 
 function embed(type) {
+    if (openexternal.includes(type)) {
+        return;
+    }
     const SELECTOR = `a.${BASE}--${type}.${BASE}--inline`;
     const PLAY_CLASS = `${BASE}--play`;
 

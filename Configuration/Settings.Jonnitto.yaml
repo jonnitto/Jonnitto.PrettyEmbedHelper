@@ -27,3 +27,8 @@ Jonnitto:
     button:
       play: 'resource://Jonnitto.PrettyEmbedHelper/Public/Assets/PlayButton.svg'
       pause: 'resource://Jonnitto.PrettyEmbedHelper/Public/Assets/PauseButton.svg'
+
+    # Should the player be embedded on the site or open in a new window?
+    openInNewWindow:
+      youtube: false
+      vimeo: false
