@@ -23,3 +23,35 @@ $prettyembed-lightbox-close-opacity: 0.65 !default;
 $prettyembed-lightbox-close-opacity-hover: 1 !default;
 $prettyembed-lightbox-close-color: #fff !default;
 $prettyembed-lightbox-backdrop-filter: blur(5px) !default;
+
+// GDPR Message
+$prettyembed-gdpr-include: true !default;
+$prettyembed-gdpr-color: #fff !default;
+$prettyembed-gdpr-font-size-breakpoint: 640px !default;
+$prettyembed-gdpr-font-size-mobile: 0.8rem !default;
+$prettyembed-gdpr-font-size: 1rem !default;
+$prettyembed-gdpr-gap: 1em !default;
+$prettyembed-gdpr-padding: 0.5em !default;
+$prettyembed-gdpr-explantation-font-size: 0.9em !default;
+$prettyembed-gdpr-explantation-max-width: 60ch !default;
+$prettyembed-gdpr-button-gap: 0.5em !default;
+$prettyembed-gdpr-button-padding: 0.5em 1em !default;
+$prettyembed-gdpr-button-border-radius: 0.25em !default;
+
+$prettyembed-gdpr-button-accept-color: #fff !default;
+$prettyembed-gdpr-button-accept-background-color: #16a34a !default;
+$prettyembed-gdpr-button-accept-border: none !default;
+$prettyembed-gdpr-button-accept-color-hover: #fff !default;
+$prettyembed-gdpr-button-accept-background-color-hover: #15803d !default;
+$prettyembed-gdpr-button-accept-border-color-hover: false !default;
+
+$prettyembed-gdpr-button-external-color: #fff !default;
+$prettyembed-gdpr-button-external-background-color: transparent !default;
+$prettyembed-gdpr-button-external-border: 1px solid #fff !default;
+$prettyembed-gdpr-button-external-color-hover: #000 !default;
+$prettyembed-gdpr-button-external-background-color-hover: #fff !default;
+$prettyembed-gdpr-button-external-border-color-hover: false !default;
+
+$prettyembed-gdpr-backdrop-filter: blur(5px) !default;
+$prettyembed-gdpr-overlay-color: #0b0b0b !default;
+$prettyembed-gdpr-overlay-opacity: 0.8 !default;

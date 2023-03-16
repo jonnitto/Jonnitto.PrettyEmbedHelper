@@ -1,0 +1,3 @@
+prototype(Jonnitto.PrettyEmbedHelper:GdprMessageNewWindow) < prototype(Neos.Fusion:Value) {
+    value = ${Translation.translate('gdprMessageNewWindow', 'Open in new window', [], 'Main', 'Jonnitto.PrettyEmbedHelper')}
+}

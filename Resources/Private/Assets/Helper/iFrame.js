@@ -3,12 +3,19 @@ import triggerEvent from './triggerEvent';
 import getAriaLabel from './getAriaLabel';
 import * as lightboxHelper from '../Helper/Lightbox';
 
+const LOCAL_STORAGE = window.localStorage;
+const BASE = 'jonnitto-prettyembed';
+const GDPR_CLASS = BASE + '__gdpr';
+const GDPR_BUTTON_CLASS = GDPR_CLASS + '-button';
+const GDPR_OPEN = {
+    youtube: false,
+    vimeo: false,
+};
+
 const openexternal = (() => {
     const value = document.currentScript.dataset.openexternal;
     return value ? value.split(',') : [];
 })();
-
-const BASE = 'jonnitto-prettyembed';
 
 function markup(node) {
     const DATA = node.dataset;
@@ -65,7 +72,7 @@ function getPaddingTop(node, fallback = '56.25%') {
 }
 
 function write(link, playClass, type) {
-    if (checkGdpr(link, type)) {
+    checkGdpr(link, type, function () {
         const IFRAME = markup(link);
         const IMAGE = getImage(link);
         if (!IFRAME) {
@@ -85,35 +92,91 @@ function write(link, playClass, type) {
             title: getAriaLabel(link),
             src: link.dataset.embed,
         });
-    }
+    });
 }
 
-function checkGdpr(element, type) {
-    const GDPR = element.dataset.gdpr;
+function checkGdpr(element, type, callback) {
+    const DATASET = element.dataset;
+    const GDPR = DATASET.gdpr;
 
     if (!GDPR) {
-        return true;
+        return callback();
     }
 
-    const LOCAL_STORAGE = window.localStorage;
     const STORAGE_KEY = `jonnittoprettyembed_gdpr_${type}`;
 
-    if (LOCAL_STORAGE[STORAGE_KEY] === 'true' || confirm(GDPR)) {
+    if (LOCAL_STORAGE[STORAGE_KEY] === 'true') {
         element.removeAttribute('data-gdpr');
-        LOCAL_STORAGE[STORAGE_KEY] = 'true';
-        return true;
+        return callback();
     }
-    return false;
+
+    if (DATASET.gdprOpen) {
+        return;
+    }
+
+    GDPR_OPEN[type] = true;
+
+    const WRAPPER = document.createElement('object');
+    WRAPPER.classList.add(GDPR_CLASS);
+    WRAPPER.classList.add(`${GDPR_CLASS}--${type}`);
+    WRAPPER.innerHTML = `<p>${GDPR}</p>`;
+
+    const BUTTON_CONTAINER = document.createElement('div');
+    BUTTON_CONTAINER.innerHTML = `<button data-url="${DATASET.embed}" data-ratio="${
+        DATASET.ratio
+    }" type="button" class="${GDPR_BUTTON_CLASS} ${GDPR_BUTTON_CLASS}--external">${
+        DATASET.gdprNewWindow || 'Open in new window'
+    }</button>`;
+
+    const ACCEPT_BUTTON = document.createElement('button');
+    ACCEPT_BUTTON.type = 'button';
+    ACCEPT_BUTTON.classList.add(GDPR_BUTTON_CLASS);
+    ACCEPT_BUTTON.classList.add(`${GDPR_BUTTON_CLASS}--accept`);
+    ACCEPT_BUTTON.innerText = DATASET.gdprAccept || 'OK';
+
+    BUTTON_CONTAINER.appendChild(ACCEPT_BUTTON);
+    WRAPPER.appendChild(BUTTON_CONTAINER);
+    element.appendChild(WRAPPER);
+
+    DATASET.gdprOpen = 'true';
+    element.setAttribute('data-gdpr-open', true);
+    ACCEPT_BUTTON.addEventListener('click', function (event) {
+        event.stopPropagation();
+        event.preventDefault();
+        GDPR_OPEN[type] = false;
+        LOCAL_STORAGE[STORAGE_KEY] = 'true';
+        [...document.querySelectorAll(`.${GDPR_CLASS}--${type}`)].forEach((el) => {
+            el.remove();
+        });
+        callback();
+    });
 }
+
+addEvent(`.${GDPR_BUTTON_CLASS}--external`, function (event) {
+    event.stopPropagation();
+    event.preventDefault();
+    const DATASET = event.target.dataset;
+    const RATIO = parseFloat(DATASET.ratio || '56.25%');
+    const WIDTH = Math.min(window.innerWidth, 1000);
+    const HEIGHT = WIDTH * (RATIO / 100);
+    const LEFT = (screen.width - WIDTH) / 2;
+    const TOP = (screen.height - HEIGHT) / 2;
+    window.open(
+        DATASET.url,
+        '_blank',
+        `noopener=yes,directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=yes,width=${WIDTH},height=${HEIGHT},left=${LEFT},top=${TOP}`
+    );
+});
 
 function restore(element, playClass) {
     const IMAGE = element.getAttribute('data-img') || false;
-    if (IMAGE) {
-        element.classList.remove(playClass);
-        element.removeAttribute('style');
-        element.innerHTML = `<img src="${IMAGE}" />`;
-        replace(element, 'a');
+    if (!IMAGE) {
+        return;
     }
+    element.classList.remove(playClass);
+    element.removeAttribute('style');
+    element.innerHTML = `<img src="${IMAGE}" />`;
+    replace(element, 'a');
 }
 
 function lightbox(type) {
@@ -124,25 +187,28 @@ function lightbox(type) {
     const SELECTOR = `a.${BASE}--${type}.${BASE}--lightbox`;
 
     lightboxHelper.init(SELECTOR, function (event) {
-        const HTML = markup(this);
-        if (HTML) {
-            event.preventDefault();
-            if (checkGdpr(this, type)) {
-                const PADDING_TOP = getPaddingTop(this);
-                lightboxHelper.get([type, 'iframe'], PADDING_TOP).innerHTML = HTML;
-                lightboxHelper.show(() => {
-                    if (!this.dataset.init) {
-                        this.dataset.init = true;
-                        triggerEvent({
-                            type: type,
-                            style: 'lightbox',
-                            title: getAriaLabel(this),
-                            src: this.dataset.embed,
-                        });
-                    }
-                });
-            }
+        const element = this;
+        const HTML = markup(element);
+        if (!HTML) {
+            return;
         }
+        event.preventDefault();
+        checkGdpr(element, type, function () {
+            const PADDING_TOP = getPaddingTop(element);
+            lightboxHelper.get([type, 'iframe'], PADDING_TOP).innerHTML = HTML;
+            lightboxHelper.show(() => {
+                const dataset = element.dataset;
+                if (!dataset.init) {
+                    dataset.init = true;
+                    triggerEvent({
+                        type: type,
+                        style: 'lightbox',
+                        title: getAriaLabel(element),
+                        src: dataset.embed,
+                    });
+                }
+            });
+        });
     });
 }
 

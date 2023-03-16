@@ -5,7 +5,15 @@
         <body>
             <trans-unit id="gdprMessage" xml:space="preserve">
                 <source>While playing this video, external contents are loaded and you may be tracked by the inital content provider.</source>
-                <target>En lisant cette vidéo, le contenu est téléchargé et vous pouvez être suivi par le fournisseur d’origine.</target>
+                <target>En lisant cette vidéo, le contenu est téléchargé et vous pouvez être suivi par le fournisseur d’origine.</target>
+            </trans-unit>
+            <trans-unit id="gdprMessageAccept" xml:space="preserve">
+                <source>OK</source>
+                <target>OK</target>
+            </trans-unit>
+            <trans-unit id="gdprMessageNewWindow" xml:space="preserve">
+                <source>Open in new window</source>
+                <target>Ouvrir dans une nouvelle fenêtre</target>
             </trans-unit>
         </body>
     </file>

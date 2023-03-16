@@ -1,0 +1,109 @@
+@if $prettyembed-gdpr-include {
+  .jonnitto-prettyembed__gdpr {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: $prettyembed-gdpr-gap;
+    padding: $prettyembed-gdpr-padding;
+    color: $prettyembed-gdpr-color;
+    z-index: 1;
+    cursor: default;
+    font-size: $prettyembed-gdpr-font-size-mobile;
+
+    @media (min-width: $prettyembed-gdpr-font-size-breakpoint) {
+      font-size: $prettyembed-gdpr-font-size;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: $prettyembed-gdpr-overlay-color;
+      opacity: $prettyembed-gdpr-overlay-opacity;
+      z-index: -1;
+    }
+
+    @if $prettyembed-gdpr-backdrop-filter {
+      backdrop-filter: $prettyembed-gdpr-backdrop-filter;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      font-size: 1em;
+      text-align: center;
+    }
+
+    p {
+      font-size: $prettyembed-gdpr-explantation-font-size;
+      max-width: $prettyembed-gdpr-explantation-max-width;
+      margin: 0 auto;
+    }
+
+    div {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: $prettyembed-gdpr-button-gap;
+    }
+  }
+
+  .jonnitto-prettyembed__gdpr-button {
+    display: block;
+    padding: $prettyembed-gdpr-button-padding;
+    text-decoration: none;
+    transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+    cursor: pointer;
+    @if $prettyembed-gdpr-button-border-radius {
+      border-radius: $prettyembed-gdpr-button-border-radius;
+    }
+  }
+
+  .jonnitto-prettyembed__gdpr-button--accept {
+    color: $prettyembed-gdpr-button-accept-color;
+    background-color: $prettyembed-gdpr-button-accept-background-color;
+    @if $prettyembed-gdpr-button-accept-border {
+      border: $prettyembed-gdpr-button-accept-border;
+    }
+
+    &:hover,
+    &:focus {
+      @if $prettyembed-gdpr-button-accept-color-hover {
+        color: $prettyembed-gdpr-button-accept-color-hover;
+      }
+      @if $prettyembed-gdpr-button-accept-background-color-hover {
+        background-color: $prettyembed-gdpr-button-accept-background-color-hover;
+      }
+      @if $prettyembed-gdpr-button-accept-border-color-hover {
+        border-color: $prettyembed-gdpr-button-accept-border-color-hover;
+      }
+    }
+  }
+
+  .jonnitto-prettyembed__gdpr-button--external {
+    color: $prettyembed-gdpr-button-external-color;
+    background-color: $prettyembed-gdpr-button-external-background-color;
+    @if $prettyembed-gdpr-button-external-border {
+      border: $prettyembed-gdpr-button-external-border;
+    }
+
+    &:hover,
+    &:focus {
+      @if $prettyembed-gdpr-button-external-color-hover {
+        color: $prettyembed-gdpr-button-external-color-hover;
+      }
+
+      @if $prettyembed-gdpr-button-external-background-color-hover {
+        background-color: $prettyembed-gdpr-button-external-background-color-hover;
+      }
+
+      @if $prettyembed-gdpr-button-external-border-color-hover {
+        border-color: $prettyembed-gdpr-button-external-border-color-hover;
+      }
+    }
+  }
+}
