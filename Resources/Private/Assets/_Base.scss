@@ -41,6 +41,10 @@
     background: rgba($prettyembed-lightbox-overlay-color, $prettyembed-lightbox-overlay-opacity);
     padding: $prettyembed-lightbox-padding;
 
+    @if $prettyembed-lightbox-backdrop-filter {
+      backdrop-filter: $prettyembed-lightbox-backdrop-filter;
+    }
+
     .-jonnitto-prettyembed__lightbox & {
       z-index: $prettyembed-lightbox-z-index;
       opacity: 1;
