@@ -89,7 +89,7 @@ class ParseIDService
 
     /**
      * Get YouTube video id from url
-     * 
+     *
      * Supported url formats
      *
      * https://youtu.be/IdOfTheVideo

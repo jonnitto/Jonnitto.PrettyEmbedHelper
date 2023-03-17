@@ -85,7 +85,7 @@ class PrettyEmbedCommandController extends CommandController
     /**
      * Generate metadata for the PrettyEmbed Vimeo/YouTube/Video or Audio player
      *
-     * This generates the metadata for all player which has the mixin 
+     * This generates the metadata for all player which has the mixin
      * - Jonnitto.PrettyEmbedVideoPlatforms:Mixin.VideoID
      * - Jonnitto.PrettyEmbedVimeo:Mixin.VideoID
      * - Jonnitto.PrettyEmbedYoutube:Mixin.VideoID

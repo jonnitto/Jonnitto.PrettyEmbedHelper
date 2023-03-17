@@ -115,14 +115,14 @@ class ImageService
             return $availableImage;
         }
 
-        /** 
+        /**
          * @var ArrayCollection $tags
          */
         $tags = new ArrayCollection([$this->findOrCreateTag()]);
 
         $resource = $this->resourceManager->importResource($url);
 
-        /** 
+        /**
          * @var Image $image
          */
         $image = new Image($resource);
@@ -151,13 +151,13 @@ class ImageService
 
     /**
      * Remove the prettyembed tag if he is empty
-     * 
+     *
      * @return void
-     * @throws IllegalObjectTypeException 
+     * @throws IllegalObjectTypeException
      */
     public function removeTagIfEmpty(): void
     {
-        /** 
+        /**
          * @var Tag $tag
          */
         $tag = $this->findTag();
@@ -177,7 +177,7 @@ class ImageService
      */
     public function removeAllUnusedImages(): void
     {
-        /** 
+        /**
          * @var Tag $tag
          */
         $tag = $this->findTag();
@@ -276,7 +276,7 @@ class ImageService
 
     /**
      * Find the "PrettyEmbed" tag
-     * 
+     *
      * @return Tag|null
      */
     protected function findTag(): ?Tag
@@ -286,13 +286,13 @@ class ImageService
 
     /**
      * Create the "PrettyEmbed" tag
-     * 
-     * @return Tag 
-     * @throws IllegalObjectTypeException 
+     *
+     * @return Tag
+     * @throws IllegalObjectTypeException
      */
     protected function createTag(): Tag
     {
-        /** 
+        /**
          * @var Tag $tag
          */
         $tag = new Tag('PrettyEmbed');
@@ -310,7 +310,7 @@ class ImageService
      */
     protected function findOrCreateTag(): Tag
     {
-        /** 
+        /**
          * @var Tag $tag
          */
         $tag = $this->findTag();
