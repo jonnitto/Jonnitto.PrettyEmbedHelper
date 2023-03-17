@@ -24,16 +24,24 @@
   "devDependencies": {
     "@babel/core": "^7.21.3",
     "@babel/preset-env": "^7.20.2",
+    "@prettier/plugin-php": "^0.19.4",
     "@rollup/plugin-babel": "^6.0.3",
     "@rollup/plugin-node-resolve": "^15.0.1",
     "@rollup/plugin-terser": "^0.4.0",
     "autoprefixer": "^10.4.14",
     "cssnano": "^5.1.15",
+    "eslint": "^8.36.0",
+    "eslint-config-prettier": "^8.7.0",
+    "eslint-plugin-prettier": "^4.2.1",
     "postcss": "^8.4.21",
     "postcss-cli": "^10.1.0",
     "postcss-sort-media-queries": "^4.3.0",
+    "prettier": "^2.8.4",
     "rollup": "^3.19.1",
-    "sass": "^1.59.3"
+    "sass": "^1.59.3",
+    "stylelint": "^15.3.0",
+    "stylelint-config-standard": "^31.0.0",
+    "stylelint-scss": "^4.5.0"
   },
   "scripts": {
     "js": "rollup --config",
