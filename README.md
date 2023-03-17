@@ -6,12 +6,12 @@ This package contains helper mixins, prototypes and frontend resources for the P
 
 This package is used by following packages:
 
--   [Jonnitto.PrettyEmbedVideoPlatforms]
--   [Jonnitto.PrettyEmbedVideo]
--   [Jonnitto.PrettyEmbedVideoStreaming]
--   [Jonnitto.PrettyEmbedVimeo]
--   [Jonnitto.PrettyEmbedYoutube]
--   [Jonnitto.PrettyEmbedAudio]
+- [Jonnitto.PrettyEmbedVideoPlatforms]
+- [Jonnitto.PrettyEmbedVideo]
+- [Jonnitto.PrettyEmbedVideoStreaming]
+- [Jonnitto.PrettyEmbedVimeo]
+- [Jonnitto.PrettyEmbedYoutube]
+- [Jonnitto.PrettyEmbedAudio]
 
 [packagist]: https://packagist.org/packages/jonnitto/prettyembedhelper
 [latest stable version]: https://poser.pugx.org/jonnitto/prettyembedhelper/v/stable
@@ -31,7 +31,6 @@ This package is used by following packages:
 [stargazers]: https://github.com/jonnitto/Jonnitto.PrettyEmbedHelper/stargazers
 [subscription]: https://github.com/jonnitto/Jonnitto.PrettyEmbedHelper/subscription
 [followers]: https://github.com/jonnitto/followers
-[license]: LICENSE
 [jonnitto.prettyembedvideoplatforms]: https://github.com/jonnitto/Jonnitto.PrettyEmbedVideoPlatforms
 [jonnitto.prettyembedvideo]: https://github.com/jonnitto/Jonnitto.PrettyEmbedVideo
 [jonnitto.prettyembedvideostreaming]: https://github.com/jonnitto/Jonnitto.PrettyEmbedVideoStreaming
