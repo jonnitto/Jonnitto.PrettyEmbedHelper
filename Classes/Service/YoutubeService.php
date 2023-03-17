@@ -180,7 +180,7 @@ class YoutubeService
      * @param string $url
      * @return string The type of the link
      */
-    protected function type(string $url): string
+    public function type(string $url): string
     {
         $url = trim($url);
         if (!$url) {
@@ -196,7 +196,7 @@ class YoutubeService
      * @param string|null $url
      * @return array|null
      */
-    protected function getBestPossibleYoutubeImage(
+    public function getBestPossibleYoutubeImage(
         $videoID,
         ?string $url = null
     ): ?array {
