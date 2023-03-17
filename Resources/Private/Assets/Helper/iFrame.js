@@ -119,7 +119,10 @@ function checkGdpr(element, type, callback) {
     const WRAPPER = document.createElement('object');
     WRAPPER.classList.add(GDPR_CLASS);
     WRAPPER.classList.add(`${GDPR_CLASS}--${type}`);
-    WRAPPER.innerHTML = `<p>${GDPR}</p>`;
+
+    const PANEL = document.createElement('div');
+    PANEL.classList.add(`${GDPR_CLASS}-panel`);
+    PANEL.innerHTML = `<p>${GDPR}</p>`;
 
     const BUTTON_CONTAINER = document.createElement('div');
     BUTTON_CONTAINER.innerHTML = `<button data-url="${DATASET.embed}" data-ratio="${
@@ -135,7 +138,8 @@ function checkGdpr(element, type, callback) {
     ACCEPT_BUTTON.innerText = DATASET.gdprAccept || 'OK';
 
     BUTTON_CONTAINER.appendChild(ACCEPT_BUTTON);
-    WRAPPER.appendChild(BUTTON_CONTAINER);
+    PANEL.appendChild(BUTTON_CONTAINER);
+    WRAPPER.appendChild(PANEL);
     element.appendChild(WRAPPER);
 
     DATASET.gdprOpen = 'true';
