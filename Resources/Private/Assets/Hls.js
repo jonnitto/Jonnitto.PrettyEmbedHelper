@@ -1,1 +1,1 @@
-import 'hls.js/dist/hls.light.min';
+import 'hls.js/dist/hls.light.min.js';
