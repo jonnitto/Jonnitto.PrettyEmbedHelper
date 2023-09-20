@@ -32,6 +32,7 @@
     max-height: 100%;
     overflow: auto;
     font-size: $prettyembed-gdpr-font-size-mobile;
+    pointer-events: auto !important;
 
     @media (min-width: $prettyembed-gdpr-font-size-breakpoint) {
       font-size: $prettyembed-gdpr-font-size;
