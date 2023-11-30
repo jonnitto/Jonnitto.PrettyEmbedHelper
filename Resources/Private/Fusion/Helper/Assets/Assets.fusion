@@ -3,15 +3,25 @@ prototype(Jonnitto.PrettyEmbedHelper:Assets) < prototype(Neos.Fusion:Component) 
     openInNewWindow = ${Configuration.setting('Jonnitto.PrettyEmbedHelper.openInNewWindow')}
     inBackend = ${node.context.inBackend}
     youtubeAPI = false
+    vimeoAPI = false
 
     renderer = Neos.Fusion:Join {
+        vimeoAPI = Neos.Fusion:Tag {
+            @if.set = ${!props.inBackend && props.vimeoAPI}
+            tagName = 'script'
+            attributes {
+                data-slipstream = true
+                defer = true
+                src = 'https://player.vimeo.com/api/player.js'
+            }
+        }
         youtubeAPI = Neos.Fusion:Tag {
             @if.set = ${!props.inBackend && props.youtubeAPI}
             tagName = 'script'
             attributes {
                 data-slipstream = true
                 defer = true
-                src="https://www.youtube.com/iframe_api"
+                src = 'https://www.youtube.com/iframe_api'
             }
         }
         generalCSS = Jonnitto.PrettyEmbedHelper:Assets.Fragment.Style {
