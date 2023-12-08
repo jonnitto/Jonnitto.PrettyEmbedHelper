@@ -8,51 +8,44 @@
     "type": "git",
     "url": "git://github.com/jonnitto/Jonnitto.PrettyEmbedHelper.git"
   },
-  "browserslist": [
-    "> 0.5%",
-    "last 2 versions",
-    "Firefox ESR",
-    "ie 11",
-    "not ie <= 10",
-    "not ie_mob <= 10",
-    "not bb <= 10",
-    "not op_mob <= 12.1"
-  ],
   "dependencies": {
-    "hls.js": "^1.4.12"
+    "alpinejs": "^3.13.3",
+    "hls.js": "^1.4.13"
   },
   "devDependencies": {
-    "@babel/core": "^7.23.5",
-    "@babel/preset-env": "^7.23.5",
     "@prettier/plugin-php": "^0.21.0",
-    "@rollup/plugin-babel": "^6.0.4",
-    "@rollup/plugin-node-resolve": "^15.2.3",
-    "@rollup/plugin-terser": "^0.4.4",
     "autoprefixer": "^10.4.16",
     "cssnano": "^6.0.1",
-    "eslint": "^8.54.0",
-    "eslint-config-prettier": "^9.0.0",
+    "esbuild": "^0.19.8",
+    "eslint": "^8.55.0",
+    "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.0.1",
-    "postcss": "^8.4.31",
-    "postcss-cli": "^10.1.0",
+    "postcss": "^8.4.32",
+    "postcss-cli": "^11.0.0",
     "postcss-sort-media-queries": "^5.2.0",
     "prettier": "^3.1.0",
-    "rollup": "^4.6.1",
     "sass": "^1.69.5",
     "stylelint": "^15.11.0",
     "stylelint-config-standard": "^34.0.0",
     "stylelint-scss": "^5.3.1"
   },
   "scripts": {
-    "js": "rollup --config",
-    "css:scss": "sass --embed-sources Resources/Private/Assets:Resources/Public/Styles",
-    "css:postcss": "postcss Resources/Public/Styles/*.css --replace --map --use postcss-sort-media-queries autoprefixer cssnano",
-    "css": "pnpm css:scss && pnpm css:postcss",
-    "watch:js": "rollup --config --watch",
+    "prettierFiles": "prettier --write --no-error-on-unmatched-pattern '**/*.{js,php,yaml,scss,mjs}'",
+    "build:css:scss": "sass --embed-sources Resources/Private/Assets:Resources/Public/Styles",
+    "build:css:postcss": "postcss Resources/Public/Styles/*.css --replace --map --use postcss-sort-media-queries autoprefixer cssnano",
+    "build:css": "pnpm build:css:scss && pnpm build:css:postcss",
+    "dev:css:scss": "sass --embed-sources Resources/Private/Assets:Resources/Public/Styles",
+    "dev:css:postcss": "postcss Resources/Public/Styles/*.css --replace --map --use postcss-sort-media-queries autoprefixer",
+    "dev:css": "pnpm dev:css:scss && pnpm dev:css:postcss",
     "watch:css:scss": "sass --watch --embed-sources Resources/Private/Assets:Resources/Public/__Styles",
     "watch:css:postcss": "postcss Resources/Public/__Styles/*.css --dir Resources/Public/Styles/ --map --watch --use postcss-sort-media-queries autoprefixer cssnano",
-    "build": "rm -rf Resources/Public/__Styles Resources/Public/Styles Resources/Public/Scripts;pnpm css | pnpm js",
-    "start": "pnpm build",
-    "watch": "pnpm watch:css:scss | pnpm watch:css:postcss | pnpm watch:js"
+    "watch:css": "pnpm watch:css:scss | pnpm watch:css:postcss",
+    "build:js": "node build.mjs --production",
+    "watch:js": "node build.mjs --watch",
+    "dev:js": "node build.mjs",
+    "build": "pnpm build:css | pnpm build:js",
+    "watch": "pnpm watch:css | pnpm watch:js",
+    "dev": "pnpm dev:css | pnpm dev:js",
+    "start": "pnpm build"
   }
 }
