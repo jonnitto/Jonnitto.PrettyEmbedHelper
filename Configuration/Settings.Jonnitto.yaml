@@ -1,6 +1,8 @@
 Jonnitto:
   PrettyEmbedHelper:
-    # If you want to use your own assets, set this to false (Backend.js and Backend.css will be always be included in the backend)
+    includeAlpineJsCheck: true
+
+    # If you want to use your own assets, set this to false (Backend.Video.css ignores this setting)
     includeAssets:
       css: true
       js: true

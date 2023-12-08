@@ -1,46 +1,59 @@
 prototype(Jonnitto.PrettyEmbedHelper:Assets) < prototype(Neos.Fusion:Component) {
     includeAssets = ${Configuration.setting('Jonnitto.PrettyEmbedHelper.includeAssets')}
-    openInNewWindow = ${Configuration.setting('Jonnitto.PrettyEmbedHelper.openInNewWindow')}
+    includeAlpineJsCheck = ${Configuration.setting('Jonnitto.PrettyEmbedHelper.includeAlpineJsCheck')}
     inBackend = ${node.context.inBackend}
-    youtubeAPI = false
-    vimeoAPI = false
+
+    // This decides which file to load
+    video = false
+    audio = false
+    streaming = false
+    youtube = false
+    vimeo = false
+    media = ${this.video || this.audio || this.streaming}
+
+    openInNewWindow = ${this.youtube ? !!Configuration.setting('Jonnitto.PrettyEmbedHelper.openInNewWindow.youtube') : this.vimeo ? !!Configuration.setting('Jonnitto.PrettyEmbedHelper.openInNewWindow.vimeo') : null}
+    enableGdprMessage = ${this.youtube || this.vimeo ? Configuration.setting('Jonnitto.PrettyEmbedHelper.enableGdprMessage') : false}
+    includeFrontendScripts = ${!this.inBackend && this.includeAssets.js}
 
     renderer = Neos.Fusion:Join {
-        vimeoAPI = Neos.Fusion:Tag {
-            @if.set = ${!props.inBackend && props.vimeoAPI}
-            tagName = 'script'
-            attributes {
-                data-slipstream = true
-                defer = true
-                src = 'https://player.vimeo.com/api/player.js'
-            }
-        }
-        youtubeAPI = Neos.Fusion:Tag {
-            @if.set = ${!props.inBackend && props.youtubeAPI}
-            tagName = 'script'
-            attributes {
-                data-slipstream = true
-                defer = true
-                src = 'https://www.youtube.com/iframe_api'
-            }
-        }
         generalCSS = Jonnitto.PrettyEmbedHelper:Assets.Fragment.Style {
             @if.set = ${props.includeAssets.css}
             filename = 'Main.css'
         }
-        backendCSS = Jonnitto.PrettyEmbedHelper:Assets.Fragment.Style {
-            @if.set = ${props.inBackend}
-            filename = 'Backend.css'
+        backendVideoCSS = Jonnitto.PrettyEmbedHelper:Assets.Fragment.Style {
+            @if.set = ${props.inBackend && props.video}
+            filename = 'Backend.Video.css'
         }
-        backendJS = Jonnitto.PrettyEmbedHelper:Assets.Fragment.Script {
-            @if.set = ${props.inBackend}
-            filename = 'Backend.js'
-        }
-        liveJS = Jonnitto.PrettyEmbedHelper:Assets.Fragment.Script {
-            @if.set = ${!props.inBackend && props.includeAssets.js}
-            openYoutubeInNewWindow = ${props.openInNewWindow.youtube}
-            openVimeoInNewWindow = ${props.openInNewWindow.vimeo}
-            filename = 'Main.js'
+        frontendScripts = Neos.Fusion:Join {
+            @if.set = ${props._includeFrontendScripts}
+            gdprPlugin = Jonnitto.PrettyEmbedHelper:Assets.Fragment.Module {
+                @if.set = ${props.enableGdprMessage}
+                filename = 'Gdpr.js'
+            }
+            magicPlugin = Jonnitto.PrettyEmbedHelper:Assets.Fragment.Module {
+                @if.set = ${props.media || !props.openInNewWindow == false}
+                filename = 'Magic.js'
+            }
+            mediaPlugin = Jonnitto.PrettyEmbedHelper:Assets.Fragment.Module {
+                @if.set = ${props.media}
+                filename = 'Media.js'
+            }
+            popupPlugin = Jonnitto.PrettyEmbedHelper:Assets.Fragment.Module {
+                @if.set = ${props.enableGdprMessage || props.openInNewWindow}
+                filename = 'Popup.js'
+            }
+            youtubePlugin = Jonnitto.PrettyEmbedHelper:Assets.Fragment.Module {
+                @if.set = ${props.youtube}
+                filename = 'YouTube.js'
+            }
+            vimeoPlugin = Jonnitto.PrettyEmbedHelper:Assets.Fragment.Module {
+                @if.set = ${props.vimeo}
+                filename = 'Vimeo.js'
+            }
+            alpineJs = Jonnitto.PrettyEmbedHelper:Assets.Fragment.Script {
+                @if.set = ${props.includeAlpineJsCheck}
+                filename = 'AlpineCheck.js'
+            }
         }
     }
 }

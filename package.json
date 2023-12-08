@@ -31,8 +31,8 @@
   },
   "scripts": {
     "prettierFiles": "prettier --write --no-error-on-unmatched-pattern '**/*.{js,php,yaml,scss,mjs}'",
-    "build:css:scss": "sass --embed-sources Resources/Private/Assets:Resources/Public/Styles",
-    "build:css:postcss": "postcss Resources/Public/Styles/*.css --replace --map --use postcss-sort-media-queries autoprefixer cssnano",
+    "build:css:scss": "sass --no-source-map Resources/Private/Assets:Resources/Public/Styles",
+    "build:css:postcss": "postcss Resources/Public/Styles/*.css --replace --no-map --use postcss-sort-media-queries autoprefixer cssnano",
     "build:css": "pnpm build:css:scss && pnpm build:css:postcss",
     "dev:css:scss": "sass --embed-sources Resources/Private/Assets:Resources/Public/Styles",
     "dev:css:postcss": "postcss Resources/Public/Styles/*.css --replace --map --use postcss-sort-media-queries autoprefixer",
