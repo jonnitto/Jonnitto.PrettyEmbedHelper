@@ -1,5 +1,5 @@
 @if $prettyembed-gdpr-include {
-  .jonnitto-prettyembed__gdpr {
+  .jonnitto-prettyembed-gdpr {
     position: absolute;
     inset: 0;
     z-index: 1;
@@ -22,7 +22,7 @@
     }
   }
 
-  .jonnitto-prettyembed__gdpr-panel {
+  .jonnitto-prettyembed-gdpr__panel {
     overflow: auto;
     display: flex;
     flex-direction: column;
@@ -60,11 +60,14 @@
     }
   }
 
-  .jonnitto-prettyembed__gdpr-button {
+  .jonnitto-prettyembed-gdpr__button {
     display: block;
     padding: $prettyembed-gdpr-button-padding;
     text-decoration: none;
-    transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+    transition:
+      color 0.2s ease-in-out,
+      background-color 0.2s ease-in-out,
+      border-color 0.2s ease-in-out;
     cursor: pointer;
 
     @if $prettyembed-gdpr-button-border-radius {
@@ -72,7 +75,7 @@
     }
   }
 
-  .jonnitto-prettyembed__gdpr-button--accept {
+  .jonnitto-prettyembed-gdpr__button--accept {
     color: $prettyembed-gdpr-button-accept-color;
     background-color: $prettyembed-gdpr-button-accept-background-color;
 
@@ -96,7 +99,7 @@
     }
   }
 
-  .jonnitto-prettyembed__gdpr-button--external {
+  .jonnitto-prettyembed-gdpr__button--external {
     color: $prettyembed-gdpr-button-external-color;
     background-color: $prettyembed-gdpr-button-external-background-color;
 

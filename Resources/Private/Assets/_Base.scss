@@ -1,36 +1,81 @@
-@import "Variables";
-
-.jonnitto-prettyembed {
-  position: relative;
+.jonnitto-prettyembed,
+.jonnitto-prettyembed-lightbox__content {
   display: block;
   width: 100%;
   max-width: 100%;
+  position: relative;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  border: 0 solid transparent;
 
-  img {
-    display: block;
+  > iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
-    height: auto;
+    height: 100%;
+  }
+
+  > :is(audio, iframe, video) {
+    display: block;
+    border: 0 solid transparent;
+    width: 100%;
+    max-height: 100%;
     max-width: none;
+    outline: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  > :where(button) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  > img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
     margin: 0;
     padding: 0;
   }
 }
 
-@if $prettyembed-lightbox-include {
-  .jonnitto-prettyembed--lightbox {
-    cursor: pointer;
-  }
+.jonnitto-prettyembed-pointer-none {
+  pointer-events: none;
+}
 
-  .jonnitto-prettyembed__lightbox {
+.jonnitto-prettyembed-ratio {
+  aspect-ratio: var(--aspect-ratio, 16 / 9);
+
+  & :where(iframe, video) {
+    aspect-ratio: var(--aspect-ratio, 16 / 9);
+  }
+}
+
+.jonnitto-prettyembed,
+.jonnitto-prettyembed-lightbox,
+.jonnitto-prettyembed-backdrop {
+  & [x-cloak] {
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+}
+
+a.jonnitto-prettyembed {
+  text-decoration: none;
+}
+
+@if $prettyembed-lightbox-include {
+  .jonnitto-prettyembed-lightbox {
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: -1;
-    opacity: 0;
+    inset: 0;
     font-size: 0;
-    transition: opacity 0.2s, z-index 0s 0.2s;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -39,39 +84,42 @@
     overflow-y: auto;
     white-space: nowrap;
     -webkit-overflow-scrolling: touch;
-    pointer-events: none;
-    background: rgba($prettyembed-lightbox-overlay-color, $prettyembed-lightbox-overlay-opacity);
+    z-index: $prettyembed-lightbox-z-index;
     padding: $prettyembed-lightbox-padding;
+
+    & :where(iframe, video) {
+      box-shadow: $prettyembed-lightbox-shadow;
+    }
+  }
+
+  .jonnitto-prettyembed-backdrop {
+    z-index: $prettyembed-lightbox-z-index - 1;
+    background: rgba($prettyembed-lightbox-overlay-color, $prettyembed-lightbox-overlay-opacity);
+    position: fixed;
+    inset: 0;
 
     @if $prettyembed-lightbox-backdrop-filter {
       backdrop-filter: $prettyembed-lightbox-backdrop-filter;
     }
-
-    .-jonnitto-prettyembed__lightbox & {
-      z-index: $prettyembed-lightbox-z-index;
-      opacity: 1;
-      transition: opacity 0.2s;
-      pointer-events: initial;
-    }
   }
 
-  .jonnitto-prettyembed__inner {
+  .jonnitto-prettyembed-lightbox__inner {
     width: 100%;
     max-width: $prettyembed-lightbox-max-width;
-    transform: scale(0);
-    transition: transform 0.2s;
-
-    .-jonnitto-prettyembed__lightbox & {
-      transform: scale(1);
-    }
+    display: flex;
+    align-items: center;
+    flex-direction: column;
   }
 
-  .jonnitto-prettyembed__content {
+  .jonnitto-prettyembed-lightbox__content {
     line-height: 0;
-    box-shadow: $prettyembed-lightbox-shadow;
+    max-height: calc(99vh - #{round($prettyembed-lightbox-padding * 1.5 + $prettyembed-lightbox-close-size)});
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
   }
 
-  .jonnitto-prettyembed__close {
+  .jonnitto-prettyembed-lightbox__close {
     position: relative;
     display: block;
     z-index: 1;

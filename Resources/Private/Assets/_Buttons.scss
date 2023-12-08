@@ -1,58 +1,73 @@
 .jonnitto-prettyembed-button {
-  color: $prettyembed-button-foreground-color;
   position: absolute;
-  pointer-events: none;
+  inset: 0;
   z-index: 1;
-}
-
-.jonnitto-prettyembed-button--play {
-  display: block;
-  top: 50%;
-  left: 50%;
-  width: $prettyembed-button-play-size;
-  height: $prettyembed-button-play-size;
-  transform: translate(-50%, -50%) scale($prettyembed-button-scale);
-  transition: transform 0.25s ease-in-out, opacity 0.25s linear;
+  border: 0;
+  background: transparent;
+  color: $prettyembed-button-foreground-color;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.25s linear;
 
   @if ($prettyembed-button-opacity != 1) {
     opacity: $prettyembed-button-opacity;
   }
 
-  .jonnitto-prettyembed--play & {
-    opacity: 0;
+  > * {
+    pointer-events: none;
   }
 
-  .jonnitto-prettyembed:hover &,
-  .jonnitto-prettyembed:focus & {
-    transform: translate(-50%, -50%) scale($prettyembed-button-scale-hover);
+  &:hover,
+  &:focus {
+    > svg {
+      transform: scale($prettyembed-button-scale-hover);
+    }
   }
 
-  .jonnitto-prettyembed:active & {
-    transform: translate(-50%, -50%) scale($prettyembed-button-scale-active);
+  &:active > svg {
+    transform: scale($prettyembed-button-scale-active);
+  }
+
+  svg {
+    width: $prettyembed-button-play-size;
+    height: $prettyembed-button-play-size;
+    transform: scale($prettyembed-button-scale);
+    transition:
+      transform 0.25s ease-in-out,
+      opacity 0.25s linear;
   }
 }
 
-.jonnitto-prettyembed-button--pause {
-  display: none;
-  top: $prettyembed-button-pause-margin;
-  left: $prettyembed-button-pause-margin;
-  width: $prettyembed-button-pause-size;
-  height: $prettyembed-button-pause-size;
-  transition: opacity 0.25s linear;
+.jonnitto-prettyembed--play .jonnitto-prettyembed-button--play {
   opacity: 0;
+  pointer-events: none;
+}
 
-  .jonnitto-prettyembed--video.jonnitto-prettyembed--play.jonnitto-prettyembed--slim & {
-    display: block;
-  }
-
-  .jonnitto-prettyembed:hover &,
-  .jonnitto-prettyembed:focus & {
-    opacity: $prettyembed-button-opacity;
-  }
+.jonnitto-prettyembed-button__play {
 }
 
 .jonnitto-prettyembed-button__background {
   fill: $prettyembed-button-background-color;
   fill-opacity: $prettyembed-button-background-opactiy;
   stroke-width: 5;
+}
+
+.jonnitto-prettyembed-button--pause {
+  top: auto;
+  bottom: $prettyembed-button-pause-margin;
+  left: $prettyembed-button-pause-margin;
+  width: $prettyembed-button-pause-size;
+  height: $prettyembed-button-pause-size;
+  transition: opacity 0.25s linear;
+  opacity: 0;
+
+  .jonnitto-prettyembed:not(.jonnitto-prettyembed--play) & {
+    pointer-events: none;
+  }
+
+  .jonnitto-prettyembed--play:hover &,
+  .jonnitto-prettyembed--play:focus & {
+    opacity: $prettyembed-button-opacity;
+  }
 }
