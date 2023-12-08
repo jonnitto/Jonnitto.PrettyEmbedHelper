@@ -1,5 +1,4 @@
-.jonnitto-prettyembed,
-.jonnitto-prettyembed-lightbox__content {
+:is(.jonnitto-prettyembed, .jonnitto-prettyembed-lightbox__content) {
   display: block;
   width: 100%;
   max-width: 100%;
@@ -9,7 +8,7 @@
   padding: 0;
   border: 0 solid transparent;
 
-  > iframe {
+  & > iframe {
     position: absolute;
     top: 0;
     left: 0;
@@ -17,7 +16,7 @@
     height: 100%;
   }
 
-  > :is(audio, iframe, video) {
+  & > :is(audio, iframe, video) {
     display: block;
     border: 0 solid transparent;
     width: 100%;
@@ -28,7 +27,7 @@
     padding: 0;
   }
 
-  > :where(button) {
+  & > :where(button) {
     position: absolute;
     inset: 0;
     width: 100%;
@@ -37,7 +36,7 @@
     padding: 0;
   }
 
-  > img {
+  & > img {
     object-fit: cover;
     width: 100%;
     height: 100%;
@@ -58,13 +57,9 @@
   }
 }
 
-.jonnitto-prettyembed,
-.jonnitto-prettyembed-lightbox,
-.jonnitto-prettyembed-backdrop {
-  & [x-cloak] {
-    visibility: hidden !important;
-    pointer-events: none !important;
-  }
+:is(.jonnitto-prettyembed, .jonnitto-prettyembed-lightbox, .jonnitto-prettyembed-backdrop) [x-cloak] {
+  visibility: visible !important;
+  pointer-events: auto !important;
 }
 
 a.jonnitto-prettyembed {
@@ -141,9 +136,7 @@ a.jonnitto-prettyembed {
     opacity: $prettyembed-lightbox-close-opacity;
     transition: opacity 0.2s linear;
 
-    &:hover,
-    &:focus,
-    &:active {
+    &:is(:hover, :focus, :active) {
       opacity: $prettyembed-lightbox-close-opacity-hover;
       outline: none;
     }

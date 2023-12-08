@@ -8,7 +8,7 @@
   transform: translateY(-100%);
   z-index: 1;
 
-  .jonnitto-prettyembedbackend__hide {
+  & .jonnitto-prettyembedbackend__hide {
     display: none;
   }
 }
@@ -17,17 +17,17 @@
   display: none;
 
   &:checked {
-    ~ .jonnitto-prettyembedbackend__label {
-      .jonnitto-prettyembedbackend__show {
+    & ~ .jonnitto-prettyembedbackend__label {
+      & .jonnitto-prettyembedbackend__show {
         display: none;
       }
 
-      .jonnitto-prettyembedbackend__hide {
+      & .jonnitto-prettyembedbackend__hide {
         display: block;
       }
     }
 
-    ~ .jonnitto-prettyembedbackend__table {
+    & ~ .jonnitto-prettyembedbackend__table {
       display: table;
     }
   }
@@ -40,8 +40,7 @@
   margin: 1em 0 2em;
   position: relative;
 
-  th,
-  td {
+  & :is(th, td) {
     &:not(:first-child) {
       padding-left: 5px;
     }
@@ -51,35 +50,32 @@
       padding-right: 5px;
     }
 
-    &.jonnitto-prettyembedbackend__center,
-    &:last-child {
+    &:is(.jonnitto-prettyembedbackend__center, :last-child) {
       text-align: center;
     }
   }
 
-  .jonnitto-prettyembedbackend__error {
+  & .jonnitto-prettyembedbackend__error {
     background: #d9534f;
     color: #fff;
     padding: 0 !important;
   }
 
-  tbody {
-    td {
+  & tbody {
+    & td {
       border-top: 1px solid #aaa;
     }
 
-    > :not(td) {
+    & > :not(td) {
       display: table-row;
     }
 
-    > [data-__neos-fusion-path*="removedContent"]:first-child,
-    > [class^="style__addEmptyContentCollectionOverlay"] {
+    & > :is([data-__neos-fusion-path*="removedContent"]:first-child, [class^="style__addEmptyContentCollectionOverlay"]) {
       outline: 0;
     }
 
     &:empty,
-    > [data-__neos-fusion-path*="removedContent"]:first-child,
-    > [class^="style__addEmptyContentCollectionOverlay"] {
+    & > :is(:empty, [data-__neos-fusion-path*="removedContent"]:first-child, [class^="style__addEmptyContentCollectionOverlay"]) {
       $height: 41px;
 
       cursor: pointer;
@@ -113,22 +109,15 @@
         animation: none;
       }
 
-      &:hover,
-      &:focus {
-        &::before,
-        &::after {
-          opacity: 1;
-        }
+      &:is(:hover, :focus):is(::before, ::after) {
+        opacity: 1;
       }
     }
 
     &[data-lang="de"] {
-      &:empty,
-      > [data-__neos-fusion-path*="removedContent"]:first-child,
-      > [class^="style__addEmptyContentCollectionOverlay"] {
-        &::before {
-          content: "Hier klicken um Inhalt hinzuzufügen";
-        }
+      &:empty::before,
+      & > :is([data-__neos-fusion-path*="removedContent"]:first-child, [class^="style__addEmptyContentCollectionOverlay"])::before {
+        content: "Hier klicken um Inhalt hinzuzufügen";
       }
     }
 

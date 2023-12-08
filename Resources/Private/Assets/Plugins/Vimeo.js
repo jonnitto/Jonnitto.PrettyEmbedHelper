@@ -11,10 +11,9 @@ export default function (Alpine) {
 
 function handeleRoot({ element, Alpine, options }) {
     const type = 'Vimeo';
-    const { style, slim, videoId, color, gdpr } = options;
+    const { style, slim, videoId, color, loop, gdpr, background } = options;
     const videoPlayerOptions = {
         id: videoId,
-        color,
         autopip: true,
         autoplay: true,
         pip: true,
@@ -22,10 +21,14 @@ function handeleRoot({ element, Alpine, options }) {
         responsive: false,
         title: false,
         byline: false,
-        background: false,
+        background: !!background,
+        loop: !!loop,
         autopause: false,
         controls: !slim,
     };
+    if (color) {
+        videoPlayerOptions.color = color;
+    }
     const localStorage = window.localStorage;
     const storageKey = `jonnittoprettyembed_gdpr_${type.toLowerCase()}`;
 
@@ -82,7 +85,7 @@ function handeleRoot({ element, Alpine, options }) {
                         return;
                     }
                     loadVimeoApi(() => {
-                        const target = this.$refs.target || element;
+                        const target = this.$refs.vimeo || element;
                         player = new Vimeo.Player(target, videoPlayerOptions);
 
                         const dispatchDetails = async (event) => {

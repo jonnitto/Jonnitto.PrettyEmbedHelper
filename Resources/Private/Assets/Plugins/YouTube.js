@@ -11,7 +11,7 @@ export default function (Alpine) {
 
 function handeleRoot({ element, Alpine, options }) {
     const type = 'YouTube';
-    let { videoId, playlistId, style, slim } = options;
+    let { videoId, playlistId, style, slim, loop } = options;
 
     const videoPlayerOptions = {
         playerVars: {
@@ -21,6 +21,7 @@ function handeleRoot({ element, Alpine, options }) {
             rel: 0,
             showinfo: 0,
             controls: slim ? 0 : 1,
+            loop: loop ? 1 : 0,
         },
     };
 
@@ -93,7 +94,7 @@ function handeleRoot({ element, Alpine, options }) {
                         return;
                     }
                     loadYoutubeApi(() => {
-                        const target = this.$refs.target || element;
+                        const target = this.$refs.youtube || element;
                         const dispatchDetails = () => {
                             const videoUrl = player.getVideoUrl();
                             const { title, author, video_id, video_quality, list } = player.getVideoData();

@@ -38,20 +38,20 @@
       font-size: $prettyembed-gdpr-font-size;
     }
 
-    * {
+    & * {
       margin: 0;
       padding: 0;
       font-size: 1em;
       text-align: center;
     }
 
-    p {
+    & p {
       font-size: $prettyembed-gdpr-explantation-font-size;
       max-width: $prettyembed-gdpr-explantation-max-width;
       margin: 0 auto;
     }
 
-    div {
+    & div {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
@@ -83,8 +83,7 @@
       border: $prettyembed-gdpr-button-accept-border;
     }
 
-    &:hover,
-    &:focus {
+    &:is(:hover, :focus) {
       @if $prettyembed-gdpr-button-accept-color-hover {
         color: $prettyembed-gdpr-button-accept-color-hover;
       }
@@ -107,8 +106,7 @@
       border: $prettyembed-gdpr-button-external-border;
     }
 
-    &:hover,
-    &:focus {
+    &:is(:hover, :focus) {
       @if $prettyembed-gdpr-button-external-color-hover {
         color: $prettyembed-gdpr-button-external-color-hover;
       }
