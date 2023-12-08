@@ -7,13 +7,7 @@ prototype(Jonnitto.PrettyEmbedHelper:Content) < prototype(Neos.Neos:ContentCompo
     image = ${q(node).property('image')}
 
     // Need to be defined
-    package = ${null}
-
-    origin = Neos.Neos:NodeUri {
-        node = ${site}
-        absolute = true
-        @process.onlyTheDomain = ${String.pregMatch(value, '(https?:\/\/[^\/]+)')[0]}
-    }
+    package = null
 
     @if.hasPackage = ${this.package}
     @context {
