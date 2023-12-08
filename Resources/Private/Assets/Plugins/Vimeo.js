@@ -1,4 +1,6 @@
-import { eventName, playClass, loadVimeoApi } from './Helper';
+import { loadVimeoApi } from './Helper';
+
+const eventName = 'prettyembed';
 
 export default function (Alpine) {
     Alpine.directive('prettyembedvimeo', (element, { modifiers, expression }, { evaluate }) => {
@@ -43,9 +45,6 @@ function handeleRoot({ element, Alpine, options }) {
     let player = null;
 
     Alpine.bind(element, {
-        ':class'() {
-            return this.playing && playClass;
-        },
         'x-data'() {
             return {
                 ...data,

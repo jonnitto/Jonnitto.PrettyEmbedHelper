@@ -1,7 +1,3 @@
-const namespace = 'prettyembed';
-const eventName = namespace;
-const playClass = `jonnitto-${namespace}--play`;
-
 let youtubeScript = false;
 let vimeoScript = false;
 
@@ -66,4 +62,4 @@ function checkIfLoaded(check, callback, maxAttempts = 100) {
     rafTimeOut(() => checkIfLoaded(check, callback, maxAttempts), 100);
 }
 
-export { loadYoutubeApi, loadVimeoApi, loadScript, eventName, playClass };
+export { loadYoutubeApi, loadVimeoApi, loadScript };

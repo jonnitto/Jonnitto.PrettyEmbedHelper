@@ -1,4 +1,6 @@
-import { eventName, playClass, loadYoutubeApi } from './Helper';
+import { loadYoutubeApi } from './Helper';
+
+const eventName = 'prettyembed';
 
 export default function (Alpine) {
     Alpine.directive('prettyembedyoutube', (element, { modifiers, expression }, { evaluate }) => {
@@ -52,9 +54,6 @@ function handeleRoot({ element, Alpine, options }) {
     let player = null;
 
     Alpine.bind(element, {
-        ':class'() {
-            return this.playing && playClass;
-        },
         'x-data'() {
             return {
                 ...data,

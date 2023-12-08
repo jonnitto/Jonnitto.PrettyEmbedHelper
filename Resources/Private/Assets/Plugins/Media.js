@@ -1,5 +1,6 @@
-import { eventName, playClass, loadScript } from './Helper';
+import { loadScript } from './Helper';
 
+const eventName = 'prettyembed';
 const hlsScript = '/_Resources/Static/Packages/Jonnitto.PrettyEmbedHelper/Scripts/Hls.js?v=2';
 
 export default function (Alpine) {
@@ -41,9 +42,6 @@ function handleRoot({ element, Alpine, options }) {
     const needHlsWrapper = streaming ? !streamcheck() : null;
 
     Alpine.bind(element, {
-        ':class'() {
-            return this.playing && playClass;
-        },
         'x-data'() {
             return {
                 ...data,
