@@ -1,2 +1,0 @@
-import './Embed';
-import './Lightbox';
