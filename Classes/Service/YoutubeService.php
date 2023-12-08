@@ -90,9 +90,7 @@ class YoutubeService
             return $returnArray;
         }
 
-        $isYoutubePackage = $node->getNodeType()->isOfType(
-            'Jonnitto.PrettyEmbedYoutube:Mixin.VideoID'
-        );
+        $isYoutubePackage = $node->getNodeType()->isOfType('Jonnitto.PrettyEmbedYoutube:Mixin.VideoID');
 
         $videoIDProperty = $node->getProperty('videoID');
 
@@ -110,28 +108,20 @@ class YoutubeService
         }
 
         $videoID = $this->parseID->youtube($videoIDProperty, $type);
-        $data = $this->api->youtube(
-            $videoID,
-            $type,
-            $this->settings['youtubeApiKey']
-        );
+        $data = $this->api->youtube($videoID, $type, $this->settings['youtubeApiKey']);
 
         if (isset($data)) {
             $title = $data['title'] ?? null;
-            $ratio = $data['width'] && $data['height'] ?
-                $this->utility->calculatePaddingTop(
-                    $data['width'],
-                    $data['height']
-                ) : null;
+            $ratio =
+                $data['width'] && $data['height']
+                    ? $this->utility->calculatePaddingTop($data['width'], $data['height'])
+                    : null;
             $duration = $data['duration'] ?? null;
             if (isset($data['imageUrl'], $data['imageResolution'])) {
                 $image = $data['imageUrl'];
                 $resolution = $data['imageResolution'];
             } else {
-                $youtubeImageArray = $this->getBestPossibleYoutubeImage(
-                    $videoID,
-                    $data['thumbnail_url'] ?? null
-                );
+                $youtubeImageArray = $this->getBestPossibleYoutubeImage($videoID, $data['thumbnail_url'] ?? null);
                 $image = $youtubeImageArray['image'];
                 $resolution = $youtubeImageArray['resolution'];
             }
@@ -142,23 +132,13 @@ class YoutubeService
         }
 
         if (isset($image)) {
-            $thumbnail = $this->imageService->import(
-                $node,
-                $image,
-                $videoID,
-                'Youtube',
-                $resolution
-            );
+            $thumbnail = $this->imageService->import($node, $image, $videoID, 'Youtube', $resolution);
         }
-
 
         $node->setProperty('metadataID', $videoID);
         $node->setProperty('metadataTitle', $title ?? null);
         $node->setProperty('metadataRatio', $ratio ?? null);
-        $node->setProperty(
-            'metadataImage',
-            $this->utility->removeProtocolFromUrl($image)
-        );
+        $node->setProperty('metadataImage', $this->utility->removeProtocolFromUrl($image));
         $node->setProperty('metadataThumbnail', $thumbnail ?? null);
         $node->setProperty('metadataDuration', $duration ?? null);
 
@@ -196,29 +176,21 @@ class YoutubeService
      * @param string|null $url
      * @return array|null
      */
-    public function getBestPossibleYoutubeImage(
-        $videoID,
-        ?string $url = null
-    ): ?array {
+    public function getBestPossibleYoutubeImage($videoID, ?string $url = null): ?array
+    {
         if (!isset($url)) {
-            $url = sprintf("https://i.ytimg.com/vi/%s/maxresdefault.jpg", $videoID);
+            $url = sprintf('https://i.ytimg.com/vi/%s/maxresdefault.jpg', $videoID);
         }
 
-        $resolutions = [
-            'maxresdefault', 'sddefault', 'hqdefault', 'mqdefault', 'default'
-        ];
+        $resolutions = ['maxresdefault', 'sddefault', 'hqdefault', 'mqdefault', 'default'];
 
         foreach ($resolutions as $resolution) {
-            $url = preg_replace(
-                '/\/[\w]*\.([a-z]{3,})$/i',
-                sprintf("/%s.$1", $resolution),
-                $url
-            );
+            $url = preg_replace('/\/[\w]*\.([a-z]{3,})$/i', sprintf("/%s.$1", $resolution), $url);
             $headers = @get_headers($url);
             if ($headers && strpos($headers[0], '200')) {
                 return [
                     'image' => $url,
-                    'resolution' => $resolution
+                    'resolution' => $resolution,
                 ];
             }
         }

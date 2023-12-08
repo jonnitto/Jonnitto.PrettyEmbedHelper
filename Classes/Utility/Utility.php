@@ -33,6 +33,6 @@ class Utility
      */
     public function calculatePaddingTop(int $width, int $height): string
     {
-        return (100 / ($width / $height)) . '%';
+        return 100 / ($width / $height) . '%';
     }
 }

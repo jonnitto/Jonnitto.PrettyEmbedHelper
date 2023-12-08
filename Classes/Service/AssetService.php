@@ -39,13 +39,11 @@ class AssetService
     {
         if (class_exists('JamesHeinrich\GetID3\Utils')) {
             try {
-                $cacheDirectory = Files::concatenatePaths(
-                    [
-                        $this->environment->getPathToTemporaryDirectory(),
-                        (string)$this->environment->getContext(),
-                        'Jonnitto_PrettyEmbedHelper_GetID3_Cache'
-                    ]
-                );
+                $cacheDirectory = Files::concatenatePaths([
+                    $this->environment->getPathToTemporaryDirectory(),
+                    (string) $this->environment->getContext(),
+                    'Jonnitto_PrettyEmbedHelper_GetID3_Cache',
+                ]);
                 Files::createDirectoryRecursively($cacheDirectory);
                 \JamesHeinrich\GetID3\Utils::setTempDirectory($cacheDirectory);
             } catch (Exception | FilesException $e) {
@@ -62,11 +60,8 @@ class AssetService
      * @return array
      * @throws NodeException
      */
-    public function getAndSaveDataId3(
-        NodeInterface $node,
-        bool $remove,
-        string $type
-    ): array {
+    public function getAndSaveDataId3(NodeInterface $node, bool $remove, string $type): array
+    {
         $duration = null;
         if ($remove === true || !class_exists('JamesHeinrich\GetID3\GetID3')) {
             $node->setProperty('metadataDuration', null);
@@ -75,7 +70,7 @@ class AssetService
             $assets = $node->getProperty('assets');
 
             if (isset($assets) && !empty($assets)) {
-                $getID3 = new \JamesHeinrich\GetID3\GetID3;
+                $getID3 = new \JamesHeinrich\GetID3\GetID3();
                 $file = $assets[0]->getResource()->createTemporaryLocalCopy();
                 if (file_exists($file)) {
                     $fileInfo = $getID3->analyze($file);
@@ -91,7 +86,7 @@ class AssetService
             'type' => '',
             'id' => '',
             'path' => $node->getPath(),
-            'data' => isset($duration)
+            'data' => isset($duration),
         ];
     }
 }

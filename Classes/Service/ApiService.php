@@ -22,7 +22,6 @@ use function urlencode;
  */
 class ApiService
 {
-
     /**
      * @Flow\Inject
      * @var LoggerInterface
@@ -53,11 +52,8 @@ class ApiService
      * @throws InfiniteRedirectionException|JsonException
      * @throws Exception
      */
-    public function youtube(
-        $id,
-        string $type = 'video',
-        ?string $apiKey = null
-    ): ?array {
+    public function youtube($id, string $type = 'video', ?string $apiKey = null): ?array
+    {
         if (!$id || ($type !== 'video' && $type !== 'playlist')) {
             return null;
         }
@@ -69,12 +65,7 @@ class ApiService
         }
         $pathAndQuery = ($type === 'video' ? 'watch?v=' : 'playlist?list=') . $id;
         $url = urlencode('https://youtube.com/' . $pathAndQuery);
-        $data = $this->getJson(
-            'https://www.youtube.com/oembed?url=' . $url,
-            $type,
-            'YouTube Oembed Service',
-            $id
-        );
+        $data = $this->getJson('https://www.youtube.com/oembed?url=' . $url, $type, 'YouTube Oembed Service', $id);
 
         return $data ?? null;
     }
@@ -119,35 +110,25 @@ class ApiService
      * @throws InfiniteRedirectionException
      * @throws JsonException
      */
-    protected function getJson(
-        string $url,
-        string $type,
-        string $service,
-        string $id
-    ): ?array {
-        $message = sprintf(
-            '"%s data from %s" with the id "%s"',
-            $type,
-            $service,
-            $id
-        );
+    protected function getJson(string $url, string $type, string $service, string $id): ?array
+    {
+        $message = sprintf('"%s data from %s" with the id "%s"', $type, $service, $id);
 
         $request = $this->browser->request($url);
         if ($request->getReasonPhrase() !== 'OK') {
             $code = $request->getStatusCode();
             $this->logger->error(
-                sprintf(
-                    'The request for %s failed with the status code "%s"',
-                    $message,
-                    $code
-                ),
+                sprintf('The request for %s failed with the status code "%s"', $message, $code),
                 LogEnvironment::fromMethodName(__METHOD__)
             );
             return null;
         }
         $content = $request->getBody()->getContents();
         $data = json_decode($content, true, 512, JSON_THROW_ON_ERROR);
-        if ($service === 'Google API Service' && (!isset($data['pageInfo']) || $data['pageInfo']['totalResults'] === 0)) {
+        if (
+            $service === 'Google API Service' &&
+            (!isset($data['pageInfo']) || $data['pageInfo']['totalResults'] === 0)
+        ) {
             $this->logger->error(
                 "Error while get $message. Returned data: " . json_encode($data, JSON_THROW_ON_ERROR),
                 LogEnvironment::fromMethodName(__METHOD__)
@@ -155,10 +136,7 @@ class ApiService
             return null;
         }
 
-        $this->logger->debug(
-            "Load $message",
-            LogEnvironment::fromMethodName(__METHOD__)
-        );
+        $this->logger->debug("Load $message", LogEnvironment::fromMethodName(__METHOD__));
 
         return $data;
     }
@@ -176,7 +154,7 @@ class ApiService
             return 0;
         }
         $interval = new DateInterval($ISO8601duration);
-        $ref = new DateTimeImmutable;
+        $ref = new DateTimeImmutable();
         return $ref->add($interval)->getTimestamp() - $ref->getTimestamp();
     }
 
@@ -188,11 +166,8 @@ class ApiService
      * @param string $type
      * @return array|null The array with the data or null if there's an error
      */
-    protected function makeCallToGoogleApi(
-        string $id,
-        string $apiKey,
-        string $type
-    ): ?array {
+    protected function makeCallToGoogleApi(string $id, string $apiKey, string $type): ?array
+    {
         $url = sprintf('https://www.googleapis.com/youtube/v3/%ss?key=%s&part=contentDetails', $type, $apiKey);
         $typeForLogger = $type === 'playlistItem' ? 'playlist items' : $type;
 
@@ -202,12 +177,7 @@ class ApiService
             $url .= '&playlistId=';
         }
         try {
-            $data = $this->getJson(
-                $url . $id,
-                $typeForLogger,
-                'Google API Service',
-                $id
-            );
+            $data = $this->getJson($url . $id, $typeForLogger, 'Google API Service', $id);
         } catch (JsonException | InfiniteRedirectionException $e) {
         }
         return isset($data) ? $data['items'] : null;
@@ -222,11 +192,8 @@ class ApiService
      * @return array|null The array with the data or null if there's an error
      * @throws Exception
      */
-    protected function getDataFromYoutubeVideoWithApi(
-        string $id,
-        string $apiKey,
-        string $type
-    ): ?array {
+    protected function getDataFromYoutubeVideoWithApi(string $id, string $apiKey, string $type): ?array
+    {
         $data = $this->makeCallToGoogleApi($id, $apiKey, $type);
         if (!$data) {
             return null;
@@ -240,8 +207,8 @@ class ApiService
         $dom = new DOMDocument();
         $dom->loadHTML($item['player']['embedHtml']);
         $iframe = $dom->getElementsByTagName('iframe')[0];
-        $width = $iframe ? (int) $iframe->getAttribute("width") : null;
-        $height = $iframe ? (int) $iframe->getAttribute("height") : null;
+        $width = $iframe ? (int) $iframe->getAttribute('width') : null;
+        $height = $iframe ? (int) $iframe->getAttribute('height') : null;
 
         // Get the best possible image
         $thumbnail = end($item['snippet']['thumbnails']);
@@ -255,17 +222,11 @@ class ApiService
             $duration = $this->convertToSeconds($item['contentDetails']['duration']);
         } else {
             // From a playlist, get every video ID and read the duration
-            $playlistItems = $this->makeCallToGoogleApi(
-                $id,
-                $apiKey,
-                'playlistItem'
-            );
+            $playlistItems = $this->makeCallToGoogleApi($id, $apiKey, 'playlistItem');
             foreach ($playlistItems as $playlistItem) {
                 $videoId = $playlistItem['contentDetails']['videoId'];
                 $videoEntry = $this->makeCallToGoogleApi($videoId, $apiKey, 'video');
-                $duration += $this->convertToSeconds(
-                    $videoEntry[0]['contentDetails']['duration']
-                );
+                $duration += $this->convertToSeconds($videoEntry[0]['contentDetails']['duration']);
             }
         }
 

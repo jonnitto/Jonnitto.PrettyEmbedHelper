@@ -51,7 +51,6 @@ class MetadataService
      */
     protected $defaultReturn = ['node' => null];
 
-
     /**
      * Create data
      *
@@ -61,11 +60,12 @@ class MetadataService
      * @throws NodeException
      * @throws IllegalObjectTypeException
      */
-    public function createDataFromService(
-        NodeInterface $node,
-        bool $remove = false
-    ): array {
-        if ($node->hasProperty('videoID') || $node->getNodeType()->isOfType('Jonnitto.PrettyEmbedHelper:Mixin.Metadata.Duration')) {
+    public function createDataFromService(NodeInterface $node, bool $remove = false): array
+    {
+        if (
+            $node->hasProperty('videoID') ||
+            $node->getNodeType()->isOfType('Jonnitto.PrettyEmbedHelper:Mixin.Metadata.Duration')
+        ) {
             return $this->dataFromService($node, $remove);
         }
         return $this->defaultReturn;
@@ -81,10 +81,7 @@ class MetadataService
         $node->setProperty('metadataTitle', null);
         $node->setProperty('metadataRatio', null);
         $node->setProperty('metadataDuration', null);
-        $node->setProperty(
-            'metadataImage',
-            null
-        );
+        $node->setProperty('metadataImage', null);
         $node->setProperty('metadataThumbnail', null);
         $this->imageService->removeTagIfEmpty();
     }
@@ -100,16 +97,13 @@ class MetadataService
      * @throws NodeException
      * @throws IllegalObjectTypeException
      */
-    public function updateDataFromService(
-        NodeInterface $node,
-        string $propertyName,
-        $oldValue,
-        $newValue
-    ): array {
+    public function updateDataFromService(NodeInterface $node, string $propertyName, $oldValue, $newValue): array
+    {
         if (
             ($propertyName === 'videoID' && $oldValue !== $newValue) ||
             ($propertyName === 'type' && $node->hasProperty('videoID')) ||
-            ($propertyName === 'assets' && $node->getNodeType()->isOfType('Jonnitto.PrettyEmbedHelper:Mixin.Metadata.Duration'))
+            ($propertyName === 'assets' &&
+                $node->getNodeType()->isOfType('Jonnitto.PrettyEmbedHelper:Mixin.Metadata.Duration'))
         ) {
             return $this->dataFromService($node);
         }
@@ -125,10 +119,8 @@ class MetadataService
      * @throws NodeException
      * @throws IllegalObjectTypeException
      */
-    protected function dataFromService(
-        NodeInterface $node,
-        bool $remove = false
-    ): array {
+    protected function dataFromService(NodeInterface $node, bool $remove = false): array
+    {
         switch ($this->checkNodeAndSetPlatform($node)) {
             case 'audio':
                 $data = $this->assetService->getAndSaveDataId3($node, $remove, 'Audio');

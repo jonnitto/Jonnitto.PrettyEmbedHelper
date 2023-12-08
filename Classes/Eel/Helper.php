@@ -2,7 +2,6 @@
 
 namespace Jonnitto\PrettyEmbedHelper\Eel;
 
-
 use JsonException;
 use Neos\Flow\Annotations as Flow;
 use Neos\Eel\ProtectedContextAwareInterface;
@@ -31,7 +30,7 @@ class Helper implements ProtectedContextAwareInterface
             return $ratio;
         }
 
-        return (100 / $ratio) . '%';
+        return 100 / $ratio . '%';
     }
 
     /**
@@ -96,7 +95,6 @@ class Helper implements ProtectedContextAwareInterface
         $parseID = new ParseIDService();
         return $parseID->youtube($videoID);
     }
-
 
     /**
      * All methods are considered safe

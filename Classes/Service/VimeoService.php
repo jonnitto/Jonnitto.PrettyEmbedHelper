@@ -56,10 +56,8 @@ class VimeoService
      * @throws NodeException
      * @throws IllegalObjectTypeException
      */
-    public function getAndSaveDataFromApi(
-        NodeInterface $node,
-        bool $remove = false
-    ): ?array {
+    public function getAndSaveDataFromApi(NodeInterface $node, bool $remove = false): ?array
+    {
         $this->imageService->remove($node);
 
         $returnArray = [
@@ -67,7 +65,7 @@ class VimeoService
             'node' => 'Vimeo',
             'type' => 'Video',
             'path' => $node->getPath(),
-            'data' => false
+            'data' => false,
         ];
 
         if ($remove === true) {
@@ -84,23 +82,16 @@ class VimeoService
 
         if (isset($data)) {
             $title = $data['title'] ?? null;
-            $ratio = $data['width'] && $data['height'] ?
-                $this->utility->calculatePaddingTop(
-                    $data['width'],
-                    $data['height']
-                ) :
-                null;
+            $ratio =
+                $data['width'] && $data['height']
+                    ? $this->utility->calculatePaddingTop($data['width'], $data['height'])
+                    : null;
             $image = $data['thumbnail_url'] ?? null;
             $duration = $data['duration'] ?? null;
 
             if (isset($image)) {
                 try {
-                    $thumbnail = $this->imageService->import(
-                        $node,
-                        $image,
-                        $videoID,
-                        'Vimeo'
-                    );
+                    $thumbnail = $this->imageService->import($node, $image, $videoID, 'Vimeo');
                 } catch (IllegalObjectTypeException | InvalidQueryException | Exception | \Exception $e) {
                 }
             }
@@ -109,10 +100,7 @@ class VimeoService
         $node->setProperty('metadataTitle', $title ?? null);
         $node->setProperty('metadataRatio', $ratio ?? null);
         $node->setProperty('metadataDuration', $duration ?? null);
-        $node->setProperty(
-            'metadataImage',
-            $this->utility->removeProtocolFromUrl($image ?? null)
-        );
+        $node->setProperty('metadataImage', $this->utility->removeProtocolFromUrl($image ?? null));
         $node->setProperty('metadataThumbnail', $thumbnail ?? null);
 
         $this->imageService->removeTagIfEmpty();
