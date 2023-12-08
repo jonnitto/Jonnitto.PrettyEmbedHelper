@@ -1,4 +1,4 @@
-prototype(Jonnitto.PrettyEmbedHelper:Content) < prototype(Neos.Neos:ContentComponent) {
+prototype(Jonnitto.PrettyEmbed:Content) < prototype(Neos.Neos:ContentComponent) {
     contentElement = true
 
     // Global Settings for all Embed Players

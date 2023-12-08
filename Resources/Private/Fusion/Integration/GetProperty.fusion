@@ -1,0 +1,21 @@
+prototype(Jonnitto.PrettyEmbed:GetProperty) < prototype(Neos.Fusion:Component) {
+    @propTypes {
+        type = ${PropTypes.oneOf(['YouTube', 'Vimeo', 'Audio', 'Video']).isRequired}
+        property = ${PropTypes.string.isRequired}
+    }
+
+    node = ${node}
+    value = ${q(this.node).property(this.property)}
+    type = ${type}
+
+    renderer = Neos.Fusion:Case {
+        hasValue {
+            condition = ${Type.isBoolean(props.value) || Type.isString(props.value)}
+            renderer = ${props.value}
+        }
+        default {
+            condition = true
+            renderer = ${Configuration.setting('Jonnitto.PrettyEmbed.' + props.type + '.' + props.property)}
+        }
+    }
+}

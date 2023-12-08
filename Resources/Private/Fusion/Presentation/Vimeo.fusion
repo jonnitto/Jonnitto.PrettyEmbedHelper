@@ -1,0 +1,8 @@
+prototype(Jonnitto.PrettyEmbed:Presentation.Vimeo) < prototype(Jonnitto.PrettyEmbed:Presentation.Iframe) {
+    type = 'Vimeo'
+    gdprHandling = ${Configuration.setting('Jonnitto.PrettyEmbed.Vimeo.gdprHandling')}
+    color = ${Configuration.setting('Jonnitto.PrettyEmbed.Vimeo.color')}
+    controls = ${Configuration.setting('Jonnitto.PrettyEmbed.Vimeo.controls')}
+    background = ${Configuration.setting('Jonnitto.PrettyEmbed.Vimeo.background')}
+    loop = ${Configuration.setting('Jonnitto.PrettyEmbed.Vimeo.loop')}
+}

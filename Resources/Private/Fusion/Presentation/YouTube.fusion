@@ -1,0 +1,6 @@
+prototype(Jonnitto.PrettyEmbed:Presentation.YouTube) < prototype(Jonnitto.PrettyEmbed:Presentation.Iframe) {
+    type = 'YouTube'
+    gdprHandling = ${Configuration.setting('Jonnitto.PrettyEmbed.YouTube.gdprHandling')}
+    controls = ${Configuration.setting('Jonnitto.PrettyEmbed.YouTube.controls')}
+    loop = ${Configuration.setting('Jonnitto.PrettyEmbed.YouTube.loop')}
+}

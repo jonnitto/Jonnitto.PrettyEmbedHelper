@@ -1,0 +1,94 @@
+prototype(Jonnitto.PrettyEmbed:Presentation.Video) < prototype(Neos.Fusion:Component) {
+    @propTypes {
+        class = ${PropTypes.anyOf( PropTypes.string, PropTypes.arrayOf( PropTypes.string ) )}
+        id = ${PropTypes.string}
+        label = ${PropTypes.string}
+        href = ${PropTypes.string}
+        embedHref = ${PropTypes.string}
+        preview = ${PropTypes.string}
+        image = ${PropTypes.string}
+        loadImageStrategy = ${PropTypes.oneOf(['lazy', 'eager', null, false])}
+        preload = ${PropTypes.oneOf(['none', 'metadata', 'auto'])}
+        crossorigin = ${PropTypes.oneOf(['anonymous', 'use-credentials', true, false])}
+        controls = ${PropTypes.boolean}
+        lightbox = ${PropTypes.boolean}
+        wrapper = ${PropTypes.anyOf([PropTypes.string, PropTypes.boolean])}
+        loop = ${PropTypes.boolean}
+        streaming = ${PropTypes.string}
+        autoplay = ${PropTypes.boolean}
+        muted = ${PropTypes.boolean}
+
+        # Should be source tags
+        content = ${PropTypes.string}
+    }
+
+    loadImageStrategy = ${Configuration.setting('Jonnitto.PrettyEmbed.loadImageStrategy')}
+
+    controls = ${Configuration.setting('Jonnitto.PrettyEmbed.Video.controls')}
+    lightbox = ${Configuration.setting('Jonnitto.PrettyEmbed.Video.lightbox')}
+    autoplay = ${Configuration.setting('Jonnitto.PrettyEmbed.Video.autoplay')}
+    loop = ${Configuration.setting('Jonnitto.PrettyEmbed.Video.loop')}
+    muted = ${Configuration.setting('Jonnitto.PrettyEmbed.Video.muted')}
+    preload = ${Configuration.setting('Jonnitto.PrettyEmbed.Video.preload')}
+    crossorigin = ${Configuration.setting('Jonnitto.PrettyEmbed.Video.crossorigin')}
+
+    wrapper = ${Configuration.setting('Jonnitto.PrettyEmbed.wrapper')}
+
+    @if.checkVideo = ${this.image && (this.content || this.streaming)}
+
+    renderer = Neos.Fusion:Component {
+        @apply.props = ${props}
+        _video = afx`
+            <video
+                x-prettyembedmedia:media={props.streaming}
+                x-prettyembedmedia:media.@if={props.controls}
+                x-prettyembedmedia:media.slim={props.streaming}
+                x-prettyembedmedia:media.slim.@if={!props.controls}
+                preload={props.preload}
+                playsinline
+                autoplay={props.autoplay}
+                loop={props.streaming ? null : props.loop}
+                muted={props.autoplay || props.muted}
+                crossorigin={props.crossorigin}
+                poster={props.image}
+            >
+                {props.streaming ? '' : props.content}
+            </video>
+        `
+        renderer = afx`
+            <Jonnitto.PrettyEmbed:Presenation.Wrapper wrapper={props.wrapper}>
+                <div
+                    x-data
+                    x-prettyembedmedia={AlpineJS.object({
+                        streaming: props.streaming || null,
+                        lightbox: props.lightbox || null
+                    })}
+                    aria-label={props.label}
+                    id={props.id}
+                    class={Carbon.String.merge(props.class, BEM.modifier('jonnitto-prettyembed', 'video'))}
+                >
+                    <Jonnitto.PrettyEmbed:Assets type="Media" />
+                    <Jonnitto.PrettyEmbed:Presentation.Preview
+                        @if={props.lightbox}
+                        content={props.preview}
+                        label={props.label}
+                        image={props.image}
+                        loadImageStrategy={props.loadImageStrategy}
+                    />
+                    {props.lightbox ? '' : props._video}
+                    <Jonnitto.PrettyEmbed:Presentation.Button.Play onClick="play" />
+                    <Jonnitto.PrettyEmbed:Presentation.Button.Pause
+                        @if={!props.controls && !props.lightbox}
+                    />
+                    <Jonnitto.PrettyEmbed:Presentation.Lightbox
+                        @if={props.lightbox}
+                        type="Media"
+                        playButton={true}
+                        pauseButton={!props.controls}
+                        content={props._video}
+                    />
+                </div>
+            </Jonnitto.PrettyEmbed:Presenation.Wrapper>
+        `
+    }
+}

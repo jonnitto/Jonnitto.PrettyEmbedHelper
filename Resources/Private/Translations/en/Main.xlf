@@ -15,6 +15,18 @@
                 <source>Open in new window</source>
                 <target>Open in new window</target>
             </trans-unit>
+            <trans-unit id="close" xml:space="preserve">
+                <source>Close</source>
+                <target>Close</target>
+            </trans-unit>
+            <trans-unit id="play" xml:space="preserve">
+                <source>Play</source>
+                <target>Play</target>
+            </trans-unit>
+            <trans-unit id="pause" xml:space="preserve">
+                <source>Pause</source>
+                <target>Pause</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

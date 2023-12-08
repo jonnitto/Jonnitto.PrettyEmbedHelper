@@ -1,0 +1,26 @@
+prototype(Jonnitto.PrettyEmbed:Presentation.Preview) < prototype(Neos.Fusion:Component) {
+    @propTypes {
+        content = ${PropTypes.string}
+        show = ${PropTypes.string}
+        label = ${PropTypes.string}
+        image = ${PropTypes.string}
+        loadImageStrategy = ${PropTypes.oneOf(['lazy', 'eager', null, false])}
+    }
+
+    @if.hasImageOrContent = ${this.content || this.image}
+
+    renderer = afx`
+        <Neos.Fusion:Augmenter
+            @if={props.content}
+            x-show={props.show}
+            content={props.content}
+        />
+        <img
+            @if={!props.content}
+            x-show={props.show}
+            alt={props.label}
+            src={props.image}
+            loading={props.loadImageStrategy}
+        />
+    `
+}

@@ -1,0 +1,58 @@
+prototype(Jonnitto.PrettyEmbed:Presentation.Lightbox) < prototype(Neos.Fusion:Component) {
+    @propTypes {
+        type = ${PropTypes.oneOf(['YouTube', 'Vimeo', 'Video']).isRequired}
+        content = ${PropTypes.string}
+        ratio = ${PropTypes.string}
+        playButton = ${PropTypes.boolean}
+        pauseButton = ${PropTypes.boolean}
+   }
+
+    type = 'Video'
+    playButton = ${this.type == 'Video'}
+
+    @if.hasType = ${this.type}
+
+    renderer = afx`
+        <template x-teleport="body">
+            <div
+                x-show="lightbox"
+                "x-transition.opacity.duration.500ms"
+                x-cloak
+                aria-hidden="true"
+                class="jonnitto-prettyembed-backdrop"
+            ></div>
+        </template>
+        <template x-teleport="body">
+            <div
+                x-show="lightbox"
+                x-cloak
+                "x-on:keydown.escape.window.prevent.stop"="lightbox=false"
+                "x-transition.duration.500ms"
+                role="dialog"
+                aria-modal="true"
+                class="jonnitto-prettyembed-lightbox"
+            >
+                <div x-on:click.outside="lightbox=false" class="jonnitto-prettyembed-lightbox__inner">
+                    <Jonnitto.PrettyEmbed:Presentation.Button.Close />
+                    <div
+                        x-ref={props.type == 'Vimeo' ? 'vimeo' : null}
+                        style={props.ratio ? '--aspect-ratio:' + props.ratio :  null}
+                        class.base="jonnitto-prettyembed-lightbox__content"
+                        class.ratio={props.ratio ? "jonnitto-prettyembed-ratio" : null}
+                    >
+                        <Jonnitto.PrettyEmbed:Presentation.YouTubeTarget
+                            type={props.type}
+                            controls={!props.pauseButton}
+                        />
+                        {props.type == 'Video' ? props.content : ''}
+                        <Jonnitto.PrettyEmbed:Presentation.Button.Play
+                            @if={props.playButton}
+                            onClick="play"
+                        />
+                        <Jonnitto.PrettyEmbed:Presentation.Button.Pause  @if={props.pauseButton} />
+                    </div>
+                </div>
+            </div>
+        </template>
+    `
+}

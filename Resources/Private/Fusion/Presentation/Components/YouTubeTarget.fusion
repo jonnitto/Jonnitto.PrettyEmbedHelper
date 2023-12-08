@@ -1,0 +1,15 @@
+prototype(Jonnitto.PrettyEmbed:Presentation.YouTubeTarget) < prototype(Neos.Fusion:Component) {
+    @propTypes {
+        type = ${PropTypes.string}
+        controls = ${PropTypes.boolean}
+    }
+
+    @if.isYoutube = ${this.type == 'YouTube'}
+
+    renderer = afx`
+        <div
+            x-ref="youtube"
+            class={props.controls ? null : 'jonnitto-prettyembed-pointer-none'}
+        ></div>
+    `
+}

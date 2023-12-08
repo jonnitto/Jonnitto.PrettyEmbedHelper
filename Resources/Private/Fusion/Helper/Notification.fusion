@@ -1,4 +1,4 @@
-prototype(Jonnitto.PrettyEmbedHelper:Notification) < prototype(Neos.Fusion:Component) {
+prototype(Jonnitto.PrettyEmbed:Notification) < prototype(Neos.Fusion:Component) {
     key = ${null}
     type = 'alert'
     package = ${package}

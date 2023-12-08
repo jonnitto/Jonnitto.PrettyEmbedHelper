@@ -1,0 +1,115 @@
+prototype(Jonnitto.PrettyEmbed:Presentation.Iframe) < prototype(Neos.Fusion:Component) {
+    @propTypes {
+        type = ${PropTypes.oneOf(['YouTube', 'Vimeo']).isRequired}
+        class = ${PropTypes.anyOf( PropTypes.string, PropTypes.arrayOf( PropTypes.string ) )}
+        id = ${PropTypes.string}
+        label = ${PropTypes.string}
+        href = ${PropTypes.string}
+        embedHref = ${PropTypes.string}
+        preview = ${PropTypes.string}
+        image = ${PropTypes.string}
+        loadImageStrategy = ${PropTypes.oneOf(['lazy', 'eager', null, false])}
+        ratio = ${PropTypes.string}
+        ratioClass = ${PropTypes.boolean}
+        controls = ${PropTypes.boolean}
+        lightbox = ${PropTypes.boolean}
+        wrapper = ${PropTypes.anyOf([PropTypes.string, PropTypes.boolean])}
+        gdprHandling = ${PropTypes.oneOf([true, false, 'popup']).isRequired}
+        loop = ${PropTypes.boolean}
+        videoId = ${PropTypes.anyOf([PropTypes.string, PropTypes.integer])}
+
+        # YouTube only
+        playlistId = ${PropTypes.anyOf([PropTypes.string, PropTypes.integer])}
+
+        # Vimeo only
+        color = ${PropTypes.string}
+    }
+
+    gdprHandling = true
+    loadImageStrategy = ${Configuration.setting('Jonnitto.PrettyEmbed.loadImageStrategy')}
+    ratioClass = ${!!this.ratio}
+    controls = true
+
+    wrapper = ${Configuration.setting('Jonnitto.PrettyEmbed.wrapper')}
+
+    @if {
+        checkType = ${this.type == 'YouTube' || this.type == 'Vimeo'}
+        checkVimeo = ${this.type == 'Vimeo' ? (this.videoId && this.href && this.embedHref) : true}
+        checkYouTube = ${this.type == 'YouTube' ? (this.videoId && this.href && this.embedHref) : true}
+        checkPreviewImage = ${this.image || this.preview}
+    }
+    _alwaysOpenInPopup = ${this.gdprHandling == 'popup'}
+
+    renderer = afx`
+        <Jonnitto.PrettyEmbed:Presenation.Wrapper wrapper={props.wrapper}>
+            <div
+                x-data
+                x-prettyembedvimeo={AlpineJS.object({
+                    gdpr:props.gdprHandling,
+                    videoId: props.videoId,
+                    color: props.color || null,
+                    slim: !props.controls || null,
+                    lightbox: props.lightbox || null,
+                    loop: props.loop || null
+                })}
+                x-prettyembedvimeo.@if={props.type == 'Vimeo' && !props._alwaysOpenInPopup}
+                x-prettyembedyoutube={AlpineJS.object({
+                    gdpr:props.gdprHandling,
+                    videoId: props.videoId || null,
+                    playlistId: props.playlistId || null,
+                    slim: !props.controls || null,
+                    lightbox: props.lightbox || null,
+                    loop: props.loop || null
+                })}
+                x-prettyembedyoutube.@if={props.type == 'YouTube' && !props._alwaysOpenInPopup}
+                aria-label={props.label}
+                id={props.id}
+                class={Carbon.String.merge(props.class, BEM.modifier('jonnitto-prettyembed', String.toLowerCase(props.type)), props.ratioClass && 'jonnitto-prettyembed-ratio')}
+                style={props.ratio}
+            >
+                <Jonnitto.PrettyEmbed:Assets
+                    type={props.type}
+                    gdprHandling={props.gdprHandling}
+                />
+                <Jonnitto.PrettyEmbed:Presentation.Button.Play
+                    @if={!props._alwaysOpenInPopup}
+                    show={props.controls && !props.lightbox ? "!loaded" : null}
+                    onClick="load"
+                    href={props.href}
+                />
+                <Jonnitto.PrettyEmbed:Presentation.Button.Play
+                    @if={props._alwaysOpenInPopup}
+                    href={props.href}
+                    popup={props.embedHref}
+                />
+                <Jonnitto.PrettyEmbed:Presentation.Button.Pause
+                    @if={!props.controls && !props.lightbox && !props._alwaysOpenInPopup}
+                />
+                <Jonnitto.PrettyEmbed:Presentation.Gdpr
+                    @if={props.gdprHandling == true}
+                    href={props.href}
+                    embedHref={props.embedHref}
+                />
+                <Jonnitto.PrettyEmbed:Presentation.Preview
+                    show={props._alwaysOpenInPopup || props.lightbox ? null : "!loaded"}
+                    content={props.preview}
+                    label={props.label}
+                    image={props.image}
+                    loadImageStrategy={props.loadImageStrategy}
+                />
+                <Jonnitto.PrettyEmbed:Presentation.YouTubeTarget
+                    @if={!props.lightbox}
+                    type={props.type}
+                    controls={props.controls}
+                />
+                <Jonnitto.PrettyEmbed:Presentation.Lightbox
+                    @if={props.lightbox && !props._alwaysOpenInPopup }
+                    ratio={props.ratio}
+                    type={props.type}
+                    playButton={!props.controls}
+                    pauseButton={!props.controls}
+                />
+            </div>
+        </Jonnitto.PrettyEmbed:Presenation.Wrapper>
+    `
+}

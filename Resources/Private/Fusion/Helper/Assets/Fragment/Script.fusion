@@ -1,4 +1,4 @@
-prototype(Jonnitto.PrettyEmbedHelper:Assets.Fragment.Script) < prototype(Neos.Fusion:Component) {
+prototype(Jonnitto.PrettyEmbed:Assets.Fragment.Script) < prototype(Neos.Fusion:Component) {
     filename = null
     uri = ${StaticResource.uri('Jonnitto.PrettyEmbedHelper', 'Public/Script/' + this.filename)}
 
