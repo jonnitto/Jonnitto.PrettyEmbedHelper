@@ -52,16 +52,10 @@ class YoutubeService
     protected $metadataService;
 
     /**
-     * @Flow\InjectConfiguration(package="Jonnitto.PrettyEmbedYoutube")
-     * @var array
+     * @Flow\InjectConfiguration(package="Jonnitto.PrettyEmbed", path="YouTube.apiKey")
+     * @var string
      */
-    protected $youtubeSettings;
-
-    /**
-     * @Flow\InjectConfiguration
-     * @var array
-     */
-    protected $settings;
+    protected $apiKey;
 
     /**
      * Get and save data from oembed service
@@ -90,25 +84,12 @@ class YoutubeService
             return $returnArray;
         }
 
-        $isYoutubePackage = $node->getNodeType()->isOfType('Jonnitto.PrettyEmbedYoutube:Mixin.VideoID');
-
         $videoIDProperty = $node->getProperty('videoID');
-
-        if ($isYoutubePackage) {
-            $type = $this->youtubeSettings['defaults']['type'];
-            if ($node->hasProperty('type')) {
-                $typeFromProperty = $node->getProperty('type');
-                if ($typeFromProperty === 'video' || $typeFromProperty === 'playlist') {
-                    $type = $typeFromProperty;
-                }
-            }
-        } else {
-            $type = $this->type($videoIDProperty);
-            $node->setProperty('type', $type);
-        }
+        $type = $this->type($videoIDProperty);
+        $node->setProperty('type', $type);
 
         $videoID = $this->parseID->youtube($videoIDProperty, $type);
-        $data = $this->api->youtube($videoID, $type, $this->settings['youtubeApiKey']);
+        $data = $this->api->youtube($videoID, $type, $this->apiKey);
 
         if (isset($data)) {
             $title = $data['title'] ?? null;
