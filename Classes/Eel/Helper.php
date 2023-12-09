@@ -16,24 +16,6 @@ use Neos\Flow\Http\Client\InfiniteRedirectionException;
 class Helper implements ProtectedContextAwareInterface
 {
     /**
-     * This helper calculates the padding from a given ratio or width and height
-     *
-     * @param float|integer|string $ratio
-     * @return string|null The calculated value
-     */
-    public function paddingTop($ratio = null): ?string
-    {
-        if ($ratio === null) {
-            return null;
-        }
-        if (is_string($ratio)) {
-            return $ratio;
-        }
-
-        return 100 / $ratio . '%';
-    }
-
-    /**
      * Return the thumbnail URL from vimeo
      *
      * @param string|integer $videoID

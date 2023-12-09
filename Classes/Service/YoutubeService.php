@@ -93,10 +93,7 @@ class YoutubeService
 
         if (isset($data)) {
             $title = $data['title'] ?? null;
-            $ratio =
-                $data['width'] && $data['height']
-                    ? $this->utility->calculatePaddingTop($data['width'], $data['height'])
-                    : null;
+            $ratio = $data['width'] && $data['height'] ? sprintf('%s / %s', $data['width'], $data['height']) : null;
             $duration = $data['duration'] ?? null;
             if (isset($data['imageUrl'], $data['imageResolution'])) {
                 $image = $data['imageUrl'];

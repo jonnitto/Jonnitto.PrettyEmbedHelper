@@ -23,16 +23,4 @@ class Utility
         }
         return preg_replace('/https?:\/\//i', '//', $url);
     }
-
-    /**
-     * This calculates the padding-top from width and height
-     *
-     * @param integer $width
-     * @param integer $height
-     * @return string The calculated value
-     */
-    public function calculatePaddingTop(int $width, int $height): string
-    {
-        return 100 / ($width / $height) . '%';
-    }
 }

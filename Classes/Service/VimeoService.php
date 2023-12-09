@@ -82,10 +82,7 @@ class VimeoService
 
         if (isset($data)) {
             $title = $data['title'] ?? null;
-            $ratio =
-                $data['width'] && $data['height']
-                    ? $this->utility->calculatePaddingTop($data['width'], $data['height'])
-                    : null;
+            $ratio = $data['width'] && $data['height'] ? sprintf('%s / %s', $data['width'], $data['height']) : null;
             $image = $data['thumbnail_url'] ?? null;
             $duration = $data['duration'] ?? null;
 
