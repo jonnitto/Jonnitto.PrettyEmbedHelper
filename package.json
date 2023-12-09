@@ -25,12 +25,11 @@
     "postcss-sort-media-queries": "^5.2.0",
     "prettier": "^3.1.0",
     "sass": "^1.69.5",
-    "stylelint": "^15.11.0",
-    "stylelint-config-standard": "^34.0.0",
+    "stylelint": "^16.0.1",
+    "stylelint-config-standard": "^35.0.0",
     "stylelint-scss": "^5.3.1"
   },
   "scripts": {
-    "prettierFiles": "prettier --write --no-error-on-unmatched-pattern '**/*.{js,php,yaml,scss,mjs}'",
     "build:css:scss": "sass --no-source-map Resources/Private/Assets:Resources/Public/Styles",
     "build:css:postcss": "postcss Resources/Public/Styles/*.css --replace --no-map --use postcss-sort-media-queries autoprefixer cssnano",
     "build:css": "pnpm build:css:scss && pnpm build:css:postcss",

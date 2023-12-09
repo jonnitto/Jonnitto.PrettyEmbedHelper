@@ -36,3 +36,6 @@ max_line_length = 1000
 max_line_length = 200
 trim_trailing_whitespace = false
 indent_size = 2
+
+[Makefile]
+indent_style = tab
