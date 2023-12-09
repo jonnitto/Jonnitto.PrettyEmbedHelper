@@ -1,0 +1,13 @@
+# Contains metadata
+# - videoID (Vimeo or YouTube)
+# - title
+# - aspectRatio
+# - duration
+# - image (string)
+# - thumbnail ImageInterface
+
+'Jonnitto.PrettyEmbedHelper:Mixin.Metadata':
+  abstract: true
+  properties:
+    prettyembedMetadata:
+      type: array

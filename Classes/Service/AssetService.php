@@ -2,6 +2,7 @@
 
 namespace Jonnitto\PrettyEmbedHelper\Service;
 
+use Jonnitto\PrettyEmbedHelper\Utility\Utility;
 use Neos\ContentRepository\Domain\Model\NodeInterface;
 use Neos\ContentRepository\Exception\NodeException;
 use Neos\Flow\Annotations as Flow;
@@ -64,7 +65,7 @@ class AssetService
     {
         $duration = null;
         if ($remove === true || !class_exists('JamesHeinrich\GetID3\GetID3')) {
-            $node->setProperty('metadataDuration', null);
+            Utility::removeMetadata($node, 'duration');
         } else {
             $this->setCacheDirectory();
             $assets = $node->getProperty('assets');
@@ -77,7 +78,7 @@ class AssetService
                     $duration = (int) round($fileInfo['playtime_seconds']);
                 }
             }
-            $node->setProperty('metadataDuration', $duration);
+            Utility::saveMetadata($node, $duration, 'duration');
         }
 
         return [

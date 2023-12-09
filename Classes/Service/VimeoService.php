@@ -3,7 +3,6 @@
 namespace Jonnitto\PrettyEmbedHelper\Service;
 
 use Jonnitto\PrettyEmbedHelper\Utility\Utility;
-use JsonException;
 use Neos\ContentRepository\Domain\Model\NodeInterface;
 use Neos\ContentRepository\Exception\NodeException;
 use Neos\Flow\Annotations as Flow;
@@ -11,6 +10,7 @@ use Neos\Flow\Http\Client\InfiniteRedirectionException;
 use Neos\Flow\Persistence\Exception\IllegalObjectTypeException;
 use Neos\Flow\Persistence\Exception\InvalidQueryException;
 use Neos\Flow\ResourceManagement\Exception;
+use JsonException;
 
 /**
  * @Flow\Scope("singleton")
@@ -87,12 +87,15 @@ class VimeoService
                 }
             }
         }
-        $node->setProperty('metadataID', $videoID);
-        $node->setProperty('metadataTitle', $title ?? null);
-        $node->setProperty('metadataRatio', $ratio ?? null);
-        $node->setProperty('metadataDuration', $duration ?? null);
-        $node->setProperty('metadataImage', Utility::removeProtocolFromUrl($image ?? null));
-        $node->setProperty('metadataThumbnail', $thumbnail ?? null);
+        $metadata = [
+            'videoID' => $videoID,
+            'title' => $title ?? null,
+            'aspectRatio' => $ratio ?? null,
+            'duration' => $duration ?? null,
+            'image' => Utility::removeProtocolFromUrl($image ?? null),
+            'thumbnail' => $thumbnail ?? null,
+        ];
+        Utility::saveMetadata($node, $metadata);
 
         $this->imageService->removeTagIfEmpty();
 

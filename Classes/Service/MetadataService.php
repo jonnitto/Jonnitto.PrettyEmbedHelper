@@ -78,12 +78,7 @@ class MetadataService
      */
     public function removeMetaData(NodeInterface $node): void
     {
-        $node->setProperty('metadataID', null);
-        $node->setProperty('metadataTitle', null);
-        $node->setProperty('metadataRatio', null);
-        $node->setProperty('metadataDuration', null);
-        $node->setProperty('metadataImage', null);
-        $node->setProperty('metadataThumbnail', null);
+        Utility::removeAllMetadata($node);
         $this->imageService->removeTagIfEmpty();
     }
 
@@ -180,9 +175,9 @@ class MetadataService
 
         $platform = $this->parseID->platform($node->getProperty('videoID'));
         if (!$platform) {
-            $node->setProperty('metadataDuration', null);
+            Utility::removeMetadata($node, 'duration');
         }
-        $node->setProperty('platform', $platform);
+        Utility::saveMetadata($node, $platform, 'platform');
         return $platform;
     }
 }

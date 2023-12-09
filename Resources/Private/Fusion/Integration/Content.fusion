@@ -5,6 +5,7 @@ prototype(Jonnitto.PrettyEmbed:Content) < prototype(Neos.Neos:ContentComponent) 
     maximumWidth = ${Configuration.setting('Jonnitto.PrettyEmbedHelper.maximumWidth')}
     wrapper = ${Configuration.setting('Jonnitto.PrettyEmbedHelper.wrapper')}
     image = ${q(node).property('image')}
+    metadata = ${q(node).property('prettyembedMetadata')}
 
     // Need to be defined
     package = null

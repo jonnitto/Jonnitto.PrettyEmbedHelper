@@ -105,13 +105,15 @@ class YoutubeService
             $thumbnail = $this->imageService->import($node, $image, $videoID, 'Youtube', $resolution);
         }
 
-        $node->setProperty('metadataID', $videoID);
-        $node->setProperty('metadataTitle', $title ?? null);
-        $node->setProperty('metadataRatio', $ratio ?? null);
-        $node->setProperty('metadataImage', Utility::removeProtocolFromUrl($image));
-        $node->setProperty('metadataThumbnail', $thumbnail ?? null);
-        $node->setProperty('metadataDuration', $duration ?? null);
-
+        $metadata = [
+            'videoID' => $videoID,
+            'title' => $title ?? null,
+            'aspectRatio' => $ratio ?? null,
+            'duration' => $duration ?? null,
+            'image' => Utility::removeProtocolFromUrl($image ?? null),
+            'thumbnail' => $thumbnail ?? null,
+        ];
+        Utility::saveMetadata($node, $metadata);
         $this->imageService->removeTagIfEmpty();
 
         if (!$videoIDProperty) {
