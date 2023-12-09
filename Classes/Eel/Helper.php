@@ -25,17 +25,7 @@ class Helper implements ProtectedContextAwareInterface
      */
     public function vimeoThumbnail($videoID): ?string
     {
-        if (!$videoID) {
-            return null;
-        }
-
-        $api = new ApiService();
-        $data = $api->vimeo($videoID);
-
-        if (!isset($data)) {
-            return null;
-        }
-        return Utility::removeProtocolFromUrl($data['thumbnail_url'] ?? null);
+        return Utility::vimeoThumbnail($videoID);
     }
 
     /**
@@ -46,7 +36,7 @@ class Helper implements ProtectedContextAwareInterface
      */
     public function youtubeThumbnail(string $videoID): ?string
     {
-        return Utility::getBestPossibleYoutubeImage($videoID)['image'] ?? null;
+        return Utility::youtubeThumbnail($videoID);
     }
 
     /**

@@ -98,6 +98,50 @@ class Utility
     }
 
     /**
+     * Return the thumbnail URL from vimeo
+     *
+     * @param string|integer $videoID
+     * @return string|null
+     * @throws InfiniteRedirectionException
+     * @throws JsonException
+     */
+    public static function vimeoThumbnail($videoID): ?string
+    {
+        if (!$videoID) {
+            return null;
+        }
+
+        $api = new ApiService();
+        $data = $api->vimeo($videoID);
+
+        if (!isset($data)) {
+            return null;
+        }
+        return Utility::removeProtocolFromUrl($data['thumbnail_url'] ?? null);
+    }
+
+    /**
+     * Return the thumbnail URL from vimeo
+     *
+     * @param string $videoID
+     * @return string|null
+     */
+    public static function youtubeThumbnail(string $videoID): ?string
+    {
+        if (!$videoID) {
+            return null;
+        }
+
+        $imageArray = Utility::getBestPossibleYoutubeImage($videoID);
+
+        if (!$imageArray) {
+            return null;
+        }
+
+        return Utility::removeProtocolFromUrl($imageArray['image'] ?? null);
+    }
+
+    /**
      * Remove the protocol from url and replace it with `//`
      *
      * @param string|null $url
