@@ -93,7 +93,7 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Iframe) < prototype(Neos.Fusion:Comp
                 <Jonnitto.PrettyEmbed:Presentation.Button.Pause
                     @if={!props.controls && !props.lightbox && !props._alwaysOpenInPopup}
                 />
-                <Jonnitto.PrettyEmbed:Presentation.Gdpr
+                <Jonnitto.PrettyEmbed:Presentation.GdprConsent
                     @if={props.gdprHandling == true}
                     href={props.href}
                     embedHref={props.embedHref}

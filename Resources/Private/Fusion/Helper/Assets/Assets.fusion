@@ -26,10 +26,10 @@ prototype(Jonnitto.PrettyEmbed:Assets) < prototype(Neos.Fusion:Component) {
             filename = 'Backend.Video.css'
         }
         frontendScripts = Neos.Fusion:Join {
-            @if.set = ${props._includeFrontendScripts}
+            @if.set = ${props.includeFrontendScripts}
             gdprPlugin = Jonnitto.PrettyEmbed:Assets.Fragment.Module {
                 @if.set = ${props.gdprHandling == true}
-                filename = 'Gdpr.js'
+                filename = 'Consent.js'
             }
             magicPlugin = Jonnitto.PrettyEmbed:Assets.Fragment.Module {
                 @if.set = ${props.player == 'Media' || props.gdprHandling != 'Popup'}
@@ -46,6 +46,7 @@ prototype(Jonnitto.PrettyEmbed:Assets) < prototype(Neos.Fusion:Component) {
             alpineJs = Jonnitto.PrettyEmbed:Assets.Fragment.Script {
                 @if.set = ${props.includeAlpineJsCheck}
                 filename = 'AlpineCheck.js'
+                slipstream = '//body'
             }
         }
     }

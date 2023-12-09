@@ -1,5 +1,5 @@
 export default function (Alpine) {
-    Alpine.directive('prettyembedgdpr', (element, { value }) => {
+    Alpine.directive('prettyembedconsent', (element, { value }) => {
         if (value === 'accept') {
             handleAccept({ element, Alpine });
             return;
