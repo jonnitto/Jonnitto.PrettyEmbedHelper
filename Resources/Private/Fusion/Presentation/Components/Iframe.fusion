@@ -11,22 +11,22 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Iframe) < prototype(Neos.Fusion:Comp
         poster2x = ${PropTypes.string}
         posterSrcset = ${PropTypes.string}
         loadImageStrategy = ${PropTypes.oneOf(['lazy', 'eager', null, false])}
-        aspectRatio = ${PropTypes.anyOf([PropTypes.string, PropTypes.float, PropTypes.integer])}
+        aspectRatio = ${PropTypes.anyOf(PropTypes.string, PropTypes.float, PropTypes.integer)}
         setAspectRatioClass = ${PropTypes.boolean}
         preserveAspectRatio = ${PropTypes.boolean}
-        fallbackAspectRatio = ${PropTypes.anyOf([PropTypes.string, PropTypes.float, PropTypes.integer])}
+        fallbackAspectRatio = ${PropTypes.anyOf(PropTypes.string, PropTypes.float, PropTypes.integer)}
         controls = ${PropTypes.boolean}
         lightbox = ${PropTypes.boolean}
-        wrapper = ${PropTypes.anyOf([PropTypes.string, PropTypes.boolean])}
+        wrapper = ${PropTypes.anyOf(PropTypes.string, PropTypes.boolean)}
         gdprHandling = ${PropTypes.oneOf([true, false, 'popup']).isRequired}
         loop = ${PropTypes.boolean}
-        videoId = ${PropTypes.anyOf([PropTypes.string, PropTypes.integer])}
+        videoId = ${PropTypes.anyOf(PropTypes.string, PropTypes.integer)}
 
         # YouTube only
-        playlistId = ${PropTypes.anyOf([PropTypes.string, PropTypes.integer])}
+        playlistId = ${PropTypes.anyOf(PropTypes.string, PropTypes.integer)}
 
         # Vimeo only
-        color = ${PropTypes.string}
+        color = ${PropTypes.anyOf(PropTypes.string, PropTypes.boolean)}
     }
 
     loadImageStrategy = ${Configuration.setting('Jonnitto.PrettyEmbed.loadImageStrategy')}
@@ -44,7 +44,7 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Iframe) < prototype(Neos.Fusion:Comp
         checkPlayer = ${this.player == 'YouTube' || this.player == 'Vimeo'}
         checkVimeo = ${this.player == 'Vimeo' ? (this.videoId && this.href && this.embedHref) : true}
         checkYouTube = ${this.player == 'YouTube' ? (this.videoId && this.href && this.embedHref) : true}
-        checkPreviewImage = ${this.image || this.preview}
+        checkPreviewImage = ${this.poster || this.preview}
     }
     _alwaysOpenInPopup = ${this.gdprHandling == 'popup'}
 
@@ -55,7 +55,7 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Iframe) < prototype(Neos.Fusion:Comp
                 x-prettyembedvimeo={AlpineJS.object({
                     gdpr:props.gdprHandling,
                     videoId: props.videoId,
-                    color: props.color || null,
+                    color: Type.isString(props.color) ? props.color : null,
                     slim: !props.controls || null,
                     lightbox: props.lightbox || null,
                     loop: props.loop || null

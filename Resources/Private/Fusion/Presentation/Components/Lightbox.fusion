@@ -2,7 +2,7 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Lightbox) < prototype(Neos.Fusion:Co
     @propTypes {
         player = ${PropTypes.oneOf(['YouTube', 'Vimeo', 'Video']).isRequired}
         content = ${PropTypes.string}
-        aspectRatio = ${PropTypes.anyOf([PropTypes.string, PropTypes.float, PropTypes.integer])}
+        aspectRatio = ${PropTypes.anyOf(PropTypes.string, PropTypes.float, PropTypes.integer)}
         playButton = ${PropTypes.boolean}
         pauseButton = ${PropTypes.boolean}
    }

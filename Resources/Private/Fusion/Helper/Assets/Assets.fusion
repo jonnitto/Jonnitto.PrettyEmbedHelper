@@ -2,8 +2,8 @@ prototype(Jonnitto.PrettyEmbed:Assets) < prototype(Neos.Fusion:Component) {
     @propTypes {
         player = ${PropTypes.oneOf(['YouTube', 'Vimeo', 'Video', 'Audio', 'Media']).isRequired}
         gdprHandling = ${PropTypes.oneOf([true, false, 'popup'])}
-        includeAlpineJsCheck = ${PropTypes.bool}
-        inBackend = ${PropTypes.bool}
+        includeAlpineJsCheck = ${PropTypes.boolean}
+        inBackend = ${PropTypes.boolean}
     }
 
     includeAssets = ${Configuration.setting('Jonnitto.PrettyEmbed.includeAssets')}

@@ -3,7 +3,7 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Audio) < prototype(Neos.Fusion:Compo
         class = ${PropTypes.anyOf( PropTypes.string, PropTypes.arrayOf( PropTypes.string ) )}
         id = ${PropTypes.string}
         label = ${PropTypes.string}
-        wrapper = ${PropTypes.anyOf([PropTypes.string, PropTypes.boolean])}
+        wrapper = ${PropTypes.anyOf(PropTypes.string, PropTypes.boolean)}
         loop = ${PropTypes.boolean}
         controls = ${PropTypes.boolean}
         preload = ${PropTypes.oneOf(['none', 'metadata', 'auto'])}

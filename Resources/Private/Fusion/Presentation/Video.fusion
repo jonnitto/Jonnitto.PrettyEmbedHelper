@@ -14,7 +14,7 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Video) < prototype(Neos.Fusion:Compo
         crossorigin = ${PropTypes.oneOf(['anonymous', 'use-credentials', true, false])}
         controls = ${PropTypes.boolean}
         lightbox = ${PropTypes.boolean}
-        wrapper = ${PropTypes.anyOf([PropTypes.string, PropTypes.boolean])}
+        wrapper = ${PropTypes.anyOf(PropTypes.string, PropTypes.boolean)}
         loop = ${PropTypes.boolean}
         streaming = ${PropTypes.string}
         autoplay = ${PropTypes.boolean}
