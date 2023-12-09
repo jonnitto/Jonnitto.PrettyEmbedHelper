@@ -112,6 +112,8 @@ class YoutubeService
             'duration' => $duration ?? null,
             'image' => Utility::removeProtocolFromUrl($image ?? null),
             'thumbnail' => $thumbnail ?? null,
+            'href' => Utility::youtubeHref($videoID, $type, false),
+            'embededHref' => Utility::youtubeHref($videoID, $type, true),
         ];
         Utility::saveMetadata($node, $metadata);
         $this->imageService->removeTagIfEmpty();

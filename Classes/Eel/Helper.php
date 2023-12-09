@@ -29,6 +29,31 @@ class Helper implements ProtectedContextAwareInterface
     }
 
     /**
+     * Return the href from Vimeo
+     *
+     * @param string|integer $videoID
+     * @param boolean $embeded
+     * @return string
+     */
+    public function vimeoHref($videoID, bool $embeded = false): string
+    {
+        return Utility::vimeoHref($videoID, $embeded);
+    }
+
+    /**
+     * Return the href from YouTube
+     *
+     * @param string $videoID
+     * @param string $type
+     * @param boolean $embeded
+     * @return string
+     */
+    public function youtubeHref(string $videoID, ?string $type = 'video', bool $embeded = false): string
+    {
+        return Utility::youtubeHref($videoID, $type, $embeded);
+    }
+
+    /**
      * Return the thumbnail URL from vimeo
      *
      * @param string $videoID

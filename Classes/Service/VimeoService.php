@@ -94,6 +94,8 @@ class VimeoService
             'duration' => $duration ?? null,
             'image' => Utility::removeProtocolFromUrl($image ?? null),
             'thumbnail' => $thumbnail ?? null,
+            'href' => Utility::vimeoHref($videoID, false),
+            'embededHref' => Utility::vimeoHref($videoID, true),
         ];
         Utility::saveMetadata($node, $metadata);
 
