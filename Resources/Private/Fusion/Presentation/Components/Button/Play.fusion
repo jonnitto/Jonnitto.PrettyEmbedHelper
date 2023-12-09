@@ -1,4 +1,4 @@
-prototype(Jonnitto.PrettyEmbed:Presentation.Button.Close) < prototype(Neos.Fusion:Component) {
+prototype(Jonnitto.PrettyEmbed:Presentation.Button.Play) < prototype(Neos.Fusion:Component) {
     @propTypes {
         class = ${PropTypes.anyOf( PropTypes.string, PropTypes.arrayOf( PropTypes.string ) )}
         label = ${PropTypes.string}
