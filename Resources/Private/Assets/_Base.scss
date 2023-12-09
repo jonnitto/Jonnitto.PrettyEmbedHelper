@@ -58,7 +58,7 @@
 }
 
 :is(.jonnitto-prettyembed, .jonnitto-prettyembed-lightbox, .jonnitto-prettyembed-backdrop) [x-cloak] {
-  visibility: visible !important;
+  visibility: hidden !important;
   pointer-events: auto !important;
 }
 
