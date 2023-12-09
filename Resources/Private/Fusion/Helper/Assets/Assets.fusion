@@ -14,19 +14,23 @@ prototype(Jonnitto.PrettyEmbed:Assets) < prototype(Neos.Fusion:Component) {
     player = null
     player.@process.fallback = ${value == 'YouTube' || value == 'Vimeo' ? value : 'Media'}
 
-    includeFrontendScripts = ${!this.inBackend && this.includeAssets.js}
-
     renderer = Neos.Fusion:Join {
         generalCSS = Jonnitto.PrettyEmbed:Assets.Fragment.Style {
             @if.set = ${props.includeAssets.css}
             filename = 'Main.css'
         }
         backendVideoCSS = Jonnitto.PrettyEmbed:Assets.Fragment.Style {
-            @if.set = ${props.inBackend && props.video}
+            @if.set = ${props.inBackend && props.player == 'Video'}
             filename = 'Backend.Video.css'
         }
+        backendJS = Neos.Fusion:Tag {
+            @if.set = ${props.inBackend}
+            tagName = 'script'
+            attributes.data-slipstream = true
+            content = ${StaticResource.content('Jonnitto.PrettyEmbedHelper', 'Public/Scripts/Backend.js')}
+        }
         frontendScripts = Neos.Fusion:Join {
-            @if.set = ${props.includeFrontendScripts}
+            @if.set = ${props.includeAssets.js}
             gdprPlugin = Jonnitto.PrettyEmbed:Assets.Fragment.Module {
                 @if.set = ${props.gdprHandling == true}
                 filename = 'Consent.js'
