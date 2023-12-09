@@ -48,8 +48,8 @@ Jonnitto:
       # When the lightbox is set, should the preview image preserve his aspect ratio? Per default this is set via the node properties
       preserveAspectRatio: true
 
-      # If no aspect ratio can be calcualted from the oembed service, you have the possibility to force the aspect ratio 16:9. Per default this is set via the node properties
-      force16to9: true
+      # If no aspect ratio can be calcualted from the oembed service, you have the possibility to set a fallback aspect ratio.
+      fallbackAspectRatio: '16 / 9'
 
     YouTube:
       # Set to false to disable the gdpr message, set to popup open the video in a new window or set to true to show the message in the player
@@ -73,8 +73,8 @@ Jonnitto:
       # When the lightbox is set, should the preview image preserve his aspect ratio? Per default this is set via the node properties
       preserveAspectRatio: true
 
-      # If no aspect ratio can be calcualted from the oembed service, you have the possibility to force the aspect ratio 16:9. Per default this is set via the node properties
-      force16to9: true
+      # If no aspect ratio can be calcualted from the oembed service, you have the possibility to set a fallback aspect ratio.
+      fallbackAspectRatio: '16 / 9'
 
     Video:
       # If true, the browser will offer controls to allow the user to control
