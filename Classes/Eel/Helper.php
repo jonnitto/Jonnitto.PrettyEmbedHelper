@@ -35,8 +35,18 @@ class Helper implements ProtectedContextAwareInterface
         if (!isset($data)) {
             return null;
         }
-        $utility = new Utility();
-        return $utility->removeProtocolFromUrl($data['thumbnail_url'] ?? null);
+        return Utility::removeProtocolFromUrl($data['thumbnail_url'] ?? null);
+    }
+
+    /**
+     * Return the thumbnail URL from vimeo
+     *
+     * @param string $videoID
+     * @return string|null
+     */
+    public function youtubeThumbnail(string $videoID): ?string
+    {
+        return Utility::getBestPossibleYoutubeImage($videoID)['image'] ?? null;
     }
 
     /**

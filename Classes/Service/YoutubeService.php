@@ -3,7 +3,6 @@
 namespace Jonnitto\PrettyEmbedHelper\Service;
 
 use Jonnitto\PrettyEmbedHelper\Utility\Utility;
-use JsonException;
 use Neos\ContentRepository\Domain\Model\NodeInterface;
 use Neos\ContentRepository\Exception\NodeException;
 use Neos\Flow\Annotations as Flow;
@@ -11,8 +10,7 @@ use Neos\Flow\Http\Client\InfiniteRedirectionException;
 use Neos\Flow\Persistence\Exception\IllegalObjectTypeException;
 use Neos\Flow\Persistence\Exception\InvalidQueryException;
 use Neos\Flow\ResourceManagement\Exception;
-use function get_headers;
-use function preg_replace;
+use JsonException;
 use function strpos;
 use function trim;
 
@@ -21,12 +19,6 @@ use function trim;
  */
 class YoutubeService
 {
-    /**
-     * @Flow\Inject
-     * @var Utility
-     */
-    protected $utility;
-
     /**
      * @Flow\Inject
      * @var ImageService
@@ -99,12 +91,12 @@ class YoutubeService
                 $image = $data['imageUrl'];
                 $resolution = $data['imageResolution'];
             } else {
-                $youtubeImageArray = $this->getBestPossibleYoutubeImage($videoID, $data['thumbnail_url'] ?? null);
+                $youtubeImageArray = Utility::getBestPossibleYoutubeImage($videoID, $data['thumbnail_url'] ?? null);
                 $image = $youtubeImageArray['image'];
                 $resolution = $youtubeImageArray['resolution'];
             }
         } else {
-            $youtubeImageArray = $this->getBestPossibleYoutubeImage($videoID);
+            $youtubeImageArray = Utility::getBestPossibleYoutubeImage($videoID);
             $image = $youtubeImageArray['image'] ?? null;
             $resolution = $youtubeImageArray['resolution'] ?? null;
         }
@@ -116,7 +108,7 @@ class YoutubeService
         $node->setProperty('metadataID', $videoID);
         $node->setProperty('metadataTitle', $title ?? null);
         $node->setProperty('metadataRatio', $ratio ?? null);
-        $node->setProperty('metadataImage', $this->utility->removeProtocolFromUrl($image));
+        $node->setProperty('metadataImage', Utility::removeProtocolFromUrl($image));
         $node->setProperty('metadataThumbnail', $thumbnail ?? null);
         $node->setProperty('metadataDuration', $duration ?? null);
 
@@ -145,34 +137,5 @@ class YoutubeService
             return 'video';
         }
         return strpos($url, 'list=') !== false ? 'playlist' : 'video';
-    }
-
-    /**
-     * Get the best possible image from YouTube
-     *
-     * @param string|integer $videoID
-     * @param string|null $url
-     * @return array|null
-     */
-    public function getBestPossibleYoutubeImage($videoID, ?string $url = null): ?array
-    {
-        if (!isset($url)) {
-            $url = sprintf('https://i.ytimg.com/vi/%s/maxresdefault.jpg', $videoID);
-        }
-
-        $resolutions = ['maxresdefault', 'sddefault', 'hqdefault', 'mqdefault', 'default'];
-
-        foreach ($resolutions as $resolution) {
-            $url = preg_replace('/\/[\w]*\.([a-z]{3,})$/i', sprintf("/%s.$1", $resolution), $url);
-            $headers = @get_headers($url);
-            if ($headers && strpos($headers[0], '200')) {
-                return [
-                    'image' => $url,
-                    'resolution' => $resolution,
-                ];
-            }
-        }
-
-        return null;
     }
 }

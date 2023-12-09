@@ -19,12 +19,6 @@ class VimeoService
 {
     /**
      * @Flow\Inject
-     * @var Utility
-     */
-    protected $utility;
-
-    /**
-     * @Flow\Inject
      * @var ImageService
      */
     protected $imageService;
@@ -97,7 +91,7 @@ class VimeoService
         $node->setProperty('metadataTitle', $title ?? null);
         $node->setProperty('metadataRatio', $ratio ?? null);
         $node->setProperty('metadataDuration', $duration ?? null);
-        $node->setProperty('metadataImage', $this->utility->removeProtocolFromUrl($image ?? null));
+        $node->setProperty('metadataImage', Utility::removeProtocolFromUrl($image ?? null));
         $node->setProperty('metadataThumbnail', $thumbnail ?? null);
 
         $this->imageService->removeTagIfEmpty();
