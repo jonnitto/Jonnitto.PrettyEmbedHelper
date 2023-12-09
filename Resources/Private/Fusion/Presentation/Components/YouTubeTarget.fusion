@@ -1,10 +1,10 @@
 prototype(Jonnitto.PrettyEmbed:Presentation.YouTubeTarget) < prototype(Neos.Fusion:Component) {
     @propTypes {
-        type = ${PropTypes.string}
+        player = ${PropTypes.string}
         controls = ${PropTypes.boolean}
     }
 
-    @if.isYoutube = ${this.type == 'YouTube'}
+    @if.isYoutube = ${this.player == 'YouTube'}
 
     renderer = afx`
         <div

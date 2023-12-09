@@ -1,16 +1,16 @@
 prototype(Jonnitto.PrettyEmbed:Presentation.Lightbox) < prototype(Neos.Fusion:Component) {
     @propTypes {
-        type = ${PropTypes.oneOf(['YouTube', 'Vimeo', 'Video']).isRequired}
+        player = ${PropTypes.oneOf(['YouTube', 'Vimeo', 'Video']).isRequired}
         content = ${PropTypes.string}
-        ratio = ${PropTypes.string}
+        aspectRatio = ${PropTypes.anyOf([PropTypes.string, PropTypes.float, PropTypes.integer])}
         playButton = ${PropTypes.boolean}
         pauseButton = ${PropTypes.boolean}
    }
 
-    type = 'Video'
-    playButton = ${this.type == 'Video'}
+    player = 'Video'
+    playButton = ${this.player == 'Video'}
 
-    @if.hasType = ${this.type}
+    @if.hasPlayer = ${this.player}
 
     renderer = afx`
         <template x-teleport="body">
@@ -35,16 +35,16 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Lightbox) < prototype(Neos.Fusion:Co
                 <div x-on:click.outside="lightbox=false" class="jonnitto-prettyembed-lightbox__inner">
                     <Jonnitto.PrettyEmbed:Presentation.Button.Close />
                     <div
-                        x-ref={props.type == 'Vimeo' ? 'vimeo' : null}
-                        style={props.ratio ? '--aspect-ratio:' + props.ratio :  null}
+                        x-ref={props.player == 'Vimeo' ? 'vimeo' : null}
+                        style={props.aspectRatio ? '--aspect-ratio:' + props.aspectRatio :  null}
                         class.base="jonnitto-prettyembed-lightbox__content"
-                        class.ratio={props.ratio ? "jonnitto-prettyembed-ratio" : null}
+                        class.ratio={props.aspectRatio ? "jonnitto-prettyembed-ratio" : null}
                     >
                         <Jonnitto.PrettyEmbed:Presentation.YouTubeTarget
-                            type={props.type}
+                            player={props.player}
                             controls={!props.pauseButton}
                         />
-                        {props.type == 'Video' ? props.content : ''}
+                        {props.player == 'Video' ? props.content : ''}
                         <Jonnitto.PrettyEmbed:Presentation.Button.Play
                             @if={props.playButton}
                             onClick="play"

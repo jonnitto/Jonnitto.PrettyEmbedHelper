@@ -3,11 +3,16 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Preview) < prototype(Neos.Fusion:Com
         content = ${PropTypes.string}
         show = ${PropTypes.string}
         label = ${PropTypes.string}
-        image = ${PropTypes.string}
+        src = ${PropTypes.string}
+        src2x = ${PropTypes.string}
+        srcset = ${PropTypes.string}
         loadImageStrategy = ${PropTypes.oneOf(['lazy', 'eager', null, false])}
     }
 
-    @if.hasImageOrContent = ${this.content || this.image}
+    @if.hasImageOrContent = ${this.content || this.src}
+
+    srcset = null
+    srcset.@process.convert = ${value || (this.src2x ? this.src + ' 1x,' + this.src2x + ' 2x' : null)}
 
     renderer = afx`
         <Neos.Fusion:Augmenter
@@ -19,7 +24,8 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Preview) < prototype(Neos.Fusion:Com
             @if={!props.content}
             x-show={props.show}
             alt={props.label}
-            src={props.image}
+            src={props.src}
+            srcset={props.srcset}
             loading={props.loadImageStrategy}
         />
     `

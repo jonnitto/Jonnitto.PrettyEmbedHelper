@@ -29,7 +29,7 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Audio) < prototype(Neos.Fusion:Compo
                 id={props.id}
                 class={Carbon.String.merge(props.class, BEM.modifier('jonnitto-prettyembed', 'audio'))}
             >
-                <Jonnitto.PrettyEmbed:Assets type="Media" />
+                <Jonnitto.PrettyEmbed:Assets player="Media" />
                 <audio
                     x-prettyembedmedia:media
                     controls={props.controls}

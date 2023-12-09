@@ -6,7 +6,9 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Video) < prototype(Neos.Fusion:Compo
         href = ${PropTypes.string}
         embedHref = ${PropTypes.string}
         preview = ${PropTypes.string}
-        image = ${PropTypes.string}
+        poster = ${PropTypes.string}
+        poster2x = ${PropTypes.string}
+        posterSrcset = ${PropTypes.string}
         loadImageStrategy = ${PropTypes.oneOf(['lazy', 'eager', null, false])}
         preload = ${PropTypes.oneOf(['none', 'metadata', 'auto'])}
         crossorigin = ${PropTypes.oneOf(['anonymous', 'use-credentials', true, false])}
@@ -67,12 +69,14 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Video) < prototype(Neos.Fusion:Compo
                     id={props.id}
                     class={Carbon.String.merge(props.class, BEM.modifier('jonnitto-prettyembed', 'video'))}
                 >
-                    <Jonnitto.PrettyEmbed:Assets type="Media" />
+                    <Jonnitto.PrettyEmbed:Assets player="Media" />
                     <Jonnitto.PrettyEmbed:Presentation.Preview
                         @if={props.lightbox}
                         content={props.preview}
                         label={props.label}
-                        image={props.image}
+                        src={props.poster}
+                        src2x={props.poster2x}
+                        srcset={props.posterSrcset}
                         loadImageStrategy={props.loadImageStrategy}
                     />
                     {props.lightbox ? '' : props._video}
@@ -82,7 +86,7 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Video) < prototype(Neos.Fusion:Compo
                     />
                     <Jonnitto.PrettyEmbed:Presentation.Lightbox
                         @if={props.lightbox}
-                        type="Media"
+                        player="Media"
                         playButton={true}
                         pauseButton={!props.controls}
                         content={props._video}

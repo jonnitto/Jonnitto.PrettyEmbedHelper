@@ -1,16 +1,20 @@
 prototype(Jonnitto.PrettyEmbed:Presentation.Iframe) < prototype(Neos.Fusion:Component) {
     @propTypes {
-        type = ${PropTypes.oneOf(['YouTube', 'Vimeo']).isRequired}
+        player = ${PropTypes.oneOf(['YouTube', 'Vimeo']).isRequired}
         class = ${PropTypes.anyOf( PropTypes.string, PropTypes.arrayOf( PropTypes.string ) )}
         id = ${PropTypes.string}
         label = ${PropTypes.string}
         href = ${PropTypes.string}
         embedHref = ${PropTypes.string}
         preview = ${PropTypes.string}
-        image = ${PropTypes.string}
+        poster = ${PropTypes.string}
+        poster2x = ${PropTypes.string}
+        posterSrcset = ${PropTypes.string}
         loadImageStrategy = ${PropTypes.oneOf(['lazy', 'eager', null, false])}
-        ratio = ${PropTypes.string}
-        ratioClass = ${PropTypes.boolean}
+        aspectRatio = ${PropTypes.anyOf([PropTypes.string, PropTypes.float, PropTypes.integer])}
+        setAspectRatioClass = ${PropTypes.boolean}
+        preserveAspectRatio = ${PropTypes.boolean}
+        fallbackAspectRatio = ${PropTypes.anyOf([PropTypes.string, PropTypes.float, PropTypes.integer])}
         controls = ${PropTypes.boolean}
         lightbox = ${PropTypes.boolean}
         wrapper = ${PropTypes.anyOf([PropTypes.string, PropTypes.boolean])}
@@ -25,17 +29,21 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Iframe) < prototype(Neos.Fusion:Comp
         color = ${PropTypes.string}
     }
 
-    gdprHandling = true
     loadImageStrategy = ${Configuration.setting('Jonnitto.PrettyEmbed.loadImageStrategy')}
-    ratioClass = ${!!this.ratio}
+    wrapper = ${Configuration.setting('Jonnitto.PrettyEmbed.wrapper')}
+    gdprHandling = true
     controls = true
 
-    wrapper = ${Configuration.setting('Jonnitto.PrettyEmbed.wrapper')}
+    preserveAspectRatio = true
+    fallbackAspectRatio = '16 / 9'
+    aspectRatio = null
+    aspectRatio.@process.fallback =${value || this.fallbackAspectRatio}
+    setAspectRatioClass = ${this.lightbox && this.preserveAspectRatio ? false : !!this.aspectRatio}
 
     @if {
-        checkType = ${this.type == 'YouTube' || this.type == 'Vimeo'}
-        checkVimeo = ${this.type == 'Vimeo' ? (this.videoId && this.href && this.embedHref) : true}
-        checkYouTube = ${this.type == 'YouTube' ? (this.videoId && this.href && this.embedHref) : true}
+        checkPlayer = ${this.player == 'YouTube' || this.player == 'Vimeo'}
+        checkVimeo = ${this.player == 'Vimeo' ? (this.videoId && this.href && this.embedHref) : true}
+        checkYouTube = ${this.player == 'YouTube' ? (this.videoId && this.href && this.embedHref) : true}
         checkPreviewImage = ${this.image || this.preview}
     }
     _alwaysOpenInPopup = ${this.gdprHandling == 'popup'}
@@ -52,7 +60,7 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Iframe) < prototype(Neos.Fusion:Comp
                     lightbox: props.lightbox || null,
                     loop: props.loop || null
                 })}
-                x-prettyembedvimeo.@if={props.type == 'Vimeo' && !props._alwaysOpenInPopup}
+                x-prettyembedvimeo.@if={props.player == 'Vimeo' && !props._alwaysOpenInPopup}
                 x-prettyembedyoutube={AlpineJS.object({
                     gdpr:props.gdprHandling,
                     videoId: props.videoId || null,
@@ -61,14 +69,14 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Iframe) < prototype(Neos.Fusion:Comp
                     lightbox: props.lightbox || null,
                     loop: props.loop || null
                 })}
-                x-prettyembedyoutube.@if={props.type == 'YouTube' && !props._alwaysOpenInPopup}
+                x-prettyembedyoutube.@if={props.player== 'YouTube' && !props._alwaysOpenInPopup}
                 aria-label={props.label}
                 id={props.id}
-                class={Carbon.String.merge(props.class, BEM.modifier('jonnitto-prettyembed', String.toLowerCase(props.type)), props.ratioClass && 'jonnitto-prettyembed-ratio')}
-                style={props.ratio}
+                class={Carbon.String.merge(props.class, BEM.modifier('jonnitto-prettyembed', String.toLowerCase(props.player)), props.setAspectRatioClass && 'jonnitto-prettyembed-ratio')}
+                style={props.aspectRatio}
             >
                 <Jonnitto.PrettyEmbed:Assets
-                    type={props.type}
+                    player={props.player}
                     gdprHandling={props.gdprHandling}
                 />
                 <Jonnitto.PrettyEmbed:Presentation.Button.Play
@@ -94,18 +102,20 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Iframe) < prototype(Neos.Fusion:Comp
                     show={props._alwaysOpenInPopup || props.lightbox ? null : "!loaded"}
                     content={props.preview}
                     label={props.label}
-                    image={props.image}
+                    src={props.poster}
+                    src2x={props.poster2x}
+                    srcset={props.posterSrcset}
                     loadImageStrategy={props.loadImageStrategy}
                 />
                 <Jonnitto.PrettyEmbed:Presentation.YouTubeTarget
                     @if={!props.lightbox}
-                    type={props.type}
+                    player={props.player}
                     controls={props.controls}
                 />
                 <Jonnitto.PrettyEmbed:Presentation.Lightbox
                     @if={props.lightbox && !props._alwaysOpenInPopup }
-                    ratio={props.ratio}
-                    type={props.type}
+                    aspectRatio={props.aspectRatio}
+                    player={props.player}
                     playButton={!props.controls}
                     pauseButton={!props.controls}
                 />

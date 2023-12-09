@@ -1,16 +1,16 @@
 prototype(Jonnitto.PrettyEmbed:Notification) < prototype(Neos.Fusion:Component) {
-    key = ${null}
+    key = null
     type = 'alert'
-    package = ${package}
-    default = ${null}
-    content = ${Carbon.Backend.translate(this.key, this.default, [], 'Main', 'Jonnitto.PrettyEmbed' + this.package)}
-    lang = ${Carbon.Backend.translate('lang', 'en', [], 'Main', 'Jonnitto.PrettyEmbed' + this.package)}
+    default = null
+    content = ${Carbon.Backend.translate(this.key, this.default, [], 'Main', 'Jonnitto.PrettyEmbedHelper')}
+    lang = ${Carbon.Backend.translate('lang', 'en', [], 'Main', 'Jonnitto.PrettyEmbedHelper')}
+
+    @if.hasKey = ${this.key}
 
     renderer = afx`
         <Carbon.Notification:Backend
             {...props}
             key={null}
-            package={null}
             default={null}
         />`
 }

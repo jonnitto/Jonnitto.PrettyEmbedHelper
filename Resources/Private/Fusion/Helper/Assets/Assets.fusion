@@ -1,6 +1,6 @@
 prototype(Jonnitto.PrettyEmbed:Assets) < prototype(Neos.Fusion:Component) {
     @propTypes {
-        type = ${PropTypes.oneOf(['YouTube', 'Vimeo', 'Video', 'Audio', 'Media']).isRequired}
+        player = ${PropTypes.oneOf(['YouTube', 'Vimeo', 'Video', 'Audio', 'Media']).isRequired}
         gdprHandling = ${PropTypes.oneOf([true, false, 'popup'])}
         includeAlpineJsCheck = ${PropTypes.bool}
         inBackend = ${PropTypes.bool}
@@ -11,8 +11,8 @@ prototype(Jonnitto.PrettyEmbed:Assets) < prototype(Neos.Fusion:Component) {
     inBackend = ${node.context.inBackend}
 
     // This decides which file to load
-    type = null
-    type.@process.fallback = ${value == 'YouTube' || value == 'Vimeo' ? value : 'Media'}
+    player = null
+    player.@process.fallback = ${value == 'YouTube' || value == 'Vimeo' ? value : 'Media'}
 
     includeFrontendScripts = ${!this.inBackend && this.includeAssets.js}
 
@@ -32,16 +32,16 @@ prototype(Jonnitto.PrettyEmbed:Assets) < prototype(Neos.Fusion:Component) {
                 filename = 'Gdpr.js'
             }
             magicPlugin = Jonnitto.PrettyEmbed:Assets.Fragment.Module {
-                @if.set = ${props.type == 'Media' || props.gdprHandling != 'Popup'}
+                @if.set = ${props.player == 'Media' || props.gdprHandling != 'Popup'}
                 filename = 'Magic.js'
             }
             popupPlugin = Jonnitto.PrettyEmbed:Assets.Fragment.Module {
                 @if.set = ${props.gdprHandling}
                 filename = 'Popup.js'
             }
-            pluginBasedOnType = Jonnitto.PrettyEmbed:Assets.Fragment.Module {
-                @if.set = ${props.type}
-                filename = ${props.type + '.js'}
+            pluginBasedOnPlayer = Jonnitto.PrettyEmbed:Assets.Fragment.Module {
+                @if.set = ${props.player}
+                filename = ${props.player + '.js'}
             }
             alpineJs = Jonnitto.PrettyEmbed:Assets.Fragment.Script {
                 @if.set = ${props.includeAlpineJsCheck}
