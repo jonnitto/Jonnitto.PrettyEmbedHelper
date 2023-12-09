@@ -2,14 +2,15 @@
 
 namespace Jonnitto\PrettyEmbedHelper\Service;
 
-use JsonException;
+use Jonnitto\PrettyEmbedHelper\Utility\Utility;
+use Neos\ContentRepository\Domain\Model\NodeInterface;
 use Neos\ContentRepository\Exception\NodeException;
 use Neos\Flow\Annotations as Flow;
-use Neos\ContentRepository\Domain\Model\NodeInterface;
 use Neos\Flow\Http\Client\InfiniteRedirectionException;
 use Neos\Flow\Persistence\Exception\IllegalObjectTypeException;
 use Neos\Flow\Persistence\Exception\InvalidQueryException;
 use Neos\Flow\ResourceManagement\Exception;
+use JsonException;
 
 /**
  * @Flow\Scope("singleton")

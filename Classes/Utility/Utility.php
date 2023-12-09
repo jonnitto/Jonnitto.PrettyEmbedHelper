@@ -2,8 +2,8 @@
 
 namespace Jonnitto\PrettyEmbedHelper\Utility;
 
-use function preg_replace;
 use function get_headers;
+use function preg_replace;
 use function strpos;
 
 class Utility

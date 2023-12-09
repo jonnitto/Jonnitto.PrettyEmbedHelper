@@ -2,13 +2,13 @@
 
 namespace Jonnitto\PrettyEmbedHelper;
 
-use Neos\Flow\Core\Bootstrap;
+use Jonnitto\PrettyEmbedHelper\Service\ImageService;
+use Jonnitto\PrettyEmbedHelper\Service\MetadataService;
 use Neos\ContentRepository\Domain\Model\Node;
 use Neos\ContentRepository\Domain\Model\Workspace;
-use Neos\Flow\Persistence\Doctrine\PersistenceManager;
+use Neos\Flow\Core\Bootstrap;
 use Neos\Flow\Package\Package as BasePackage;
-use Jonnitto\PrettyEmbedHelper\Service\MetadataService;
-use Jonnitto\PrettyEmbedHelper\Service\ImageService;
+use Neos\Flow\Persistence\Doctrine\PersistenceManager;
 
 class Package extends BasePackage
 {

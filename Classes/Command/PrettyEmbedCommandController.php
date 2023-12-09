@@ -2,8 +2,8 @@
 
 namespace Jonnitto\PrettyEmbedHelper\Command;
 
-use Jonnitto\PrettyEmbedHelper\Service\MetadataService;
 use Jonnitto\PrettyEmbedHelper\Service\ImageService;
+use Jonnitto\PrettyEmbedHelper\Service\MetadataService;
 use Neos\ContentRepository\Domain\Repository\WorkspaceRepository;
 use Neos\ContentRepository\Domain\Service\ContentDimensionCombinator;
 use Neos\ContentRepository\Domain\Service\ContextFactoryInterface;

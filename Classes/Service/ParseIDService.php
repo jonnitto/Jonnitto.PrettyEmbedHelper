@@ -4,8 +4,8 @@ namespace Jonnitto\PrettyEmbedHelper\Service;
 
 use Neos\Flow\Annotations as Flow;
 use function count;
-use function preg_match;
 use function preg_match_all;
+use function preg_match;
 use function strcmp;
 use function strpos;
 use function trim;

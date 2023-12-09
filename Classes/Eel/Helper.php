@@ -2,13 +2,13 @@
 
 namespace Jonnitto\PrettyEmbedHelper\Eel;
 
-use JsonException;
-use Neos\Flow\Annotations as Flow;
-use Neos\Eel\ProtectedContextAwareInterface;
 use Jonnitto\PrettyEmbedHelper\Service\ApiService;
 use Jonnitto\PrettyEmbedHelper\Service\ParseIDService;
 use Jonnitto\PrettyEmbedHelper\Utility\Utility;
+use Neos\Eel\ProtectedContextAwareInterface;
+use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Http\Client\InfiniteRedirectionException;
+use JsonException;
 
 /**
  * @Flow\Proxy(false)

@@ -2,17 +2,17 @@
 
 namespace Jonnitto\PrettyEmbedHelper\Service;
 
-use DateInterval;
-use DateTimeImmutable;
-use DOMDocument;
-use Exception;
-use JsonException;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Http\Client\Browser;
 use Neos\Flow\Http\Client\CurlEngine;
 use Neos\Flow\Http\Client\InfiniteRedirectionException;
 use Neos\Flow\Log\Utility\LogEnvironment;
 use Psr\Log\LoggerInterface;
+use DateInterval;
+use DateTimeImmutable;
+use DOMDocument;
+use Exception;
+use JsonException;
 use function json_decode;
 use function json_encode;
 use function urlencode;
