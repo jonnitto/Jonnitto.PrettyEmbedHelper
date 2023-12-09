@@ -65,7 +65,7 @@ class MetadataService
     {
         if (
             $node->hasProperty('videoID') ||
-            $node->getNodeType()->isOfType('Jonnitto.PrettyEmbedHelper:Mixin.Metadata.Duration')
+            $node->getNodeType()->isOfType('Jonnitto.PrettyEmbedHelper:Mixin.Metadata')
         ) {
             return $this->dataFromService($node, $remove);
         }
@@ -98,8 +98,7 @@ class MetadataService
         if (
             ($propertyName === 'videoID' && $oldValue !== $newValue) ||
             ($propertyName === 'type' && $node->hasProperty('videoID')) ||
-            ($propertyName === 'assets' &&
-                $node->getNodeType()->isOfType('Jonnitto.PrettyEmbedHelper:Mixin.Metadata.Duration'))
+            ($propertyName === 'assets' && $node->getNodeType()->isOfType('Jonnitto.PrettyEmbedHelper:Mixin.Metadata'))
         ) {
             return $this->dataFromService($node);
         }
@@ -117,31 +116,32 @@ class MetadataService
      */
     protected function dataFromService(NodeInterface $node, bool $remove = false): array
     {
-        switch ($this->checkNodeAndSetPlatform($node)) {
-            case 'audio':
-                $data = $this->assetService->getAndSaveDataId3($node, $remove, 'Audio');
-                break;
-
-            case 'video':
-                $data = $this->assetService->getAndSaveDataId3($node, $remove, 'Video');
-                break;
-
-            case 'youtube':
-                try {
-                    $data = $this->youtubeService->getAndSaveDataFromApi($node, $remove);
-                } catch (JsonException | NodeException | InfiniteRedirectionException | IllegalObjectTypeException | InvalidQueryException | Exception $e) {
-                }
-                break;
-
-            case 'vimeo':
-                $data = $this->vimeoService->getAndSaveDataFromApi($node, $remove);
-                break;
-
-            default:
-                return $this->defaultReturn;
+        $platform = $this->checkNodeAndSetPlatform($node);
+        if (!$platform) {
+            return $this->defaultReturn;
         }
 
-        return $data ?? $this->defaultReturn;
+        if ($platform == 'audio') {
+            return $this->assetService->getAndSaveDataId3($node, $remove, 'Audio');
+        }
+
+        if ($platform == 'video') {
+            return $this->assetService->getAndSaveDataId3($node, $remove, 'Video');
+        }
+
+        if ($platform == 'youtube') {
+            try {
+                $data = $this->youtubeService->getAndSaveDataFromApi($node, $remove);
+            } catch (JsonException | NodeException | InfiniteRedirectionException | IllegalObjectTypeException | InvalidQueryException | Exception $e) {
+            }
+            return $data ?? $this->defaultReturn;
+        }
+
+        if ($platform == 'vimeo') {
+            return $this->vimeoService->getAndSaveDataFromApi($node, $remove);
+        }
+
+        return $this->defaultReturn;
     }
 
     /**
@@ -161,23 +161,15 @@ class MetadataService
             return 'video';
         }
 
-        if ($node->getNodeType()->isOfType('Jonnitto.PrettyEmbedYoutube:Mixin.VideoID')) {
-            return 'youtube';
-        }
-
-        if ($node->getNodeType()->isOfType('Jonnitto.PrettyEmbedVimeo:Mixin.VideoID')) {
-            return 'vimeo';
-        }
-
         if (!$node->getNodeType()->isOfType('Jonnitto.PrettyEmbedVideoPlatforms:Mixin.VideoID')) {
             return null;
         }
 
         $platform = $this->parseID->platform($node->getProperty('videoID'));
         if (!$platform) {
-            Utility::removeMetadata($node, 'duration');
+            Utility::removeAllMetadata($node);
         }
-        Utility::saveMetadata($node, $platform, 'platform');
+        $node->setProperty('platform', $platform);
         return $platform;
     }
 }

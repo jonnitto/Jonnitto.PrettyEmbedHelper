@@ -85,11 +85,7 @@ class PrettyEmbedCommandController extends CommandController
     /**
      * Generate metadata for the PrettyEmbed Vimeo/YouTube/Video or Audio player
      *
-     * This generates the metadata for all player which has the mixin
-     * - Jonnitto.PrettyEmbedVideoPlatforms:Mixin.VideoID
-     * - Jonnitto.PrettyEmbedVimeo:Mixin.VideoID
-     * - Jonnitto.PrettyEmbedYoutube:Mixin.VideoID
-     * - Jonnitto.PrettyEmbedHelper:Mixin.Metadata.Duration
+     * This generates the metadata for all player which has the Jonnitto.PrettyEmbedHelper:Mixin.Metadata mixin
      *
      * @param string $workspace Workspace name, default is 'live'
      * @param boolean $remove If set, all metadata will be removed
@@ -147,12 +143,7 @@ class PrettyEmbedCommandController extends CommandController
                             'dimensions' => $dimensionCombination,
                             'targetDimensions' => [],
                         ])
-                        ->find(
-                            '[instanceof Jonnitto.PrettyEmbedHelper:Mixin.Metadata.Duration],' .
-                                '[instanceof Jonnitto.PrettyEmbedVideoPlatforms:Mixin.VideoID],' .
-                                '[instanceof Jonnitto.PrettyEmbedVimeo:Mixin.VideoID],' .
-                                '[instanceof Jonnitto.PrettyEmbedYoutube:Mixin.VideoID]'
-                        )
+                        ->find('[instanceof Jonnitto.PrettyEmbedHelper:Mixin.Metadata]')
                         ->get();
                 }
                 $this->nodes = array_merge(...$nodes);

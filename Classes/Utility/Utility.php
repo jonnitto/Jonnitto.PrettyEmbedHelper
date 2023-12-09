@@ -3,13 +3,13 @@
 namespace Jonnitto\PrettyEmbedHelper\Utility;
 
 use Neos\ContentRepository\Domain\Model\NodeInterface;
+use Jonnitto\PrettyEmbedHelper\Service\ApiService;
 use function get_headers;
 use function preg_replace;
 use function strpos;
 
 class Utility
 {
-
     /**
      * Get single metadata from node
      *
@@ -83,9 +83,6 @@ class Utility
     public static function saveMetadata(NodeInterface $node, $value, ?string $property = null): array
     {
         $propertyName = 'prettyembedMetadata';
-        if (!$node->hasProperty($propertyName)) {
-            return [];
-        }
         $currentData = $node->getProperty($propertyName) ?? [];
 
         if (isset($property)) {

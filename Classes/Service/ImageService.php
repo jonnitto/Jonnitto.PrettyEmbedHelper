@@ -76,7 +76,7 @@ class ImageService
         string $type,
         ?string $filenameSuffix = null
     ): ?object {
-        if (!$node->getNodeType()->isOfType('Jonnitto.PrettyEmbedHelper:Mixin.Metadata.Thumbnail')) {
+        if (!$node->getNodeType()->isOfType('Jonnitto.PrettyEmbedHelper:Mixin.Metadata')) {
             return null;
         }
 
@@ -200,7 +200,7 @@ class ImageService
         if (
             !$targetWorkspace->isPublicWorkspace() ||
             !$node->isRemoved() ||
-            !$node->getNodeType()->isOfType('Jonnitto.PrettyEmbedHelper:Mixin.Metadata.Thumbnail')
+            !$node->getNodeType()->isOfType('Jonnitto.PrettyEmbedHelper:Mixin.Metadata')
         ) {
             return;
         }

@@ -10,4 +10,4 @@
         inspector:
           group: look
           position: 25
-          hidden: 'ClientEval:node.properties.lightbox && node.properties.metadataRatio.trim() ? false : true'
+          hidden: 'ClientEval:node.properties.lightbox && node.properties.prettyembedMetadata && node.properties.prettyembedMetadata.aspectRatio ? false : true'
