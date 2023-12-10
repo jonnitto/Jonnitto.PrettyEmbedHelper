@@ -13,7 +13,7 @@ export default function (Alpine) {
 
 function handeleRoot({ element, Alpine, options }) {
     const type = 'YouTube';
-    let { videoId, playlistId, style, slim, loop } = options;
+    let { video, playlist, style, slim, loop } = options;
 
     const videoPlayerOptions = {
         playerVars: {
@@ -27,16 +27,16 @@ function handeleRoot({ element, Alpine, options }) {
         },
     };
 
-    if (videoId) {
-        videoPlayerOptions.videoId = videoId;
+    if (video) {
+        videoPlayerOptions.videoId = video;
     }
 
-    if (playlistId) {
-        if (!playlistId.startsWith('PL')) {
-            playlistId = 'PL' + playlistId;
+    if (playlist) {
+        if (!playlist.startsWith('PL')) {
+            playlist = 'PL' + playlist;
         }
         videoPlayerOptions.playerVars.listType = 'playlist';
-        videoPlayerOptions.playerVars.list = playlistId;
+        videoPlayerOptions.playerVars.list = playlist;
     }
 
     const localStorage = window.localStorage;
@@ -93,7 +93,7 @@ function handeleRoot({ element, Alpine, options }) {
                         return;
                     }
                     loadYoutubeApi(() => {
-                        const target = this.$refs.youtube || element;
+                        const target = this.$refs?.youtube || element;
                         const dispatchDetails = () => {
                             const videoUrl = player.getVideoUrl();
                             const { title, author, video_id, video_quality, list } = player.getVideoData();
@@ -103,9 +103,9 @@ function handeleRoot({ element, Alpine, options }) {
                                 title,
                                 author,
                                 videoUrl,
-                                videoId: video_id,
+                                videoID: video_id,
                                 quality: video_quality,
-                                playlistId: list || null,
+                                playlistID: list || null,
                             };
                         };
                         player = new YT.Player(target, {

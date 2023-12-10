@@ -13,9 +13,9 @@ export default function (Alpine) {
 
 function handeleRoot({ element, Alpine, options }) {
     const type = 'Vimeo';
-    const { style, slim, videoId, color, loop, gdpr, background } = options;
+    const { style, slim, video, color, loop, gdpr, background } = options;
     const videoPlayerOptions = {
-        id: videoId,
+        id: video,
         autopip: true,
         autoplay: true,
         pip: true,
@@ -84,7 +84,7 @@ function handeleRoot({ element, Alpine, options }) {
                         return;
                     }
                     loadVimeoApi(() => {
-                        const target = this.$refs.vimeo || element;
+                        const target = this.$refs?.vimeo || element;
                         player = new Vimeo.Player(target, videoPlayerOptions);
 
                         const dispatchDetails = async (event) => {
@@ -106,8 +106,8 @@ function handeleRoot({ element, Alpine, options }) {
                                 type,
                                 style,
                                 title: results[0].value,
-                                id: results[1].value,
-                                url: results[2].value,
+                                videoID: results[1].value,
+                                videoUrl: results[2].value,
                                 currentTime: results[3].value,
                             };
                         };
