@@ -2,7 +2,6 @@
 
 namespace Jonnitto\PrettyEmbedHelper\Eel;
 
-use Jonnitto\PrettyEmbedHelper\Service\ApiService;
 use Jonnitto\PrettyEmbedHelper\Service\ParseIDService;
 use Jonnitto\PrettyEmbedHelper\Utility\Utility;
 use Neos\Eel\ProtectedContextAwareInterface;

@@ -111,11 +111,11 @@ class YoutubeService
             'aspectRatio' => $ratio ?? null,
             'duration' => $duration ?? null,
             'image' => Utility::removeProtocolFromUrl($image ?? null),
-            'thumbnail' => $thumbnail ?? null,
             'href' => Utility::youtubeHref($videoID, $type, false),
             'embedHref' => Utility::youtubeHref($videoID, $type, true),
+            'thumbnail' => $thumbnail ?? null,
         ];
-        Utility::saveMetadata($node, $metadata);
+        $node->setProperty('prettyembedMetadata', $metadata);
         $this->imageService->removeTagIfEmpty();
 
         if (!$videoIDProperty) {

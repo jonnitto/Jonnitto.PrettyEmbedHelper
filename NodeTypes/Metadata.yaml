@@ -5,9 +5,11 @@
 # - duration
 # - image (string)
 # - thumbnail ImageInterface
+# - href (string)
+# - embedHref (string)
 
 'Jonnitto.PrettyEmbedHelper:Mixin.Metadata':
   abstract: true
   properties:
     prettyembedMetadata:
-      type: array
+      type: Jonnitto\PrettyEmbedHelper\Domain\Metadata

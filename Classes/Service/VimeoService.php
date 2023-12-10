@@ -97,7 +97,7 @@ class VimeoService
             'href' => Utility::vimeoHref($videoID, false),
             'embedHref' => Utility::vimeoHref($videoID, true),
         ];
-        Utility::saveMetadata($node, $metadata);
+        $node->setProperty('prettyembedMetadata', $metadata);
 
         $this->imageService->removeTagIfEmpty();
 
