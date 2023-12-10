@@ -57,7 +57,7 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Iframe) < prototype(Neos.Fusion:Comp
                     video: props.videoID,
                     color: Type.isString(props.color) ? props.color : null,
                     slim: !props.controls || null,
-                    lightbox: props.lightbox || null,
+                    style: props.lightbox && 'lightbox' || null,
                     loop: props.loop || null
                 })}
                 x-prettyembedvimeo.@if={props.player == 'Vimeo' && !props._alwaysOpenInPopup}
@@ -66,7 +66,7 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Iframe) < prototype(Neos.Fusion:Comp
                     video: props.videoID || null,
                     playlist: props.playlistID || null,
                     slim: !props.controls || null,
-                    lightbox: props.lightbox || null,
+                    style: props.lightbox && 'lightbox' || null,
                     loop: props.loop || null
                 })}
                 x-prettyembedyoutube.@if={props.player== 'YouTube' && !props._alwaysOpenInPopup}

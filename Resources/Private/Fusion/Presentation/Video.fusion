@@ -52,7 +52,7 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Video) < prototype(Neos.Fusion:Compo
                 loop={props.streaming ? null : props.loop}
                 muted={props.autoplay || props.muted}
                 crossorigin={props.crossorigin}
-                poster={props.image}
+                poster={props.poster}
             >
                 {props.streaming ? '' : props.content}
             </video>
@@ -63,7 +63,7 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Video) < prototype(Neos.Fusion:Compo
                     x-data
                     x-prettyembedmedia={AlpineJS.object({
                         streaming: props.streaming || null,
-                        lightbox: props.lightbox || null
+                        style: props.lightbox && 'lightbox' || null,
                     })}
                     aria-label={props.label}
                     id={props.id}
