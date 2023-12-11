@@ -3,6 +3,7 @@
 namespace Jonnitto\PrettyEmbedHelper\Service;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Jonnitto\PrettyEmbedHelper\Utility\Utility;
 use Neos\ContentRepository\Domain\Model\NodeInterface;
 use Neos\ContentRepository\Domain\Model\Workspace;
 use Neos\ContentRepository\Exception\NodeException;
@@ -131,11 +132,7 @@ class ImageService
      */
     public function remove(NodeInterface $node): void
     {
-        $metadata = $node->getProperty('prettyembedMetadata');
-        if (empty($metadata)) {
-            return;
-        }
-        $thumbnail = $metadata->getThumbnail();
+        $thumbnail = Utility::getMetadata($node, 'thumbnail');
         if (isset($thumbnail)) {
             $this->pendingThumbnailToDelete[$node->getIdentifier()] = $thumbnail;
         }

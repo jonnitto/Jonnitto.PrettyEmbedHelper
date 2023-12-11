@@ -64,10 +64,9 @@ class AssetService
     public function getAndSaveDataId3(NodeInterface $node, bool $remove, string $type): array
     {
         $duration = null;
-        $metadata = $node->getProperty('prettyembedMetadata');
 
         if ($remove === true || !class_exists('JamesHeinrich\GetID3\GetID3')) {
-            $metadata->setDuration(null);
+            Utility::removeMetadata($node, 'duration');
         } else {
             $this->setCacheDirectory();
             $assets = $node->getProperty('assets');
@@ -80,10 +79,8 @@ class AssetService
                     $duration = (int) round($fileInfo['playtime_seconds']);
                 }
             }
-            $metadata->setDuration($duration);
+            Utility::setMetadata($node, 'duration', $duration);
         }
-
-        $node->setProperty('prettyembedMetadata', $metadata);
 
         return [
             'nodeTypeName' => $node->getNodeType()->getName(),

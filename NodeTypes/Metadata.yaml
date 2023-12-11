@@ -4,12 +4,25 @@
 # - aspectRatio
 # - duration
 # - image (string)
-# - thumbnail ImageInterface
 # - href (string)
 # - embedHref (string)
 
 'Jonnitto.PrettyEmbedHelper:Mixin.Metadata':
   abstract: true
   properties:
+    prettyembedMetadataThumbnail:
+      type: Neos\Media\Domain\Model\ImageInterface
     prettyembedMetadata:
-      type: Jonnitto\PrettyEmbedHelper\Domain\Metadata
+      type: array
+      ui:
+        inspector:
+          group: metadata
+          editor: 'Jonnitto.PrettyEmbed/Metadata'
+          editorOptions:
+            videoID: Jonnitto.PrettyEmbedHelper:NodeTypes.Mixin.Metadata:videoID
+            title: Jonnitto.PrettyEmbedHelper:NodeTypes.Mixin.Metadata:title
+            aspectRatio: Jonnitto.PrettyEmbedHelper:NodeTypes.Mixin.Metadata:aspectRatio
+            duration: Jonnitto.PrettyEmbedHelper:NodeTypes.Mixin.Metadata:duration
+            image: Jonnitto.PrettyEmbedHelper:NodeTypes.Mixin.Metadata:image
+            href: Jonnitto.PrettyEmbedHelper:NodeTypes.Mixin.Metadata:href
+            embedHref: Jonnitto.PrettyEmbedHelper:NodeTypes.Mixin.Metadata:embedHref

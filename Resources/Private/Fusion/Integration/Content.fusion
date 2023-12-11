@@ -6,7 +6,7 @@ prototype(Jonnitto.PrettyEmbed:Content) < prototype(Neos.Neos:ContentComponent) 
     loadImageStrategy = ${Configuration.setting('Jonnitto.PrettyEmbed.loadImageStrategy')}
     wrapper = ${Configuration.setting('Jonnitto.PrettyEmbed.wrapper')}
     image = ${q(node).property('image')}
-    metadata = ${q(node).property('prettyembedMetadata')}
+    metadata = ${Jonnitto.PrettyEmbedHelper.getMetadata(node)}
 
     // Debug output
     _debug = ${Configuration.setting('Jonnitto.PrettyEmbed.debug')}

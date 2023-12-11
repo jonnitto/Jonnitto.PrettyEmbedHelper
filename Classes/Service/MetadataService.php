@@ -2,6 +2,7 @@
 
 namespace Jonnitto\PrettyEmbedHelper\Service;
 
+use Jonnitto\PrettyEmbedHelper\Utility\Utility;
 use Neos\ContentRepository\Domain\Model\NodeInterface;
 use Neos\ContentRepository\Exception\NodeException;
 use Neos\Flow\Annotations as Flow;
@@ -77,7 +78,7 @@ class MetadataService
      */
     public function removeMetaData(NodeInterface $node): void
     {
-        $node->removeProperty('prettyembedMetadata');
+        Utility::removeMetadata($node);
         $this->imageService->removeTagIfEmpty();
     }
 
@@ -166,7 +167,7 @@ class MetadataService
 
         $platform = $this->parseID->platform($node->getProperty('videoID'));
         if (!$platform) {
-            $node->removeProperty('prettyembedMetadata');
+            Utility::removeMetadata($node);
         }
         $node->setProperty('platform', $platform);
         return $platform;

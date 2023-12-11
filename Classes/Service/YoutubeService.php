@@ -105,7 +105,7 @@ class YoutubeService
             $thumbnail = $this->imageService->import($node, $image, $videoID, 'Youtube', $resolution);
         }
 
-        $metadata = [
+        Utility::setMetadata($node, null, [
             'videoID' => $videoID,
             'title' => $title ?? null,
             'aspectRatio' => $ratio ?? null,
@@ -114,8 +114,8 @@ class YoutubeService
             'href' => Utility::youtubeHref($videoID, $type, false),
             'embedHref' => Utility::youtubeHref($videoID, $type, true),
             'thumbnail' => $thumbnail ?? null,
-        ];
-        $node->setProperty('prettyembedMetadata', $metadata);
+        ]);
+
         $this->imageService->removeTagIfEmpty();
 
         if (!$videoIDProperty) {

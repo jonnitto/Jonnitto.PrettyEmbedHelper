@@ -4,6 +4,7 @@ namespace Jonnitto\PrettyEmbedHelper\Eel;
 
 use Jonnitto\PrettyEmbedHelper\Service\ParseIDService;
 use Jonnitto\PrettyEmbedHelper\Utility\Utility;
+use Neos\ContentRepository\Domain\Model\NodeInterface;
 use Neos\Eel\ProtectedContextAwareInterface;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Http\Client\InfiniteRedirectionException;
@@ -14,6 +15,18 @@ use JsonException;
  */
 class Helper implements ProtectedContextAwareInterface
 {
+    /**
+     * Get the metadata from a node
+     *
+     * @param NodeInterface $node
+     * @param string|null $property If not set, all metadata will be returned
+     * @return mixed
+     */
+    public function getMetadata($node, ?string $property = null)
+    {
+        return Utility::getMetadata($node, $property);
+    }
+
     /**
      * Return the thumbnail URL from vimeo
      *

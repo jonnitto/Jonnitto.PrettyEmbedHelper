@@ -87,7 +87,8 @@ class VimeoService
                 }
             }
         }
-        $metadata = [
+
+        Utility::setMetadata($node, null, [
             'videoID' => $videoID,
             'title' => $title ?? null,
             'aspectRatio' => $ratio ?? null,
@@ -96,8 +97,7 @@ class VimeoService
             'thumbnail' => $thumbnail ?? null,
             'href' => Utility::vimeoHref($videoID, false),
             'embedHref' => Utility::vimeoHref($videoID, true),
-        ];
-        $node->setProperty('prettyembedMetadata', $metadata);
+        ]);
 
         $this->imageService->removeTagIfEmpty();
 
