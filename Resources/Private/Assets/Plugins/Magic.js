@@ -1,5 +1,5 @@
 export default function (Alpine) {
-    Alpine.magic('prettyEmbedPause', () => {
+    Alpine.magic('prettyembedPause', () => {
         return (subject) => {
             getElements(subject).forEach((element) => {
                 const data = Alpine.$data(element);
@@ -10,7 +10,7 @@ export default function (Alpine) {
         };
     });
 
-    Alpine.magic('prettyEmbedReset', () => {
+    Alpine.magic('prettyembedReset', () => {
         return (subject) => {
             getElements(subject).forEach((element) => {
                 const data = Alpine.$data(element);

@@ -68,7 +68,7 @@ function handeleRoot({ element, Alpine, options }) {
                 },
                 acceptGdpr() {
                     localStorage.setItem(storageKey, 'true');
-                    this.$dispatch('prettyEmbedAcceptGdpr', type);
+                    this.$dispatch('prettyembedAcceptGdpr', type);
                     this.load();
                 },
                 play() {
@@ -115,7 +115,7 @@ function handeleRoot({ element, Alpine, options }) {
                                     const currentTime = player.getCurrentTime();
 
                                     if (data === YT.PlayerState.PLAYING) {
-                                        this.$dispatch('prettyEmbedPause', element);
+                                        this.$dispatch('prettyembedPause', element);
                                         this.loaded = true;
                                         this.playing = true;
 
@@ -163,16 +163,16 @@ function handeleRoot({ element, Alpine, options }) {
                 },
             };
         },
-        '@prettyEmbedAcceptGdpr.window'({ detail }) {
+        '@prettyembedAcceptGdpr.window'({ detail }) {
             // detail is the type who is accepted
             if (detail == type) {
                 this.gdpr = 'isAccepted';
             }
         },
-        '@prettyEmbedReset.window'() {
+        '@prettyembedReset.window'() {
             this.reset();
         },
-        '@prettyEmbedPause.window'({ detail }) {
+        '@prettyembedPause.window'({ detail }) {
             // detail is the rootElement
             if (detail == this.$root) {
                 return;

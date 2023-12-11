@@ -116,10 +116,10 @@ function handleRoot({ element, Alpine, options }) {
                 },
             };
         },
-        '@prettyEmbedReset.window'() {
+        '@prettyembedReset.window'() {
             this.reset();
         },
-        '@prettyEmbedPause.window'({ detail }) {
+        '@prettyembedPause.window'({ detail }) {
             // detail is the rootElement
             if (detail == this.$root) {
                 return;
@@ -147,7 +147,7 @@ function handleMedia({ element, Alpine, src }) {
             }
             this.playing = true;
             if (!this.autoplay && !this.muted) {
-                this.$dispatch('prettyEmbedPause', this.$root);
+                this.$dispatch('prettyembedPause', this.$root);
                 this.dispatchEvent('play');
             }
         },
