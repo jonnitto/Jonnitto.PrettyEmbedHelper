@@ -1,8 +1,28 @@
-.PHONY: help prettier build watch dev upgrade
+.PHONY: help build install prettier production watch dev upgrade
+
+.DEFAULT_GOAL := build
+
+## Install dependencies and build production version
+build: install prettier production
+
+## Install dependencies
+install:
+	@pnpm install --silent
 
 ## Prettier files
 prettier:
 	@pnpm prettier --write --no-error-on-unmatched-pattern '**/*.{js,php,yaml,scss,mjs}'
+
+## Build production version
+production:
+	@echo '   ${GREEN}Remove Public files${RESET}'
+	@rm -rf Resources/Public/Modules
+	@rm -rf Resources/Public/Scripts
+	@rm -rf Resources/Public/Styles
+	@echo '   ${GREEN}Build CSS and Javascript${RESET}'
+	@echo ''
+	@pnpm build
+
 
 ## Watch files
 dev:
@@ -15,19 +35,6 @@ watch:
 ## Check for upgrades
 upgrade:
 	@pnpm up --latest --interactive
-
-## Build files for production
-build:
-	@echo ''
-	@echo '   ${GREEN}Install packages${RESET}'
-	@pnpm install --silent
-	@echo '   ${GREEN}Remove Public files${RESET}'
-	@rm -rf Resources/Public/Modules
-	@rm -rf Resources/Public/Scripts
-	@rm -rf Resources/Public/Styles
-	@echo '   ${GREEN}Build CSS and Javascript${RESET}'
-	@echo ''
-	@pnpm build
 
 
 # Define colors
@@ -58,5 +65,3 @@ help:
 	} \
 	{ lastLine = $$0 }' $(MAKEFILE_LIST)
 	@echo ''
-
-.DEFAULT_GOAL := help
