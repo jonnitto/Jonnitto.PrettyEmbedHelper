@@ -1,12 +1,12 @@
 import { loadScript } from './Helper';
 
 const eventName = 'prettyembed';
-const hlsScript = '/_Resources/Static/Packages/Jonnitto.PrettyEmbedHelper/Scripts/Hls.js?v=2';
+const hlsScript = '/_Resources/Static/Packages/Jonnitto.PrettyEmbedHelper/Scripts/Hls.js?v=1.4.13';
 
 export default function (Alpine) {
     Alpine.directive('prettyembedmedia', (element, { value, modifiers, expression }, { evaluate }) => {
         if (value === 'media') {
-            handleMedia({ element, Alpine, expression });
+            handleMedia({ element, Alpine, src: expression });
             return;
         }
 
@@ -41,15 +41,19 @@ function handleRoot({ element, Alpine, options }) {
                         this.lightbox = true;
                     }
 
-                    if (!this.loaded && needHlsWrapper) {
-                        if (this.lightbox) {
-                            setTimeout(() => {
-                                handleStreaming(this.__media, this.url);
-                            }, 500);
+                    if (!this.loaded && streaming) {
+                        if (needHlsWrapper) {
+                            if (this.lightbox) {
+                                setTimeout(() => {
+                                    handleStreaming(this.__media, this.url);
+                                }, 500);
+                                return;
+                            }
+                            handleStreaming(this.__media, this.url);
                             return;
                         }
-                        handleStreaming(this.__media, this.url);
-                        return;
+
+                        this.__media.src = this.url;
                     }
 
                     if (this.lightbox) {
