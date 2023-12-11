@@ -1,6 +1,6 @@
 prototype(Jonnitto.PrettyEmbed:Assets) < prototype(Neos.Fusion:Component) {
     @propTypes {
-        player = ${PropTypes.oneOf(['YouTube', 'Vimeo', 'Video', 'Audio', 'Media']).isRequired}
+        player = ${PropTypes.oneOf(['YouTube', 'Vimeo', 'Video', 'Audio']).isRequired}
         gdprHandling = ${PropTypes.oneOf([true, false, 'popup'])}
         includeAlpineJsCheck = ${PropTypes.boolean}
         inBackend = ${PropTypes.boolean}
@@ -12,7 +12,6 @@ prototype(Jonnitto.PrettyEmbed:Assets) < prototype(Neos.Fusion:Component) {
 
     // This decides which file to load
     player = null
-    player.@process.fallback = ${value == 'YouTube' || value == 'Vimeo' ? value : 'Media'}
 
     renderer = Neos.Fusion:Join {
         generalCSS = Jonnitto.PrettyEmbed:Assets.Fragment.Style {
@@ -23,11 +22,13 @@ prototype(Jonnitto.PrettyEmbed:Assets) < prototype(Neos.Fusion:Component) {
             @if.set = ${props.inBackend && props.player == 'Video'}
             filename = 'Backend.Video.css'
         }
-        backendJS = Neos.Fusion:Tag {
+        backendVideoCSS = Jonnitto.PrettyEmbed:Assets.Fragment.Style {
+            @if.set = ${props.inBackend && props.player == 'Video'}
+            filename = 'Backend.Video.css'
+        }
+        backendJS = Jonnitto.PrettyEmbed:Assets.Fragment.Script {
             @if.set = ${props.inBackend}
-            tagName = 'script'
-            attributes.data-slipstream = true
-            content = ${StaticResource.content('Jonnitto.PrettyEmbedHelper', 'Public/Scripts/Backend.js')}
+            filename = 'Backend.js'
         }
         frontendScripts = Neos.Fusion:Join {
             @if.set = ${props.includeAssets.js}
@@ -36,7 +37,7 @@ prototype(Jonnitto.PrettyEmbed:Assets) < prototype(Neos.Fusion:Component) {
                 filename = 'Consent.js'
             }
             magicPlugin = Jonnitto.PrettyEmbed:Assets.Fragment.Module {
-                @if.set = ${props.player == 'Media' || props.gdprHandling != 'Popup'}
+                @if.set = ${props.player == 'Video' || props.player == 'Audio' || props.gdprHandling != 'Popup'}
                 filename = 'Magic.js'
             }
             popupPlugin = Jonnitto.PrettyEmbed:Assets.Fragment.Module {
@@ -45,7 +46,7 @@ prototype(Jonnitto.PrettyEmbed:Assets) < prototype(Neos.Fusion:Component) {
             }
             pluginBasedOnPlayer = Jonnitto.PrettyEmbed:Assets.Fragment.Module {
                 @if.set = ${props.player}
-                filename = ${props.player + '.js'}
+                filename = ${props.player == 'Video' || props.player == 'Audio' ? 'Media.js' : (props.player + '.js')}
             }
             alpineJs = Jonnitto.PrettyEmbed:Assets.Fragment.Script {
                 @if.set = ${props.includeAlpineJsCheck}
