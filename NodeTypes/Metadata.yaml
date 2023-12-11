@@ -18,6 +18,7 @@
         inspector:
           group: metadata
           editor: 'Jonnitto.PrettyEmbed/Metadata'
+          hidden: 'ClientEval: Object.values(node.properties.prettyembedMetadata).some(value => !!value) ? false : true'
           editorOptions:
             videoID: Jonnitto.PrettyEmbedHelper:NodeTypes.Mixin.Metadata:videoID
             title: Jonnitto.PrettyEmbedHelper:NodeTypes.Mixin.Metadata:title
