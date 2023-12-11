@@ -43,6 +43,14 @@
                 <source>You need to define at least one video.</source>
                 <target>Du skal definere mindst én video.</target>
             </trans-unit>
+            <trans-unit id="noVideoStreamAndPoster" xml:space="preserve">
+                <source>You need to define a video stream URL and a preview image.</source>
+                <target>Du skal definere en videostream-URL og et preview-billede.</target>
+            </trans-unit>
+            <trans-unit id="noStreamVideo" xml:space="preserve">
+                <source>You need to define a video stream URL.</source>
+                <target>Du skal definere en videostream-URL.</target>
+            </trans-unit>
             <trans-unit id="lang" xml:space="preserve">
                 <source>en</source>
                 <target>da</target>

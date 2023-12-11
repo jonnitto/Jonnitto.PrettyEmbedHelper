@@ -43,6 +43,14 @@
                 <source>You need to define at least one video.</source>
                 <target>Es muss mindestens ein Video definiert werden.</target>
             </trans-unit>
+            <trans-unit id="noVideoStreamAndPoster" xml:space="preserve">
+                <source>You need to define a video stream URL and a preview image.</source>
+                <target>Es muss eine Video-Stream URL und ein Vorschaubild definiert werden.</target>
+            </trans-unit>
+            <trans-unit id="noStreamVideo" xml:space="preserve">
+                <source>You need to define a video stream URL.</source>
+                <target>Es muss eine Video-Stream URL definiert werden.</target>
+            </trans-unit>
             <trans-unit id="lang" xml:space="preserve">
                 <source>en</source>
                 <target>de</target>
