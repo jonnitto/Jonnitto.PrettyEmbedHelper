@@ -13,10 +13,13 @@
     "hls.js": "^1.4.13"
   },
   "devDependencies": {
+    "@neos-project/neos-ui-extensibility": "9.0.0-beta1",
     "@prettier/plugin-php": "^0.21.0",
     "autoprefixer": "^10.4.16",
+    "clsx": "^2.0.0",
     "cssnano": "^6.0.1",
     "esbuild": "^0.19.8",
+    "esbuild-plugin-lightningcss-modules": "^0.1.2",
     "eslint": "^8.55.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.0.1",
