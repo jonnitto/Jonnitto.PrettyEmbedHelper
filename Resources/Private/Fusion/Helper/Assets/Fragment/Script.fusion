@@ -1,13 +1,20 @@
 prototype(Jonnitto.PrettyEmbed:Assets.Fragment.Script) < prototype(Neos.Fusion:Component) {
     filename = null
-    uri = ${StaticResource.uri('Jonnitto.PrettyEmbedHelper', 'Public/Scripts/' + this.filename)}
     slipstream = true
+    inline = false
 
     renderer = afx`
         <script
+            @if={!props.inline}
             data-slipstream={props.slipstream}
             defer
-            src={props.uri}
+            src={StaticResource.uri('Jonnitto.PrettyEmbedHelper', 'Public/Scripts/' + props.filename)}
         ></script>
+        <script
+            @if={props.inline}
+            data-slipstream={props.slipstream}
+        >
+            {StaticResource.content('Jonnitto.PrettyEmbedHelper', 'Public/Scripts/' + props.filename)}
+        </script>
     `
 }

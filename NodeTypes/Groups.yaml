@@ -19,6 +19,10 @@
           label: i18n
           icon: 'fas fa-paint-brush'
           position: 20
+        captions:
+          label: i18n
+          icon: 'fas fa-closed-captioning'
+          position: 30
         metadata:
           label: i18n
           icon: 'fas fa-database'

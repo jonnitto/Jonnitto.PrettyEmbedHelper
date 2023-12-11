@@ -18,16 +18,9 @@ prototype(Jonnitto.PrettyEmbed:Assets) < prototype(Neos.Fusion:Component) {
             @if.set = ${props.includeAssets.css}
             filename = 'Main.css'
         }
-        backendVideoCSS = Jonnitto.PrettyEmbed:Assets.Fragment.Style {
-            @if.set = ${props.inBackend && props.player == 'Video'}
-            filename = 'Backend.Video.css'
-        }
-        backendVideoCSS = Jonnitto.PrettyEmbed:Assets.Fragment.Style {
-            @if.set = ${props.inBackend && props.player == 'Video'}
-            filename = 'Backend.Video.css'
-        }
         backendJS = Jonnitto.PrettyEmbed:Assets.Fragment.Script {
             @if.set = ${props.inBackend}
+            inline = true
             filename = 'Backend.js'
         }
         frontendScripts = Neos.Fusion:Join {

@@ -23,6 +23,10 @@
                 <source><![CDATA[Look & Feel]]></source>
                 <target><![CDATA[Look & Feel]]></target>
             </trans-unit>
+            <trans-unit id="groups.captions" xml:space="preserve">
+                <source>Captions</source>
+                <target>Captions</target>
+            </trans-unit>
             <trans-unit id="groups.metadata" xml:space="preserve">
                 <source>Metadata</source>
                 <target>Metadata</target>

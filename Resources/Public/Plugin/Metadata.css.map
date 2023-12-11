@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../Private/MetadataEditor/Editor/style.module.css"],
+  "sourcesContent": [".infoView {\n    --space-between: 10px;\n\n    user-select: none;\n    display: inline-block;\n    vertical-align: top;\n    width: 100%;\n    line-height: 20px;\n    white-space: nowrap;\n    text-overflow: ellipsis;\n    overflow: hidden;\n    font-size: var(--fontSize-Base from global);\n    padding: 0;\n    margin: 0;\n    box-shadow: none;\n    transition: none;\n}\n\n.propertyLabel {\n    font-weight: normal;\n    margin: 0;\n    padding: var(--space-between) 0 2px;\n    font-size: var(--fontSize-Small from global);\n    color: var(--colors-ContrastBright from global);\n\n    &:first-child {\n        padding-top: 0;\n    }\n}\n\n.propertyValue {\n    margin: 0;\n    padding: 0 0 var(--space-between);\n    white-space: normal;\n\n    &:last-child {\n        padding-bottom: 0;\n    }\n}\n\n.propertyValue a {\n    color: #fff;\n    white-space: nowrap;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    display: block;\n    width: 100%;\n\n    &:is(:hover, :focus) {\n        color: var(--colors-PrimaryBlue from global);\n    }\n}\n\n.propertyValue img {\n    width: 100%;\n    height: auto;\n}\n"],
+  "mappings": ";AAAA,CAAA;;;;;;;;;;;;;;;;AAkBA,CAAA;;;;;;;AAOI,CAPJ,yCAOI;;;AAKJ,CAAA;;;;;AAKI,CALJ,yCAKI;;;AAKJ,CAVA,0CAUA;;;;;;;;AAQI,CAlBJ,0CAkBI,CAAA,IAAA,QAAA;;;AAKJ,CAvBA,0CAuBA;;;;",
+  "names": []
+}
