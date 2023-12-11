@@ -39,7 +39,7 @@
     "dev:css:scss": "sass --embed-sources Resources/Private/Assets:Resources/Public/Styles",
     "dev:css:postcss": "postcss Resources/Public/Styles/*.css --replace --map --use postcss-sort-media-queries autoprefixer",
     "dev:css": "pnpm dev:css:scss && pnpm dev:css:postcss",
-    "watch:css:scss": "sass --watch --embed-sources Resources/Private/Assets:Resources/Public/__Styles",
+    "watch:css:scss": "sass --watch --embed-sources Resources/Private/Assets:Resources/Public/Styles",
     "watch:css:postcss": "postcss Resources/Public/__Styles/*.css --dir Resources/Public/Styles/ --map --watch --use postcss-sort-media-queries autoprefixer cssnano",
     "watch:css": "pnpm watch:css:scss | pnpm watch:css:postcss",
     "build:js": "node build.mjs --production",

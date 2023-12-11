@@ -9,7 +9,6 @@ const baseOptions = {
     sourcemap: !process.argv.includes('--production'),
     target: 'es2020',
     legalComments: 'none',
-    entryPoints: ['Resources/Private/Assets/*.js'],
 };
 
 const scriptOptions = {
@@ -56,5 +55,5 @@ async function watch(options) {
 }
 
 [scriptOptions, moduleOptions, editorOptions].forEach((options) => {
-    process.argv.includes('--watch') ? watch(options) : esbuild.build(moduleOptions);
+    process.argv.includes('--watch') ? watch(options) : esbuild.build(options);
 });
