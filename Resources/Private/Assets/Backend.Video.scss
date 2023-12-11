@@ -90,7 +90,7 @@
         opacity: 0.95;
         transition: opacity 0.2s ease;
         line-height: $height;
-        color: #fff;
+        color: currentColor;
         content: "Click here to add captions";
         z-index: 1;
       }
@@ -102,7 +102,6 @@
         left: 0;
         right: 0;
         height: $height;
-        background: #00adee;
         opacity: 0.95;
         z-index: 0;
         margin: 0;

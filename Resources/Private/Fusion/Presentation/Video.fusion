@@ -3,8 +3,6 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Video) < prototype(Neos.Fusion:Compo
         class = ${PropTypes.anyOf( PropTypes.string, PropTypes.arrayOf( PropTypes.string ) )}
         id = ${PropTypes.string}
         label = ${PropTypes.string}
-        href = ${PropTypes.string}
-        embedHref = ${PropTypes.string}
         preview = ${PropTypes.string}
         poster = ${PropTypes.string}
         poster2x = ${PropTypes.string}
@@ -19,6 +17,8 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Video) < prototype(Neos.Fusion:Compo
         streaming = ${PropTypes.string}
         autoplay = ${PropTypes.boolean}
         muted = ${PropTypes.boolean}
+        width = ${PropTypes.integer}
+        height = ${PropTypes.integer}
 
         # Should be source tags
         content = ${PropTypes.string}
@@ -36,23 +36,25 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Video) < prototype(Neos.Fusion:Compo
 
     wrapper = ${Configuration.setting('Jonnitto.PrettyEmbed.wrapper')}
 
-    @if.checkVideo = ${this.image && (this.content || this.streaming)}
+    @if.checkVideo = ${(this.poster || this.preview) && (this.content || this.streaming)}
 
     renderer = Neos.Fusion:Component {
         @apply.props = ${props}
         _video = afx`
             <video
-                x-prettyembedmedia:media={props.streaming}
-                x-prettyembedmedia:media.@if={props.controls}
-                x-prettyembedmedia:media.slim={props.streaming}
-                x-prettyembedmedia:media.slim.@if={!props.controls}
+                x-prettyembedmedia:media={props.streaming || true}
+                x-show="loaded"
+                x-cloak
                 preload={props.preload}
                 playsinline
                 autoplay={props.autoplay}
                 loop={props.streaming ? null : props.loop}
                 muted={props.autoplay || props.muted}
+                controls={props.controls}
                 crossorigin={props.crossorigin}
                 poster={props.poster}
+                width={props.width}
+                height={props.height}
             >
                 {props.streaming ? '' : props.content}
             </video>
@@ -61,17 +63,17 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Video) < prototype(Neos.Fusion:Compo
             <Jonnitto.PrettyEmbed:Presenation.Wrapper wrapper={props.wrapper}>
                 <div
                     x-data
-                    x-prettyembedmedia={AlpineJS.object({
-                        streaming: props.streaming || null,
-                        style: props.lightbox && 'lightbox' || null,
-                    })}
+                    x-prettyembedmedia={!props.streaming && !props.lightbox}
+                    "x-prettyembedmedia.lightbox"={!props.streaming && props.lightbox}
+                    "x-prettyembedmedia.streaming.lightbox"={props.streaming && props.lightbox}
+                    "x-prettyembedmedia.streaming"={props.streaming && !props.lightbox}
                     aria-label={props.label}
                     id={props.id}
                     class={Carbon.String.merge(props.class, BEM.modifier('jonnitto-prettyembed', 'video'))}
                 >
-                    <Jonnitto.PrettyEmbed:Assets player="Media" />
+                    <Jonnitto.PrettyEmbed:Assets player="Video" />
                     <Jonnitto.PrettyEmbed:Presentation.Preview
-                        @if={props.lightbox}
+                        show={props.lightbox ? null : '!loaded'}
                         content={props.preview}
                         label={props.label}
                         src={props.poster}
@@ -80,13 +82,16 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Video) < prototype(Neos.Fusion:Compo
                         loadImageStrategy={props.loadImageStrategy}
                     />
                     {props.lightbox ? '' : props._video}
-                    <Jonnitto.PrettyEmbed:Presentation.Button.Play onClick="play" />
+                    <Jonnitto.PrettyEmbed:Presentation.Button.Play
+                        onClick="play"
+                        show={props.lightbox ? null : '!playing'}
+                    />
                     <Jonnitto.PrettyEmbed:Presentation.Button.Pause
                         @if={!props.controls && !props.lightbox}
                     />
                     <Jonnitto.PrettyEmbed:Presentation.Lightbox
                         @if={props.lightbox}
-                        player="Media"
+                        player="Video"
                         playButton={true}
                         pauseButton={!props.controls}
                         content={props._video}

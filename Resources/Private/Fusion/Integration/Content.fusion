@@ -14,6 +14,9 @@ prototype(Jonnitto.PrettyEmbed:Content) < prototype(Neos.Neos:ContentComponent) 
     // Need to be defined
     player = null
 
+    // Async images
+    async = true
+
     @context {
         // set variable for helper prototypes
         player = ${this.player}

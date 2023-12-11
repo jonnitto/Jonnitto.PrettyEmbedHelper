@@ -1,0 +1,31 @@
+prototype(Jonnitto.PrettyEmbed:Presentation.Source) < prototype(Neos.Fusion:Component) {
+    asset = null
+    uri = null
+    fileextension = null
+    type = null
+
+    @if {
+        hasType = ${this.type}
+        hasFileextension = ${this.fileextension}
+        hasAssetOrUri = ${this.uri || (this.asset && this.asset.resource.fileextension == this.fileextension)}
+    }
+
+    renderer = Neos.Fusion:Tag {
+        tagName = 'source'
+        attributes {
+            type = ${props.type + '/' + props.fileextension}
+            src = Neos.Fusion:Case {
+                hasUri {
+                    condition = ${props.uri}
+                    renderer = ${props.uri}
+                }
+                resource {
+                    condition = true
+                    renderer = Neos.Fusion:ResourceUri {
+                        resource = ${props.asset.resource}
+                    }
+                }
+            }
+        }
+    }
+}

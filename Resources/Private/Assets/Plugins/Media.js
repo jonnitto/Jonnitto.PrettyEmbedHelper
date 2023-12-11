@@ -6,17 +6,7 @@ const hlsScript = '/_Resources/Static/Packages/Jonnitto.PrettyEmbedHelper/Script
 export default function (Alpine) {
     Alpine.directive('prettyembedmedia', (element, { value, modifiers, expression }, { evaluate }) => {
         if (value === 'media') {
-            let options = {
-                slim: modifiers.includes('slim'),
-            };
-
-            // Check if expression is an object
-            if (expression.startsWith('{') && expression.endsWith('{')) {
-                options = { ...options, ...evaluate(expression || '{}') };
-            } else {
-                options.src = expression;
-            }
-            handleMedia({ element, Alpine, options });
+            handleMedia({ element, Alpine, expression });
             return;
         }
 
@@ -37,6 +27,7 @@ function handleRoot({ element, Alpine, options }) {
         autoplay: false,
         loaded: false,
         lightbox: style === 'lightbox' ? false : null,
+        __media: null,
     };
 
     const needHlsWrapper = streaming ? !streamcheck() : null;
@@ -85,10 +76,6 @@ function handleRoot({ element, Alpine, options }) {
                     if (this.__media?.currentTime) {
                         this.__media.currentTime = 0;
                     }
-                    if (this.type === 'Video') {
-                        this.__media.removeAttribute('controls');
-                        this.__media.load();
-                    }
                 },
                 toogle() {
                     if (this.__media.paused) {
@@ -123,7 +110,6 @@ function handleRoot({ element, Alpine, options }) {
                         });
                     }
                 },
-                __media: null,
             };
         },
         '@prettyEmbedReset.window'() {
@@ -139,8 +125,7 @@ function handleRoot({ element, Alpine, options }) {
     });
 }
 
-function handleMedia({ element, Alpine, options }) {
-    const { slim, src } = options;
+function handleMedia({ element, Alpine, src }) {
     const isVideo = element.tagName.toLowerCase() === 'video';
     const type = isVideo ? 'Video' : 'Audio';
 
@@ -155,9 +140,6 @@ function handleMedia({ element, Alpine, options }) {
         '@play'() {
             if (!this.loaded) {
                 this.loaded = true;
-                if (!slim) {
-                    element.setAttribute('controls', true);
-                }
             }
             this.playing = true;
             if (!this.autoplay && !this.muted) {

@@ -32,7 +32,7 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Lightbox) < prototype(Neos.Fusion:Co
                 aria-modal="true"
                 class="jonnitto-prettyembed-lightbox"
             >
-                <div x-on:click.outside="lightbox=false" class="jonnitto-prettyembed-lightbox__inner">
+                <div "x-on:click.outside"="lightbox=false" class="jonnitto-prettyembed-lightbox__inner">
                     <Jonnitto.PrettyEmbed:Presentation.Button.Close />
                     <div
                         x-ref={props.player == 'Vimeo' ? 'vimeo' : null}
@@ -48,6 +48,7 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Lightbox) < prototype(Neos.Fusion:Co
                         <Jonnitto.PrettyEmbed:Presentation.Button.Play
                             @if={props.playButton}
                             onClick="play"
+                            show="!playing"
                         />
                         <Jonnitto.PrettyEmbed:Presentation.Button.Pause  @if={props.pauseButton} />
                     </div>
