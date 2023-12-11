@@ -1,0 +1,1 @@
+(()=>{var t=!0;if(t&&window.name=="neos-content-main"){t=!1;let e=document.createElement("style");e.setAttribute("rel","stylesheet"),e.innerText=".jonnitto-prettyembed-button{pointer-events:none !important}",document.head.appendChild(e)}})();

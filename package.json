@@ -18,7 +18,7 @@
     "autoprefixer": "^10.4.16",
     "clsx": "^2.0.0",
     "cssnano": "^6.0.1",
-    "esbuild": "^0.19.8",
+    "esbuild": "^0.19.9",
     "esbuild-plugin-lightningcss-modules": "^0.1.2",
     "eslint": "^8.55.0",
     "eslint-config-prettier": "^9.1.0",
@@ -26,11 +26,11 @@
     "postcss": "^8.4.32",
     "postcss-cli": "^11.0.0",
     "postcss-sort-media-queries": "^5.2.0",
-    "prettier": "^3.1.0",
+    "prettier": "^3.1.1",
     "sass": "^1.69.5",
     "stylelint": "^16.0.1",
     "stylelint-config-standard": "^35.0.0",
-    "stylelint-scss": "^5.3.1"
+    "stylelint-scss": "^5.3.2"
   },
   "scripts": {
     "build:css:scss": "sass --no-source-map Resources/Private/Assets:Resources/Public/Styles",
