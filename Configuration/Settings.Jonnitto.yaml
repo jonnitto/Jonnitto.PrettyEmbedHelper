@@ -45,10 +45,12 @@ Jonnitto:
       # Whether to restart the video automatically after reaching the end.
       loop: false
 
-      # Should the video be opened on a lightbox? Per default this is set via the node properties
+      # Should the video be opened on a lightbox?
+      # Per default this is set via the node properties and the mixin `Jonnitto.PrettyEmbedHelper:Mixin.Lightbox`
       lightbox: false
 
-      # When the lightbox is set, should the preview image preserve his aspect ratio? Per default this is set via the node properties
+      # Sets if the image should preserve his aspect ratio when the lightbox is set.
+      # Per default this is set via the node properties and the mixin `Jonnitto.PrettyEmbedHelper:Mixin.PreserveAspectRatio`
       preserveAspectRatio: true
 
       # If no aspect ratio can be calcualted from the oembed service, you have the possibility to set a fallback aspect ratio.
@@ -59,7 +61,7 @@ Jonnitto:
       gdprHandling: true
 
       # If you want to save the duration of YouTube videos and playlists into the
-      # property metadataDuration you have to add a API key from YouTube Data API v3
+      # property prettyembedMetadata you have to add a API key from YouTube Data API v3
       # You can create this key on https://console.cloud.google.com/
       # This key is only used in the backend
       apiKey: null
@@ -70,10 +72,12 @@ Jonnitto:
       # Whether to restart the video automatically after reaching the end.
       loop: false
 
-      # Should the video be opened on a lightbox? Per default this is set via the node properties
+      # Should the video be opened on a lightbox?
+      # Per default this is set via the node properties and the mixin `Jonnitto.PrettyEmbedHelper:Mixin.Lightbox`
       lightbox: false
 
-      # When the lightbox is set, should the preview image preserve his aspect ratio? Per default this is set via the node properties
+      # Sets if the image should preserve his aspect ratio when the lightbox is set.
+      # Per default this is set via the node properties and the mixin `Jonnitto.PrettyEmbedHelper:Mixin.PreserveAspectRatio`
       preserveAspectRatio: true
 
       # If no aspect ratio can be calcualted from the oembed service, you have the possibility to set a fallback aspect ratio.
@@ -84,16 +88,17 @@ Jonnitto:
       # video playback, including volume, seeking, and pause/resume playback.
       controls: true
 
-      # Should the video be opened on a lightbox? Per default this is set via the node properties
+      # If true, the browser will automatically seek back
+      # to the start upon reaching the end of the video.
+      loop: false
+
+      # Should the video be opened on a lightbox?
+      # Per default this is set via the node properties and the mixin `Jonnitto.PrettyEmbedHelper:Mixin.Lightbox`
       lightbox: false
 
       # If true, the video automatically begins to play back as soon
       # as it can do so without stopping to finish loading the data.
       autoplay: false
-
-      # If true, the browser will automatically seek back
-      # to the start upon reaching the end of the video.
-      loop: false
 
       # Whether the video is muted upon loading. Set automatically to true if autoplay is enabled
       muted: false
@@ -106,7 +111,7 @@ Jonnitto:
       #  - auto       Indicates that the whole video file can be downloaded, even if the user is not expected to use it
       preload: none
 
-      # https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video#attr-crossorigin
+      # https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video#crossorigin
       # anonymous || use-credentials || true || false
       crossorigin: false
 
