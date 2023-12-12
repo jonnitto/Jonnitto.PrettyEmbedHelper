@@ -114,7 +114,7 @@ function handeleRoot({ element, Alpine, options }) {
 
                         player.on('play', async () => {
                             const details = await dispatchDetails('play');
-                            this.$dispatch('prettyembedPause', element);
+                            this.$dispatch('prettyembedPauseInternal', element);
                             this.loaded = true;
                             this.playing = true;
                             this.$dispatch(eventName, details);
@@ -144,10 +144,7 @@ function handeleRoot({ element, Alpine, options }) {
                 this.gdpr = 'isAccepted';
             }
         },
-        '@prettyembedReset.window'() {
-            this.reset();
-        },
-        '@prettyembedPause.window'({ detail }) {
+        '@prettyembedPauseInternal.window'({ detail }) {
             // detail is the rootElement
             if (detail == this.$root) {
                 return;

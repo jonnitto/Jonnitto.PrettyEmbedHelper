@@ -1,33 +1,35 @@
 export default function (Alpine) {
-    Alpine.magic('prettyembedPause', () => {
-        return (subject) => {
-            getElements(subject).forEach((element) => {
-                const data = Alpine.$data(element);
-                if (typeof data.pause === 'function') {
-                    data.pause(true);
-                }
-            });
-        };
-    });
+    Alpine.magic('prettyembedPause', () => pause);
 
-    Alpine.magic('prettyembedReset', () => {
-        return (subject) => {
-            getElements(subject).forEach((element) => {
-                const data = Alpine.$data(element);
-                if (typeof data.reset === 'function') {
-                    data.reset();
-                }
-            });
-        };
+    Alpine.magic('prettyembedReset', () => reset);
+}
+
+window.addEventListener('prettyembedReset', ({ detail }) => reset(detail));
+window.addEventListener('prettyembedPause', ({ detail }) => pause(detail));
+
+function reset(subject) {
+    return getElements(subject).forEach((element) => {
+        const data = Alpine.$data(element);
+        if (typeof data.reset === 'function') {
+            data.reset();
+        }
+    });
+}
+
+function pause(subject) {
+    return getElements(subject).forEach((element) => {
+        const data = Alpine.$data(element);
+        if (typeof data.pause === 'function') {
+            // the true is to not skip the autoplay check
+            data.pause(true);
+        }
     });
 }
 
 const className = 'jonnitto-prettyembed';
 function getElements(subject) {
-    console.log({ subject });
     if (typeof subject === 'string') {
         const selector = shortcutSelector(subject);
-        console.log({ selector });
         let elements = [];
         [...document.querySelectorAll(selector)].forEach((item) => {
             elements = [...elements, ...findPlayers(item)];

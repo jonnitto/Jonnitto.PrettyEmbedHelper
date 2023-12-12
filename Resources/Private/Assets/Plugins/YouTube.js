@@ -115,7 +115,7 @@ function handeleRoot({ element, Alpine, options }) {
                                     const currentTime = player.getCurrentTime();
 
                                     if (data === YT.PlayerState.PLAYING) {
-                                        this.$dispatch('prettyembedPause', element);
+                                        this.$dispatch('prettyembedPauseInternal', element);
                                         this.loaded = true;
                                         this.playing = true;
 
@@ -169,10 +169,7 @@ function handeleRoot({ element, Alpine, options }) {
                 this.gdpr = 'isAccepted';
             }
         },
-        '@prettyembedReset.window'() {
-            this.reset();
-        },
-        '@prettyembedPause.window'({ detail }) {
+        '@prettyembedPauseInternal.window'({ detail }) {
             // detail is the rootElement
             if (detail == this.$root) {
                 return;
