@@ -2,6 +2,8 @@
 
 # Jonnitto.PrettyEmbedHelper
 
+**For a detail guide, please visit the [PrettyEmbed Wiki](https://github.com/jonnitto/Jonnitto.PrettyEmbedHelper/wiki)**
+
 This package contains helper mixins, prototypes and frontend resources for the PrettyEmbed series.
 
 This package is used by following packages:
