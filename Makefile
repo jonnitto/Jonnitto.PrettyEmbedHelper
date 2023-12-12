@@ -1,9 +1,9 @@
 .PHONY: help build install prettier production watch dev upgrade
 
-.DEFAULT_GOAL := build
+.DEFAULT_GOAL := production
 
 ## Install dependencies and build production version
-build: install prettier production
+production: install cleanup prettier build
 
 ## Install dependencies
 install:
@@ -13,23 +13,24 @@ install:
 prettier:
 	@pnpm prettier --write --no-error-on-unmatched-pattern '**/*.{js,php,yaml,scss,mjs,md}'
 
-## Build production version
-production:
-	@echo '   ${GREEN}Remove Public files${RESET}'
+cleanup:
 	@rm -rf Resources/Public/Modules
 	@rm -rf Resources/Public/Scripts
 	@rm -rf Resources/Public/Styles
-	@echo '   ${GREEN}Build CSS and Javascript${RESET}'
-	@echo ''
-	@pnpm build
 
+## Build production version
+build:
+	@make cleanup
+	@pnpm build
 
 ## Watch files
 dev:
+	@make cleanup
 	@pnpm dev
 
 ## Watch files
 watch:
+	@make cleanup
 	@pnpm watch
 
 ## Check for upgrades
