@@ -12,7 +12,7 @@ use function preg_match_all;
 use function str_replace;
 
 /**
- * Replace embeded iframes with the video
+ * Replace embedded iframes with the video
  */
 class ReplaceIframesImplementation extends AbstractFusionObject
 {
@@ -31,7 +31,7 @@ class ReplaceIframesImplementation extends AbstractFusionObject
     }
 
     /**
-     * Render Replace embeded iframes with the pretty embeded markup
+     * Render Replace embedded iframes with the pretty embedded markup
      *
      * @return string
      */

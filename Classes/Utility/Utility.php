@@ -92,12 +92,12 @@ class Utility
      * Return the href from Vimeo
      *
      * @param string|integer $videoID
-     * @param boolean $embeded
+     * @param boolean $embedded
      * @return string
      */
-    public static function vimeoHref($videoID, bool $embeded = false): string
+    public static function vimeoHref($videoID, bool $embedded = false): string
     {
-        if ($embeded) {
+        if ($embedded) {
             $parameter = 'autoplay=1&background=0&title=0&byline=0&portrait=0';
             return sprintf('https://player.vimeo.com/video/%s?%s', $videoID, $parameter);
         }
@@ -109,21 +109,21 @@ class Utility
      *
      * @param string $videoID
      * @param string $type
-     * @param boolean $embeded
+     * @param boolean $embedded
      * @return string
      */
-    public static function youtubeHref(string $videoID, ?string $type = 'video', bool $embeded = false): string
+    public static function youtubeHref(string $videoID, ?string $type = 'video', bool $embedded = false): string
     {
         $parameter = 'autoplay=1&modestbranding=1&playsinline=1&rel=0';
 
         if ($type == 'playlist') {
-            if ($embeded) {
+            if ($embedded) {
                 return sprintf('https://www.youtube.com/embed/videoseries?list=%s&%s', $videoID, $parameter);
             }
             return sprintf('https://www.youtube.com/playlist?list=%s', $videoID);
         }
 
-        if ($embeded) {
+        if ($embedded) {
             return sprintf('https://www.youtube.com/embed/%s?%s', $videoID, $parameter);
         }
         return sprintf('https://www.youtube.com/watch?v=%s', $videoID);

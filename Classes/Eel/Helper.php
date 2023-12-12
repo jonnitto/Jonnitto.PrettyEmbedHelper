@@ -44,12 +44,12 @@ class Helper implements ProtectedContextAwareInterface
      * Return the href from Vimeo
      *
      * @param string|integer $videoID
-     * @param boolean $embeded
+     * @param boolean $embedded
      * @return string
      */
-    public function vimeoHref($videoID, bool $embeded = false): string
+    public function vimeoHref($videoID, bool $embedded = false): string
     {
-        return Utility::vimeoHref($videoID, $embeded);
+        return Utility::vimeoHref($videoID, $embedded);
     }
 
     /**
@@ -57,12 +57,12 @@ class Helper implements ProtectedContextAwareInterface
      *
      * @param string $videoID
      * @param string $type
-     * @param boolean $embeded
+     * @param boolean $embedded
      * @return string
      */
-    public function youtubeHref(string $videoID, ?string $type = 'video', bool $embeded = false): string
+    public function youtubeHref(string $videoID, ?string $type = 'video', bool $embedded = false): string
     {
-        return Utility::youtubeHref($videoID, $type, $embeded);
+        return Utility::youtubeHref($videoID, $type, $embedded);
     }
 
     /**
