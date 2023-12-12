@@ -23,20 +23,5 @@ prototype(Jonnitto.PrettyEmbed:Content) < prototype(Neos.Neos:ContentComponent) 
         // Allow to disable the content element wrapping
         contentElement = ${this.contentElement}
     }
-    @process.addButton = afx`
-        {value}
-        <div x-data>
-        <button type="button" x-on:click="$prettyembedPause">Pause all</button> <br/>
-        <button type="button" x-on:click="$prettyembedReset">Reset all</button> <br/>
-        <button type="button" x-on:click="$prettyembedPause('YouTube')">Pause all YouTube videos</button><br/>
-        <button type="button" x-on:click="$prettyembedPause('Video')">Pause all Video videos</button><br/>
-        <button type="button" x-on:click="$prettyembedPause(document.body)">Pause all <code>document.body</code></button><br/>
-        <h2>Event - based</h2>
-        <button type="button" x-on:click="$dispatch('prettyembedPause')">Pause all</button><br/>
-        <button type="button" x-on:click="$dispatch('prettyembedPause', document.body)">Pause all <code>document.body</code></button><br/>
-        <button type="button" x-on:click="$dispatch('prettyembedPause', 'Video')">Pause all Video</button><br/>
-        <button type="button" x-on:click="$dispatch('prettyembedPause', 'YouTube')">Pause all YouTube</button><br/>
-        </div>
-    `
     @process.contentElementWrapping.@if.contentElementWrapping = ${contentElement}
 }
