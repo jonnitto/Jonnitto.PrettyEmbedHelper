@@ -84,7 +84,8 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Iframe) < prototype(Neos.Fusion:Comp
                 />
                 <Jonnitto.PrettyEmbed:Presentation.Button.Play
                     @if={!props._alwaysOpenInPopup}
-                    show={props.controls && !props.lightbox ? "!loaded" : null}
+                    show={props.controls ? "!loaded" : "!playing"}
+                    show.@if={!props.lightbox}
                     onClick="load"
                     href={props.href}
                 />
