@@ -20,6 +20,7 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Iframe) < prototype(Neos.Fusion:Comp
         wrapper = ${PropTypes.anyOf(PropTypes.string, PropTypes.boolean)}
         gdprHandling = ${PropTypes.oneOf([true, false, 'popup']).isRequired}
         loop = ${PropTypes.boolean}
+        debug = ${PropTypes.boolean}
         videoID = ${PropTypes.anyOf(PropTypes.string, PropTypes.integer)}
 
         # YouTube only
@@ -31,6 +32,7 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Iframe) < prototype(Neos.Fusion:Comp
 
     loadImageStrategy = ${Configuration.setting('Jonnitto.PrettyEmbed.loadImageStrategy')}
     wrapper = ${Configuration.setting('Jonnitto.PrettyEmbed.wrapper')}
+    debug = ${Configuration.setting('Jonnitto.PrettyEmbed.debug')}
     gdprHandling = true
     controls = true
 
@@ -78,6 +80,7 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Iframe) < prototype(Neos.Fusion:Comp
                 <Jonnitto.PrettyEmbed:Assets
                     player={props.player}
                     gdprHandling={props.gdprHandling}
+                    debug={props.debug}
                 />
                 <Jonnitto.PrettyEmbed:Presentation.Button.Play
                     @if={!props._alwaysOpenInPopup}

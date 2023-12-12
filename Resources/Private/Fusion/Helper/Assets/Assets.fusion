@@ -6,6 +6,7 @@ prototype(Jonnitto.PrettyEmbed:Assets) < prototype(Neos.Fusion:Component) {
         inBackend = ${PropTypes.boolean}
     }
 
+    debug = ${Configuration.setting('Jonnitto.PrettyEmbed.debug')}
     includeAssets = ${Configuration.setting('Jonnitto.PrettyEmbed.includeAssets')}
     includeAlpineJsCheck = ${Configuration.setting('Jonnitto.PrettyEmbed.includeAlpineJsCheck')}
     inBackend = ${node.context.inBackend && node.context.currentRenderingMode.edit}
@@ -23,6 +24,11 @@ prototype(Jonnitto.PrettyEmbed:Assets) < prototype(Neos.Fusion:Component) {
             inline = true
             filename = 'Backend.js'
         }
+        debugJS = Jonnitto.PrettyEmbed:Assets.Fragment.Script {
+            @if.set = ${props.debug}
+            inline = true
+            filename = 'Debug.js'
+        }
         frontendScripts = Neos.Fusion:Join {
             @if.set = ${props.includeAssets.js}
             gdprPlugin = Jonnitto.PrettyEmbed:Assets.Fragment.Module {
@@ -31,7 +37,7 @@ prototype(Jonnitto.PrettyEmbed:Assets) < prototype(Neos.Fusion:Component) {
             }
             magicPlugin = Jonnitto.PrettyEmbed:Assets.Fragment.Module {
                 @if.set = ${props.player == 'Video' || props.player == 'Audio' || props.gdprHandling != 'Popup'}
-                filename = 'Magic.js'
+                filename = 'Methods.js'
             }
             popupPlugin = Jonnitto.PrettyEmbed:Assets.Fragment.Module {
                 @if.set = ${props.gdprHandling}

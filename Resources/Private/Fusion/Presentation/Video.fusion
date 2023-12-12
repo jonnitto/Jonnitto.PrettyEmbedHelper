@@ -33,6 +33,7 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Video) < prototype(Neos.Fusion:Compo
     muted = ${Configuration.setting('Jonnitto.PrettyEmbed.Video.muted')}
     preload = ${Configuration.setting('Jonnitto.PrettyEmbed.Video.preload')}
     crossorigin = ${Configuration.setting('Jonnitto.PrettyEmbed.Video.crossorigin')}
+    debug = ${Configuration.setting('Jonnitto.PrettyEmbed.debug')}
 
     wrapper = ${Configuration.setting('Jonnitto.PrettyEmbed.wrapper')}
 
@@ -71,7 +72,7 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Video) < prototype(Neos.Fusion:Compo
                     id={props.id}
                     class={Carbon.String.merge(props.class, BEM.modifier('jonnitto-prettyembed', 'video'))}
                 >
-                    <Jonnitto.PrettyEmbed:Assets player="Video" />
+                    <Jonnitto.PrettyEmbed:Assets player="Video" debug={props.debug} />
                     <Jonnitto.PrettyEmbed:Presentation.Preview
                         show={props.lightbox ? null : '!loaded'}
                         content={props.preview}
