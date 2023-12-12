@@ -62,4 +62,8 @@ function checkIfLoaded(check, callback, maxAttempts = 100) {
     rafTimeOut(() => checkIfLoaded(check, callback, maxAttempts), 100);
 }
 
-export { loadYoutubeApi, loadVimeoApi, loadScript };
+function checkFullscreen() {
+    return document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement;
+}
+
+export { loadYoutubeApi, loadVimeoApi, loadScript, checkFullscreen };

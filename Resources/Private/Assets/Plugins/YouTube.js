@@ -1,4 +1,4 @@
-import { loadYoutubeApi } from './Helper';
+import { loadYoutubeApi, checkFullscreen } from './Helper';
 
 const eventName = 'prettyembed';
 
@@ -139,12 +139,14 @@ function handeleRoot({ element, Alpine, options }) {
 
                                     if (data === YT.PlayerState.ENDED) {
                                         this.playing = false;
+                                        if (!loop && !this.lightbox && !checkFullscreen()) {
+                                            this.reset();
+                                        }
                                         this.$dispatch(eventName, {
                                             event: 'finished',
                                             currentTime,
                                             ...dispatchDetails(),
                                         });
-                                        return;
                                     }
                                 },
                             },

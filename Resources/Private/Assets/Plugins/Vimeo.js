@@ -1,4 +1,4 @@
-import { loadVimeoApi } from './Helper';
+import { loadVimeoApi, checkFullscreen } from './Helper';
 
 const eventName = 'prettyembed';
 
@@ -99,6 +99,9 @@ function handeleRoot({ element, Alpine, options }) {
 
                             if (results[4].value) {
                                 event = 'finished';
+                                if (!loop && !this.lightbox && !checkFullscreen()) {
+                                    this.reset();
+                                }
                             }
 
                             return {

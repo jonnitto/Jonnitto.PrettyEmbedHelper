@@ -1,4 +1,4 @@
-import { loadScript } from './Helper';
+import { loadScript, checkFullscreen } from './Helper';
 
 const eventName = 'prettyembed';
 const hlsScript = '/_Resources/Static/Packages/Jonnitto.PrettyEmbedHelper/Scripts/Hls.js?v=1.4.13';
@@ -41,6 +41,10 @@ function handleRoot({ element, Alpine, options }) {
                         this.lightbox = true;
                     }
 
+                    if (!this.__media?.paused) {
+                        return;
+                    }
+
                     if (!this.loaded && streaming) {
                         if (needHlsWrapper) {
                             if (this.lightbox) {
@@ -69,17 +73,19 @@ function handleRoot({ element, Alpine, options }) {
                     if (skipAutoplay && (this.autoplay || this.__media?.muted)) {
                         return;
                     }
-                    this.__media?.pause();
+                    if (!this.__media?.paused) {
+                        this.__media?.pause();
+                    }
                 },
                 reset() {
                     if (this.autoplay) {
                         return;
                     }
                     this.pause();
-                    this.loaded = false;
                     if (this.__media?.currentTime) {
                         this.__media.currentTime = 0;
                     }
+                    this.loaded = false;
                 },
                 toogle() {
                     if (this.__media.paused) {
@@ -92,6 +98,9 @@ function handleRoot({ element, Alpine, options }) {
                     const currentTime = this.__media.currentTime;
                     if (currentTime === this.__media.duration) {
                         event = 'finished';
+                        if (!this.__media.loop && !this.lightbox && !checkFullscreen()) {
+                            this.reset();
+                        }
                     }
                     this.$dispatch(eventName, {
                         detail: {
