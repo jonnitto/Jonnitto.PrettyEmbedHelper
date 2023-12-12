@@ -41,17 +41,18 @@ function Editor(props) {
 }
 
 const convertSeconds = (duration) => {
+    const twoDigits = (number) => `0${number}`.slice(-2);
     const hours = ~~(duration / 3600);
     const minutes = ~~((duration % 3600) / 60);
     const seconds = duration % 60;
 
     if (hours) {
-        return `${hours}:${minutes}:${seconds}`;
+        return `${hours}:${twoDigits(minutes)}:${twoDigits(seconds)}`;
     }
     if (minutes) {
-        return `${minutes}:${seconds}`;
+        return `${minutes}:${twoDigits(seconds)}`;
     }
-    return '';
+    return seconds;
 };
 
 export default neosifier(Editor);
