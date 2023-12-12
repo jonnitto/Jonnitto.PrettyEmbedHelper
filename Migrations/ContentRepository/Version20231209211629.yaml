@@ -1,0 +1,33 @@
+up:
+  comments: 'Remove old metadata and properties for the PrettyEmbed Series'
+  migration:
+    - filters:
+        - type: NodeType
+          settings:
+            nodeType: 'Jonnitto.PrettyEmbedHelper:Mixin.Metadata'
+            withSubTypes: true
+      transformations:
+        - type: RemoveProperty
+          settings:
+            property: 'force16to9'
+        - type: RemoveProperty
+          settings:
+            property: 'metadataID'
+        - type: RemoveProperty
+          settings:
+            property: 'metadataTitle'
+        - type: RemoveProperty
+          settings:
+            property: 'metadataRatio'
+        - type: RemoveProperty
+          settings:
+            property: 'metadataImage'
+        - type: RemoveProperty
+          settings:
+            property: 'metadataThumbnail'
+        - type: RemoveProperty
+          settings:
+            property: 'metadataDuration'
+
+down:
+  comments: 'No down migration available'

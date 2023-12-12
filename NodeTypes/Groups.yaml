@@ -1,0 +1,29 @@
+'Jonnitto.PrettyEmbedHelper:Mixin.Groups':
+  abstract: true
+  ui:
+    inspector:
+      groups:
+        video:
+          label: i18n
+          icon: 'fas fa-file-video'
+          position: 10
+        videoplatform:
+          label: i18n
+          icon: 'fas fa-play-circle'
+          position: 10
+        audio:
+          label: i18n
+          icon: 'fas fa-file-audio'
+          position: 10
+        look:
+          label: i18n
+          icon: 'fas fa-paint-brush'
+          position: 20
+        captions:
+          label: i18n
+          icon: 'fas fa-closed-captioning'
+          position: 30
+        metadata:
+          label: i18n
+          icon: 'fas fa-database'
+          position: end

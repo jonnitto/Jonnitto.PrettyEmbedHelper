@@ -1,0 +1,31 @@
+prototype(Jonnitto.PrettyEmbed:Presentation.GdprConsent) < prototype(Neos.Fusion:Component) {
+    @propTypes {
+        href = ${PropTypes.string}
+        embedHref = ${PropTypes.string}
+    }
+
+    renderer = afx`
+       <div x-prettyembedconsent x-cloak class="jonnitto-prettyembed-gdpr">
+            <div class="jonnitto-prettyembed-gdpr__panel">
+                <p>{Translation.translate('gdprMessage', 'While playing this video, external contents are loaded and you may be tracked by the inital content provider.', [], 'Main', 'Jonnitto.PrettyEmbedHelper')}</p>
+                <div>
+                    <a
+                        @if={props.href || props.embedHref}
+                        x-prettyembedpopup={props.embedHref || props.href}
+                        href={props.href || props.embedHref}
+                        class={BEM.modifier('jonnitto-prettyembed-gdpr__button', 'external')}
+                    >
+                        {Translation.translate('gdprMessageNewWindow', 'Open in new window', [], 'Main', 'Jonnitto.PrettyEmbedHelper')}
+                    </a>
+                    <button
+                        x-prettyembedconsent:accept
+                        type="button"
+                        class={BEM.modifier('jonnitto-prettyembed-gdpr__button', 'accept')}
+                     >
+                        {Translation.translate('gdprMessageAccept', 'OK', [], 'Main', 'Jonnitto.PrettyEmbedHelper')}
+                    </button>
+                </div>
+            </div>
+        </div>
+    `
+}

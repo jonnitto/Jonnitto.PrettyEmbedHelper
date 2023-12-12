@@ -1,46 +1,57 @@
-prototype(Jonnitto.PrettyEmbedHelper:Assets) < prototype(Neos.Fusion:Component) {
-    includeAssets = ${Configuration.setting('Jonnitto.PrettyEmbedHelper.includeAssets')}
-    openInNewWindow = ${Configuration.setting('Jonnitto.PrettyEmbedHelper.openInNewWindow')}
-    inBackend = ${node.context.inBackend}
-    youtubeAPI = false
-    vimeoAPI = false
+prototype(Jonnitto.PrettyEmbed:Assets) < prototype(Neos.Fusion:Component) {
+    @propTypes {
+        player = ${PropTypes.oneOf(['YouTube', 'Vimeo', 'Video', 'Audio']).isRequired}
+        gdprHandling = ${PropTypes.oneOf([true, false, 'popup'])}
+        includeAlpineJsCheck = ${PropTypes.boolean}
+        inBackend = ${PropTypes.boolean}
+    }
+
+    debug = ${Configuration.setting('Jonnitto.PrettyEmbed.debug')}
+    includeAssets = ${Configuration.setting('Jonnitto.PrettyEmbed.includeAssets')}
+    includeAlpineJsCheck = ${Configuration.setting('Jonnitto.PrettyEmbed.includeAlpineJsCheck')}
+    inBackend = ${node.context.inBackend && node.context.currentRenderingMode.edit}
+
+    // This decides which file to load
+    player = null
 
     renderer = Neos.Fusion:Join {
-        vimeoAPI = Neos.Fusion:Tag {
-            @if.set = ${!props.inBackend && props.vimeoAPI}
-            tagName = 'script'
-            attributes {
-                data-slipstream = true
-                defer = true
-                src = 'https://player.vimeo.com/api/player.js'
-            }
-        }
-        youtubeAPI = Neos.Fusion:Tag {
-            @if.set = ${!props.inBackend && props.youtubeAPI}
-            tagName = 'script'
-            attributes {
-                data-slipstream = true
-                defer = true
-                src = 'https://www.youtube.com/iframe_api'
-            }
-        }
-        generalCSS = Jonnitto.PrettyEmbedHelper:Assets.Fragment.Style {
+        generalCSS = Jonnitto.PrettyEmbed:Assets.Fragment.Style {
             @if.set = ${props.includeAssets.css}
             filename = 'Main.css'
         }
-        backendCSS = Jonnitto.PrettyEmbedHelper:Assets.Fragment.Style {
+        backendJS = Jonnitto.PrettyEmbed:Assets.Fragment.Script {
             @if.set = ${props.inBackend}
-            filename = 'Backend.css'
-        }
-        backendJS = Jonnitto.PrettyEmbedHelper:Assets.Fragment.Script {
-            @if.set = ${props.inBackend}
+            inline = true
             filename = 'Backend.js'
         }
-        liveJS = Jonnitto.PrettyEmbedHelper:Assets.Fragment.Script {
-            @if.set = ${!props.inBackend && props.includeAssets.js}
-            openYoutubeInNewWindow = ${props.openInNewWindow.youtube}
-            openVimeoInNewWindow = ${props.openInNewWindow.vimeo}
-            filename = 'Main.js'
+        debugJS = Jonnitto.PrettyEmbed:Assets.Fragment.Script {
+            @if.set = ${props.debug}
+            inline = true
+            filename = 'Debug.js'
+        }
+        frontendScripts = Neos.Fusion:Join {
+            @if.set = ${props.includeAssets.js}
+            gdprPlugin = Jonnitto.PrettyEmbed:Assets.Fragment.Module {
+                @if.set = ${props.gdprHandling == true}
+                filename = 'Consent.js'
+            }
+            magicPlugin = Jonnitto.PrettyEmbed:Assets.Fragment.Module {
+                @if.set = ${props.player == 'Video' || props.player == 'Audio' || props.gdprHandling != 'Popup'}
+                filename = 'Methods.js'
+            }
+            popupPlugin = Jonnitto.PrettyEmbed:Assets.Fragment.Module {
+                @if.set = ${props.gdprHandling}
+                filename = 'Popup.js'
+            }
+            pluginBasedOnPlayer = Jonnitto.PrettyEmbed:Assets.Fragment.Module {
+                @if.set = ${props.player}
+                filename = ${props.player == 'Video' || props.player == 'Audio' ? 'Media.js' : (props.player + '.js')}
+            }
+            alpineJs = Jonnitto.PrettyEmbed:Assets.Fragment.Script {
+                @if.set = ${props.includeAlpineJsCheck}
+                filename = 'AlpineCheck.js'
+                slipstream = '//body'
+            }
         }
     }
 }

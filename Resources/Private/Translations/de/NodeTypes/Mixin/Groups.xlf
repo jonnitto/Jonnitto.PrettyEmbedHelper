@@ -11,14 +11,6 @@
                 <source>Video</source>
                 <target>Video</target>
             </trans-unit>
-            <trans-unit id="groups.vimeo" xml:space="preserve">
-                <source>Vimeo</source>
-                <target>Vimeo</target>
-            </trans-unit>
-            <trans-unit id="groups.youtube" xml:space="preserve">
-                <source>YouTube</source>
-                <target>YouTube</target>
-            </trans-unit>
             <trans-unit id="groups.videoplatform" xml:space="preserve">
                 <source>Vimeo / YouTube</source>
                 <target>Vimeo / YouTube</target>
@@ -30,6 +22,14 @@
             <trans-unit id="groups.look" xml:space="preserve">
                 <source><![CDATA[Look & Feel]]></source>
                 <target><![CDATA[Look & Feel]]></target>
+            </trans-unit>
+            <trans-unit id="groups.captions" xml:space="preserve">
+                <source>Captions</source>
+                <target>Untertitel</target>
+            </trans-unit>
+            <trans-unit id="groups.metadata" xml:space="preserve">
+                <source>Metadata</source>
+                <target>Metadata</target>
             </trans-unit>
         </body>
     </file>

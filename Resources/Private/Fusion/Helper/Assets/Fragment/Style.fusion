@@ -1,19 +1,12 @@
-prototype(Jonnitto.PrettyEmbedHelper:Assets.Fragment.Style) < prototype(Neos.Fusion:Component) {
-    basePath = 'resource://Jonnitto.PrettyEmbedHelper/Public/Styles/'
-    filename = ${null}
-    fullPath = ${this.basePath + this.filename}
+prototype(Jonnitto.PrettyEmbed:Assets.Fragment.Style) < prototype(Neos.Fusion:Component) {
+    filename = null
+    uri = ${StaticResource.uri('Jonnitto.PrettyEmbedHelper', 'Public/Styles/' + this.filename)}
 
-    renderer = Neos.Fusion:Tag {
-        tagName = 'link'
-        attributes {
-            data-slipstream = true
-            rel = 'stylesheet'
-            href = Neos.Fusion:Join {
-                path = Neos.Fusion:ResourceUri {
-                    path = ${props.fullPath}
-                }
-                hash = ${'?v=' + Carbon.FileContent.pathHash(props.fullPath)}
-            }
-        }
-    }
+    renderer = afx`
+        <link
+            data-slipstream
+            rel="stylesheet"
+            href={props.uri}
+        />
+    `
 }

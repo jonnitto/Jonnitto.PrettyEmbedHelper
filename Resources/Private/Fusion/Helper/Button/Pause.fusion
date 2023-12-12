@@ -1,7 +1,0 @@
-prototype(Jonnitto.PrettyEmbedHelper:Button.Pause) < prototype(Neos.Fusion:Component) {
-    file = ${Configuration.setting('Jonnitto.PrettyEmbedHelper.button.pause')}
-    content = ${Carbon.FileContent.path(this.file)}
-
-    @if.set = ${this.content}
-    renderer = ${props.content}
-}

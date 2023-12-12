@@ -1,0 +1,25 @@
+prototype(Jonnitto.PrettyEmbed:Presentation.Track) < prototype(Neos.Fusion:Component) {
+    asset = null
+    kind = null
+    label = null
+    srclang = null
+    default = null
+
+    @if {
+        render = ${this.asset && this.kind && this.asset.resource.fileextension == 'vtt'}
+        languageSet = ${this.kind == 'subtitles' ? !!this.srclang : true}
+    }
+
+    renderer = Neos.Fusion:Tag {
+        tagName = 'track'
+        attributes {
+            src = Neos.Fusion:ResourceUri {
+                resource = ${props.asset.resource}
+            }
+            kind = ${props.kind}
+            label = ${props.label}
+            srclang = ${props.srclang}
+            default = ${props.default}
+        }
+    }
+}

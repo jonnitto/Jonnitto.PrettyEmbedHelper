@@ -1,0 +1,48 @@
+prototype(Jonnitto.PrettyEmbed:Presentation.Audio) < prototype(Neos.Fusion:Component) {
+    @propTypes {
+        class = ${PropTypes.anyOf( PropTypes.string, PropTypes.arrayOf( PropTypes.string ) )}
+        id = ${PropTypes.string}
+        label = ${PropTypes.string}
+        wrapper = ${PropTypes.anyOf(PropTypes.string, PropTypes.boolean)}
+        loop = ${PropTypes.boolean}
+        controls = ${PropTypes.boolean}
+        debug = ${PropTypes.boolean}
+        preload = ${PropTypes.oneOf(['none', 'metadata', 'auto'])}
+        crossorigin = ${PropTypes.oneOf(['anonymous', 'use-credentials', true, false])}
+        # Should be source tags
+        content = ${PropTypes.string}
+    }
+
+    wrapper = ${Configuration.setting('Jonnitto.PrettyEmbed.wrapper')}
+    controls = ${Configuration.setting('Jonnitto.PrettyEmbed.Audio.controls')}
+    loop = ${Configuration.setting('Jonnitto.PrettyEmbed.Audio.loop')}
+    preload = ${Configuration.setting('Jonnitto.PrettyEmbed.Audio.preload')}
+    crossorigin = ${Configuration.setting('Jonnitto.PrettyEmbed.Audio.crossorigin')}
+    debug = ${Configuration.setting('Jonnitto.PrettyEmbed.debug')}
+
+    @if.checkAudio = ${this.content}
+
+    renderer = afx`
+        <Jonnitto.PrettyEmbed:Presenation.Wrapper wrapper={props.wrapper}>
+            <div
+                x-data
+                x-prettyembedmedia
+                aria-label={props.label}
+                id={props.id}
+                class={Carbon.String.merge(props.class, BEM.modifier('jonnitto-prettyembed', 'audio'))}
+            >
+                <Jonnitto.PrettyEmbed:Assets player="Audio" debug={props.debug} />
+                <audio
+                    x-prettyembedmedia:media
+                    controls={props.controls}
+                    loop={props.loop}
+                    preload={props.preload}
+                    crossorigin={props.crossorigin}
+                    playsinline
+                >
+                    {props.content}
+                </audio>
+            </div>
+        </Jonnitto.PrettyEmbed:Presenation.Wrapper>
+    `
+}

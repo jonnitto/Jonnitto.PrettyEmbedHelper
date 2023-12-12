@@ -15,6 +15,46 @@
                 <source>Open in new window</source>
                 <target>Åbn i et nyt vindue</target>
             </trans-unit>
+            <trans-unit id="close" xml:space="preserve">
+                <source>Close</source>
+                <target>Luk</target>
+            </trans-unit>
+            <trans-unit id="play" xml:space="preserve">
+                <source>Play</source>
+                <target>Afspil</target>
+            </trans-unit>
+            <trans-unit id="pause" xml:space="preserve">
+                <source>Pause</source>
+                <target>Pause</target>
+            </trans-unit>
+            <trans-unit id="needPreviewImage" xml:space="preserve">
+                <source>You need to define a preview image.</source>
+                <target>Du skal definere et preview-billede.</target>
+            </trans-unit>
+            <trans-unit id="noVideoID" xml:space="preserve">
+                <source>Please add a video URL or ID in the inspector</source>
+                <target>Tilføj venligst en video URL eller ID i inspektøren</target>
+            </trans-unit>
+            <trans-unit id="noVideoAndPoster" xml:space="preserve">
+                <source>You need to define at least one video file and a preview image.</source>
+                <target>Du skal definere mindst én videofil og et eksempelbillede.</target>
+            </trans-unit>
+            <trans-unit id="noVideo" xml:space="preserve">
+                <source>You need to define at least one video.</source>
+                <target>Du skal definere mindst én video.</target>
+            </trans-unit>
+            <trans-unit id="noVideoStreamAndPoster" xml:space="preserve">
+                <source>You need to define a video stream URL and a preview image.</source>
+                <target>Du skal definere en videostream-URL og et preview-billede.</target>
+            </trans-unit>
+            <trans-unit id="noStreamVideo" xml:space="preserve">
+                <source>You need to define a video stream URL.</source>
+                <target>Du skal definere en videostream-URL.</target>
+            </trans-unit>
+            <trans-unit id="lang" xml:space="preserve">
+                <source>en</source>
+                <target>da</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

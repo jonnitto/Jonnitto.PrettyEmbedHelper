@@ -4,8 +4,8 @@
     <file original="" product-name="Jonnitto.PrettyEmbedHelper" source-language="en" target-language="de" datatype="plaintext">
         <body>
             <trans-unit id="properties.loop" xml:space="preserve">
-                <source>Loop video</source>
-                <target>Wiederhole Video</target>
+                <source>Loop playback</source>
+                <target>Wiedergabe wiederholen</target>
             </trans-unit>
         </body>
     </file>

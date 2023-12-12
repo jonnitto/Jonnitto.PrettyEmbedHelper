@@ -3,7 +3,6 @@
 namespace Jonnitto\PrettyEmbedHelper\Service;
 
 use Jonnitto\PrettyEmbedHelper\Utility\Utility;
-use JsonException;
 use Neos\ContentRepository\Domain\Model\NodeInterface;
 use Neos\ContentRepository\Exception\NodeException;
 use Neos\Flow\Annotations as Flow;
@@ -11,8 +10,7 @@ use Neos\Flow\Http\Client\InfiniteRedirectionException;
 use Neos\Flow\Persistence\Exception\IllegalObjectTypeException;
 use Neos\Flow\Persistence\Exception\InvalidQueryException;
 use Neos\Flow\ResourceManagement\Exception;
-use function get_headers;
-use function preg_replace;
+use JsonException;
 use function strpos;
 use function trim;
 
@@ -21,12 +19,6 @@ use function trim;
  */
 class YoutubeService
 {
-    /**
-     * @Flow\Inject
-     * @var Utility
-     */
-    protected $utility;
-
     /**
      * @Flow\Inject
      * @var ImageService
@@ -52,16 +44,10 @@ class YoutubeService
     protected $metadataService;
 
     /**
-     * @Flow\InjectConfiguration(package="Jonnitto.PrettyEmbedYoutube")
-     * @var array
+     * @Flow\InjectConfiguration(package="Jonnitto.PrettyEmbed", path="YouTube.apiKey")
+     * @var string
      */
-    protected $youtubeSettings;
-
-    /**
-     * @Flow\InjectConfiguration
-     * @var array
-     */
-    protected $settings;
+    protected $apiKey;
 
     /**
      * Get and save data from oembed service
@@ -90,77 +76,45 @@ class YoutubeService
             return $returnArray;
         }
 
-        $isYoutubePackage = $node->getNodeType()->isOfType(
-            'Jonnitto.PrettyEmbedYoutube:Mixin.VideoID'
-        );
-
         $videoIDProperty = $node->getProperty('videoID');
-
-        if ($isYoutubePackage) {
-            $type = $this->youtubeSettings['defaults']['type'];
-            if ($node->hasProperty('type')) {
-                $typeFromProperty = $node->getProperty('type');
-                if ($typeFromProperty === 'video' || $typeFromProperty === 'playlist') {
-                    $type = $typeFromProperty;
-                }
-            }
-        } else {
-            $type = $this->type($videoIDProperty);
-            $node->setProperty('type', $type);
-        }
+        $type = $this->type($videoIDProperty);
+        $node->setProperty('type', $type);
 
         $videoID = $this->parseID->youtube($videoIDProperty, $type);
-        $data = $this->api->youtube(
-            $videoID,
-            $type,
-            $this->settings['youtubeApiKey']
-        );
+        $data = $this->api->youtube($videoID, $type, $this->apiKey);
 
         if (isset($data)) {
             $title = $data['title'] ?? null;
-            $ratio = $data['width'] && $data['height'] ?
-                $this->utility->calculatePaddingTop(
-                    $data['width'],
-                    $data['height']
-                ) : null;
+            $ratio = $data['width'] && $data['height'] ? sprintf('%s / %s', $data['width'], $data['height']) : null;
             $duration = $data['duration'] ?? null;
             if (isset($data['imageUrl'], $data['imageResolution'])) {
                 $image = $data['imageUrl'];
                 $resolution = $data['imageResolution'];
             } else {
-                $youtubeImageArray = $this->getBestPossibleYoutubeImage(
-                    $videoID,
-                    $data['thumbnail_url'] ?? null
-                );
+                $youtubeImageArray = Utility::getBestPossibleYoutubeImage($videoID, $data['thumbnail_url'] ?? null);
                 $image = $youtubeImageArray['image'];
                 $resolution = $youtubeImageArray['resolution'];
             }
         } else {
-            $youtubeImageArray = $this->getBestPossibleYoutubeImage($videoID);
+            $youtubeImageArray = Utility::getBestPossibleYoutubeImage($videoID);
             $image = $youtubeImageArray['image'] ?? null;
             $resolution = $youtubeImageArray['resolution'] ?? null;
         }
 
         if (isset($image)) {
-            $thumbnail = $this->imageService->import(
-                $node,
-                $image,
-                $videoID,
-                'Youtube',
-                $resolution
-            );
+            $thumbnail = $this->imageService->import($node, $image, $videoID, 'Youtube', $resolution);
         }
 
-
-        $node->setProperty('metadataID', $videoID);
-        $node->setProperty('metadataTitle', $title ?? null);
-        $node->setProperty('metadataRatio', $ratio ?? null);
-        $node->setProperty(
-            'metadataImage',
-            $this->utility->removeProtocolFromUrl($image)
-        );
-        $node->setProperty('metadataThumbnail', $thumbnail ?? null);
-        $node->setProperty('metadataDuration', $duration ?? null);
+        Utility::setMetadata($node, null, [
+            'videoID' => $videoID,
+            'title' => $title ?? null,
+            'aspectRatio' => $ratio ?? null,
+            'duration' => $duration ?? null,
+            'image' => Utility::removeProtocolFromUrl($image ?? null),
+            'href' => Utility::youtubeHref($videoID, $type, false),
+            'embedHref' => Utility::youtubeHref($videoID, $type, true),
+            'thumbnail' => $thumbnail ?? null,
+        ]);
 
         $this->imageService->removeTagIfEmpty();
 
@@ -187,42 +141,5 @@ class YoutubeService
             return 'video';
         }
         return strpos($url, 'list=') !== false ? 'playlist' : 'video';
-    }
-
-    /**
-     * Get the best possible image from YouTube
-     *
-     * @param string|integer $videoID
-     * @param string|null $url
-     * @return array|null
-     */
-    public function getBestPossibleYoutubeImage(
-        $videoID,
-        ?string $url = null
-    ): ?array {
-        if (!isset($url)) {
-            $url = sprintf("https://i.ytimg.com/vi/%s/maxresdefault.jpg", $videoID);
-        }
-
-        $resolutions = [
-            'maxresdefault', 'sddefault', 'hqdefault', 'mqdefault', 'default'
-        ];
-
-        foreach ($resolutions as $resolution) {
-            $url = preg_replace(
-                '/\/[\w]*\.([a-z]{3,})$/i',
-                sprintf("/%s.$1", $resolution),
-                $url
-            );
-            $headers = @get_headers($url);
-            if ($headers && strpos($headers[0], '200')) {
-                return [
-                    'image' => $url,
-                    'resolution' => $resolution
-                ];
-            }
-        }
-
-        return null;
     }
 }

@@ -1,3 +1,0 @@
-prototype(Jonnitto.PrettyEmbedHelper:GdprMessageAccept) < prototype(Neos.Fusion:Value) {
-    value = ${Translation.translate('gdprMessageAccept', 'OK', [], 'Main', 'Jonnitto.PrettyEmbedHelper')}
-}

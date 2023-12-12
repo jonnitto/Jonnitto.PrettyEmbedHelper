@@ -1,0 +1,48 @@
+prototype(Jonnitto.PrettyEmbed:Presentation.Button.Play) < prototype(Neos.Fusion:Component) {
+    @propTypes {
+        class = ${PropTypes.anyOf( PropTypes.string, PropTypes.arrayOf( PropTypes.string ) )}
+        label = ${PropTypes.string}
+        show = ${PropTypes.string}
+        onClick = ${PropTypes.string}
+        href = ${PropTypes.string}
+        popup = ${PropTypes.string}
+        content = ${PropTypes.string.isRequired}
+    }
+
+    label = ${Translation.translate('play', 'Play', [], 'Main', 'Jonnitto.PrettyEmbedHelper')}
+    class = ${BEM.modifier('jonnitto-prettyembed-button', 'play')}
+    file = ${Configuration.setting('Jonnitto.PrettyEmbed.button.play')}
+    content = ${File.exists(this.file) ? File.readFile(this.file) : null}
+
+    @if.set = ${this.content}
+
+    renderer = afx`
+        <a
+            @if={props.href}
+            x-show={props.show}
+            x-on:click={props.onClick}
+            x-prettyembedpopup={props.popup}
+            x-transition
+            aria-label={props.label}
+            class={props.class}
+            href={props.href}
+            rel="noopener external"
+            target="_blank"
+        >
+            {props.content}
+        </a>
+        <button
+            @if={!props.href}
+            x-show={props.show}
+            x-on:click={props.onClick}
+            x-prettyembedpopup={props.popup}
+            x-transition
+            x-cloak
+            aria-label={props.label}
+            type="button"
+            class={props.class}
+        >
+            {props.content}
+        </button>
+    `
+}

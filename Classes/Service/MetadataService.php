@@ -2,14 +2,15 @@
 
 namespace Jonnitto\PrettyEmbedHelper\Service;
 
-use JsonException;
+use Jonnitto\PrettyEmbedHelper\Utility\Utility;
+use Neos\ContentRepository\Domain\Model\NodeInterface;
 use Neos\ContentRepository\Exception\NodeException;
 use Neos\Flow\Annotations as Flow;
-use Neos\ContentRepository\Domain\Model\NodeInterface;
 use Neos\Flow\Http\Client\InfiniteRedirectionException;
 use Neos\Flow\Persistence\Exception\IllegalObjectTypeException;
 use Neos\Flow\Persistence\Exception\InvalidQueryException;
 use Neos\Flow\ResourceManagement\Exception;
+use JsonException;
 
 /**
  * @Flow\Scope("singleton")
@@ -51,7 +52,6 @@ class MetadataService
      */
     protected $defaultReturn = ['node' => null];
 
-
     /**
      * Create data
      *
@@ -61,11 +61,12 @@ class MetadataService
      * @throws NodeException
      * @throws IllegalObjectTypeException
      */
-    public function createDataFromService(
-        NodeInterface $node,
-        bool $remove = false
-    ): array {
-        if ($node->hasProperty('videoID') || $node->getNodeType()->isOfType('Jonnitto.PrettyEmbedHelper:Mixin.Metadata.Duration')) {
+    public function createDataFromService(NodeInterface $node, bool $remove = false): array
+    {
+        if (
+            $node->hasProperty('videoID') ||
+            $node->getNodeType()->isOfType('Jonnitto.PrettyEmbedHelper:Mixin.Metadata')
+        ) {
             return $this->dataFromService($node, $remove);
         }
         return $this->defaultReturn;
@@ -77,15 +78,7 @@ class MetadataService
      */
     public function removeMetaData(NodeInterface $node): void
     {
-        $node->setProperty('metadataID', null);
-        $node->setProperty('metadataTitle', null);
-        $node->setProperty('metadataRatio', null);
-        $node->setProperty('metadataDuration', null);
-        $node->setProperty(
-            'metadataImage',
-            null
-        );
-        $node->setProperty('metadataThumbnail', null);
+        Utility::removeMetadata($node);
         $this->imageService->removeTagIfEmpty();
     }
 
@@ -100,16 +93,12 @@ class MetadataService
      * @throws NodeException
      * @throws IllegalObjectTypeException
      */
-    public function updateDataFromService(
-        NodeInterface $node,
-        string $propertyName,
-        $oldValue,
-        $newValue
-    ): array {
+    public function updateDataFromService(NodeInterface $node, string $propertyName, $oldValue, $newValue): array
+    {
         if (
             ($propertyName === 'videoID' && $oldValue !== $newValue) ||
             ($propertyName === 'type' && $node->hasProperty('videoID')) ||
-            ($propertyName === 'assets' && $node->getNodeType()->isOfType('Jonnitto.PrettyEmbedHelper:Mixin.Metadata.Duration'))
+            ($propertyName === 'assets' && $node->getNodeType()->isOfType('Jonnitto.PrettyEmbedHelper:Mixin.Metadata'))
         ) {
             return $this->dataFromService($node);
         }
@@ -125,35 +114,34 @@ class MetadataService
      * @throws NodeException
      * @throws IllegalObjectTypeException
      */
-    protected function dataFromService(
-        NodeInterface $node,
-        bool $remove = false
-    ): array {
-        switch ($this->checkNodeAndSetPlatform($node)) {
-            case 'audio':
-                $data = $this->assetService->getAndSaveDataId3($node, $remove, 'Audio');
-                break;
-
-            case 'video':
-                $data = $this->assetService->getAndSaveDataId3($node, $remove, 'Video');
-                break;
-
-            case 'youtube':
-                try {
-                    $data = $this->youtubeService->getAndSaveDataFromApi($node, $remove);
-                } catch (JsonException | NodeException | InfiniteRedirectionException | IllegalObjectTypeException | InvalidQueryException | Exception $e) {
-                }
-                break;
-
-            case 'vimeo':
-                $data = $this->vimeoService->getAndSaveDataFromApi($node, $remove);
-                break;
-
-            default:
-                return $this->defaultReturn;
+    protected function dataFromService(NodeInterface $node, bool $remove = false): array
+    {
+        $platform = $this->checkNodeAndSetPlatform($node);
+        if (!$platform) {
+            return $this->defaultReturn;
         }
 
-        return $data ?? $this->defaultReturn;
+        if ($platform == 'audio') {
+            return $this->assetService->getAndSaveDataId3($node, $remove, 'Audio');
+        }
+
+        if ($platform == 'video') {
+            return $this->assetService->getAndSaveDataId3($node, $remove, 'Video');
+        }
+
+        if ($platform == 'youtube') {
+            try {
+                $data = $this->youtubeService->getAndSaveDataFromApi($node, $remove);
+            } catch (JsonException | NodeException | InfiniteRedirectionException | IllegalObjectTypeException | InvalidQueryException | Exception $e) {
+            }
+            return $data ?? $this->defaultReturn;
+        }
+
+        if ($platform == 'vimeo') {
+            return $this->vimeoService->getAndSaveDataFromApi($node, $remove);
+        }
+
+        return $this->defaultReturn;
     }
 
     /**
@@ -173,21 +161,13 @@ class MetadataService
             return 'video';
         }
 
-        if ($node->getNodeType()->isOfType('Jonnitto.PrettyEmbedYoutube:Mixin.VideoID')) {
-            return 'youtube';
-        }
-
-        if ($node->getNodeType()->isOfType('Jonnitto.PrettyEmbedVimeo:Mixin.VideoID')) {
-            return 'vimeo';
-        }
-
         if (!$node->getNodeType()->isOfType('Jonnitto.PrettyEmbedVideoPlatforms:Mixin.VideoID')) {
             return null;
         }
 
         $platform = $this->parseID->platform($node->getProperty('videoID'));
         if (!$platform) {
-            $node->setProperty('metadataDuration', null);
+            Utility::removeMetadata($node);
         }
         $node->setProperty('platform', $platform);
         return $platform;

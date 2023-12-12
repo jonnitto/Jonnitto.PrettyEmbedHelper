@@ -1,0 +1,13 @@
+'Jonnitto.PrettyEmbedHelper:Mixin.PreserveAspectRatio':
+  abstract: true
+  properties:
+    preserveAspectRatio:
+      type: boolean
+      defaultValue: true
+      ui:
+        label: i18n
+        reloadIfChanged: true
+        inspector:
+          group: look
+          position: 25
+          hidden: 'ClientEval:node.properties.lightbox && node.properties.prettyembedMetadata && node.properties.prettyembedMetadata.aspectRatio ? false : true'

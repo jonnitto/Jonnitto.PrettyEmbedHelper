@@ -1,0 +1,9 @@
+prototype(Jonnitto.PrettyEmbed:Presentation.YouTube) < prototype(Jonnitto.PrettyEmbed:Presentation.Iframe) {
+    player = 'YouTube'
+    gdprHandling = ${Configuration.setting('Jonnitto.PrettyEmbed.YouTube.gdprHandling')}
+    controls = ${Configuration.setting('Jonnitto.PrettyEmbed.YouTube.controls')}
+    loop = ${Configuration.setting('Jonnitto.PrettyEmbed.YouTube.loop')}
+    lightbox = ${Configuration.setting('Jonnitto.PrettyEmbed.YouTube.lightbox')}
+    preserveAspectRatio = ${Configuration.setting('Jonnitto.PrettyEmbed.YouTube.preserveAspectRatio')}
+    fallbackAspectRatio = ${Configuration.setting('Jonnitto.PrettyEmbed.YouTube.fallbackAspectRatio')}
+}

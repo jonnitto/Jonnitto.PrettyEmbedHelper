@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2"
+    xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file original="" product-name="Jonnitto.PrettyEmbedHelper" source-language="en" target-language="en" datatype="plaintext">
+        <body>
+            <trans-unit id="noMetadataSet" xml:space="preserve">
+                <source>No metdata set</source>
+                <target>No metdata set</target>
+            </trans-unit>
+            <trans-unit id="videoID.label" xml:space="preserve">
+                <source>Video ID</source>
+                <target>Video ID</target>
+            </trans-unit>
+            <trans-unit id="title.label" xml:space="preserve">
+                <source>Title</source>
+                <target>Title</target>
+            </trans-unit>
+            <trans-unit id="aspectRatio.label" xml:space="preserve">
+                <source>Aspect ratio</source>
+                <target>Aspect ratio</target>
+            </trans-unit>
+            <trans-unit id="duration.label" xml:space="preserve">
+                <source>Duration</source>
+                <target>Duration</target>
+            </trans-unit>
+            <trans-unit id="duration.value" xml:space="preserve">
+                <source><![CDATA[<span title="{1}">{0} seconds</span>]]></source>
+                <target><![CDATA[<span title="{1}">{0} seconds</span>]]></target>
+            </trans-unit>
+            <trans-unit id="image.label" xml:space="preserve">
+                <source>Image</source>
+                <target>Image</target>
+            </trans-unit>
+            <trans-unit id="image.value" xml:space="preserve">
+                <source><![CDATA[<img src="{0}" alt="Preview image" />]]></source>
+                <target><![CDATA[<img src="{0}" alt="Preview image" />]]></target>
+            </trans-unit>
+            <trans-unit id="href.label" xml:space="preserve">
+                <source>Link to video</source>
+                <target>Link to video</target>
+            </trans-unit>
+            <trans-unit id="href.value" xml:space="preserve">
+                <source><![CDATA[<a href="{0}" title="{0}" target="_blank" rel="noopener external">{0}</a>]]></source>
+                <target><![CDATA[<a href="{0}" title="{0}" target="_blank" rel="noopener external">{0}</a>]]></target>
+            </trans-unit>
+            <trans-unit id="embedHref.label" xml:space="preserve">
+                <source>Link for embeding video</source>
+                <target>Link for embeding video</target>
+            </trans-unit>
+            <trans-unit id="embedHref.value" xml:space="preserve">
+                <source><![CDATA[<a href="{0}" title="{0}" target="_blank" rel="noopener external">{0}</a>]]></source>
+                <target><![CDATA[<a href="{0}" title="{0}" target="_blank" rel="noopener external">{0}</a>]]></target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

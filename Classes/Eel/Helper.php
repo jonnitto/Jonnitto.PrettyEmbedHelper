@@ -2,14 +2,13 @@
 
 namespace Jonnitto\PrettyEmbedHelper\Eel;
 
-
-use JsonException;
-use Neos\Flow\Annotations as Flow;
-use Neos\Eel\ProtectedContextAwareInterface;
-use Jonnitto\PrettyEmbedHelper\Service\ApiService;
 use Jonnitto\PrettyEmbedHelper\Service\ParseIDService;
 use Jonnitto\PrettyEmbedHelper\Utility\Utility;
+use Neos\ContentRepository\Domain\Model\NodeInterface;
+use Neos\Eel\ProtectedContextAwareInterface;
+use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Http\Client\InfiniteRedirectionException;
+use JsonException;
 
 /**
  * @Flow\Proxy(false)
@@ -17,21 +16,15 @@ use Neos\Flow\Http\Client\InfiniteRedirectionException;
 class Helper implements ProtectedContextAwareInterface
 {
     /**
-     * This helper calculates the padding from a given ratio or width and height
+     * Get the metadata from a node
      *
-     * @param float|integer|string $ratio
-     * @return string|null The calculated value
+     * @param NodeInterface $node
+     * @param string|null $property If not set, all metadata will be returned
+     * @return mixed
      */
-    public function paddingTop($ratio = null): ?string
+    public function getMetadata($node, ?string $property = null)
     {
-        if ($ratio === null) {
-            return null;
-        }
-        if (is_string($ratio)) {
-            return $ratio;
-        }
-
-        return (100 / $ratio) . '%';
+        return Utility::getMetadata($node, $property);
     }
 
     /**
@@ -44,18 +37,43 @@ class Helper implements ProtectedContextAwareInterface
      */
     public function vimeoThumbnail($videoID): ?string
     {
-        if (!$videoID) {
-            return null;
-        }
+        return Utility::vimeoThumbnail($videoID);
+    }
 
-        $api = new ApiService();
-        $data = $api->vimeo($videoID);
+    /**
+     * Return the href from Vimeo
+     *
+     * @param string|integer $videoID
+     * @param boolean $embedded
+     * @return string
+     */
+    public function vimeoHref($videoID, bool $embedded = false): string
+    {
+        return Utility::vimeoHref($videoID, $embedded);
+    }
 
-        if (!isset($data)) {
-            return null;
-        }
-        $utility = new Utility();
-        return $utility->removeProtocolFromUrl($data['thumbnail_url'] ?? null);
+    /**
+     * Return the href from YouTube
+     *
+     * @param string $videoID
+     * @param string $type
+     * @param boolean $embedded
+     * @return string
+     */
+    public function youtubeHref(string $videoID, ?string $type = 'video', bool $embedded = false): string
+    {
+        return Utility::youtubeHref($videoID, $type, $embedded);
+    }
+
+    /**
+     * Return the thumbnail URL from vimeo
+     *
+     * @param string $videoID
+     * @return string|null
+     */
+    public function youtubeThumbnail(string $videoID): ?string
+    {
+        return Utility::youtubeThumbnail($videoID);
     }
 
     /**
@@ -96,7 +114,6 @@ class Helper implements ProtectedContextAwareInterface
         $parseID = new ParseIDService();
         return $parseID->youtube($videoID);
     }
-
 
     /**
      * All methods are considered safe

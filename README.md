@@ -2,6 +2,8 @@
 
 # Jonnitto.PrettyEmbedHelper
 
+**For a detail guide, please visit the [PrettyEmbed Wiki](https://github.com/jonnitto/Jonnitto.PrettyEmbedHelper/wiki)**
+
 This package contains helper mixins, prototypes and frontend resources for the PrettyEmbed series.
 
 This package is used by following packages:
@@ -9,8 +11,6 @@ This package is used by following packages:
 - [Jonnitto.PrettyEmbedVideoPlatforms]
 - [Jonnitto.PrettyEmbedVideo]
 - [Jonnitto.PrettyEmbedVideoStreaming]
-- [Jonnitto.PrettyEmbedVimeo]
-- [Jonnitto.PrettyEmbedYoutube]
 - [Jonnitto.PrettyEmbedAudio]
 
 [packagist]: https://packagist.org/packages/jonnitto/prettyembedhelper
@@ -34,6 +34,4 @@ This package is used by following packages:
 [jonnitto.prettyembedvideoplatforms]: https://github.com/jonnitto/Jonnitto.PrettyEmbedVideoPlatforms
 [jonnitto.prettyembedvideo]: https://github.com/jonnitto/Jonnitto.PrettyEmbedVideo
 [jonnitto.prettyembedvideostreaming]: https://github.com/jonnitto/Jonnitto.PrettyEmbedVideoStreaming
-[jonnitto.prettyembedvimeo]: https://github.com/jonnitto/Jonnitto.PrettyEmbedVimeo
-[jonnitto.prettyembedyoutube]: https://github.com/jonnitto/Jonnitto.PrettyEmbedYoutube
 [jonnitto.prettyembedaudio]: https://github.com/jonnitto/Jonnitto.PrettyEmbedAudio

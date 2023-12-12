@@ -3,6 +3,7 @@
 namespace Jonnitto\PrettyEmbedHelper\Service;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Jonnitto\PrettyEmbedHelper\Utility\Utility;
 use Neos\ContentRepository\Domain\Model\NodeInterface;
 use Neos\ContentRepository\Domain\Model\Workspace;
 use Neos\ContentRepository\Exception\NodeException;
@@ -26,7 +27,6 @@ use function strtolower;
  */
 class ImageService
 {
-
     /**
      * @Flow\Inject
      * @var PersistenceManagerInterface
@@ -44,7 +44,6 @@ class ImageService
      * @var AssetRepository
      */
     protected $assetRepository;
-
 
     /**
      * * @Flow\Inject
@@ -77,11 +76,7 @@ class ImageService
         string $type,
         ?string $filenameSuffix = null
     ): ?object {
-        if (
-            !$node->getNodeType()->isOfType(
-                'Jonnitto.PrettyEmbedHelper:Mixin.Metadata.Thumbnail'
-            )
-        ) {
+        if (!$node->getNodeType()->isOfType('Jonnitto.PrettyEmbedHelper:Mixin.Metadata')) {
             return null;
         }
 
@@ -102,13 +97,7 @@ class ImageService
             }
         }
 
-        $filename = sprintf(
-            "%s-%s%s.%s",
-            $type,
-            str_replace('/', '-', $videoId),
-            $filenameSuffix,
-            $extension
-        );
+        $filename = sprintf('%s-%s%s.%s', $type, str_replace('/', '-', $videoId), $filenameSuffix, $extension);
 
         $availableImage = $this->assetRepository->findBySearchTermOrTags($filename)->getFirst();
         if (isset($availableImage)) {
@@ -143,7 +132,7 @@ class ImageService
      */
     public function remove(NodeInterface $node): void
     {
-        $thumbnail = $node->getProperty('metadataThumbnail');
+        $thumbnail = Utility::getMetadata($node, 'thumbnail');
         if (isset($thumbnail)) {
             $this->pendingThumbnailToDelete[$node->getIdentifier()] = $thumbnail;
         }
@@ -211,7 +200,7 @@ class ImageService
         if (
             !$targetWorkspace->isPublicWorkspace() ||
             !$node->isRemoved() ||
-            !$node->getNodeType()->isOfType('Jonnitto.PrettyEmbedHelper:Mixin.Metadata.Thumbnail')
+            !$node->getNodeType()->isOfType('Jonnitto.PrettyEmbedHelper:Mixin.Metadata')
         ) {
             return;
         }
@@ -314,7 +303,6 @@ class ImageService
          * @var Tag $tag
          */
         $tag = $this->findTag();
-
 
         return $tag ?? $this->createTag();
     }

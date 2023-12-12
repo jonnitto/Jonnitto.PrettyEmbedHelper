@@ -1,28 +1,20 @@
-prototype(Jonnitto.PrettyEmbedHelper:Assets.Fragment.Script) < prototype(Neos.Fusion:Component) {
-    basePath = 'resource://Jonnitto.PrettyEmbedHelper/Public/Scripts/'
-    filename = ${null}
-    defer = true
-    fullPath = ${this.basePath + this.filename}
+prototype(Jonnitto.PrettyEmbed:Assets.Fragment.Script) < prototype(Neos.Fusion:Component) {
+    filename = null
+    slipstream = true
+    inline = false
 
-    // https://github.com/sandstorm/Sandstorm.CookiePunch is installed
-    sandstormCookiePunchIsInstalled = ${Configuration.setting('Neos.Neos.fusion.autoInclude')['Sandstorm.CookiePunch']}
-    dataNeverBlock = ${!!this.sandstormCookiePunchIsInstalled}
-    openYoutubeInNewWindow = null
-    openVimeoInNewWindow = null
-
-    renderer = Neos.Fusion:Tag {
-        tagName = 'script'
-        attributes {
-            data-slipstream = true
-            defer = ${props.defer}
-            data-never-block = ${props.dataNeverBlock}
-            data-openexternal = ${Array.join(Array.filter([props.openYoutubeInNewWindow ? 'youtube' : null, props.openVimeoInNewWindow ? 'vimeo' : null]),',') || null}
-            src = Neos.Fusion:Join {
-                path = Neos.Fusion:ResourceUri {
-                    path = ${props.fullPath}
-                }
-                hash = ${'?v=' + Carbon.FileContent.pathHash(props.fullPath)}
-            }
-        }
-    }
+    renderer = afx`
+        <script
+            @if={!props.inline}
+            data-slipstream={props.slipstream}
+            defer
+            src={StaticResource.uri('Jonnitto.PrettyEmbedHelper', 'Public/Scripts/' + props.filename)}
+        ></script>
+        <script
+            @if={props.inline}
+            data-slipstream={props.slipstream}
+        >
+            {StaticResource.content('Jonnitto.PrettyEmbedHelper', 'Public/Scripts/' + props.filename)}
+        </script>
+    `
 }
