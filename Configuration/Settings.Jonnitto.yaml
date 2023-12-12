@@ -1,7 +1,7 @@
 Jonnitto:
   PrettyEmbed:
     # Set this to true for debug output
-    debug: false
+    debug: true
 
     # If you have your own AlpineJS in your setup, you can disable the check here. Alpine must be an global variable
     includeAlpineJsCheck: true
