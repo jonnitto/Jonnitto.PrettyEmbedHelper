@@ -7,6 +7,8 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Video) < prototype(Neos.Fusion:Compo
         poster = ${PropTypes.string}
         poster2x = ${PropTypes.string}
         posterSrcset = ${PropTypes.string}
+        posterWidth = ${PropTypes.integer}
+        posterHeight = ${PropTypes.integer}
         loadImageStrategy = ${PropTypes.oneOf(['lazy', 'eager', null, false])}
         preload = ${PropTypes.oneOf(['none', 'metadata', 'auto'])}
         crossorigin = ${PropTypes.oneOf(['anonymous', 'use-credentials', true, false])}
@@ -80,6 +82,8 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Video) < prototype(Neos.Fusion:Compo
                         src={props.poster}
                         src2x={props.poster2x}
                         srcset={props.posterSrcset}
+                        width={props.posterWidth}
+                        height={props.posterHeight}
                         loadImageStrategy={props.loadImageStrategy}
                     />
                     {props.lightbox ? '' : props._video}

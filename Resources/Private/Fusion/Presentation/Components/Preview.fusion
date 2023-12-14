@@ -6,6 +6,8 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Preview) < prototype(Neos.Fusion:Com
         src = ${PropTypes.string}
         src2x = ${PropTypes.string}
         srcset = ${PropTypes.string}
+        width = ${PropTypes.integer}
+        height = ${PropTypes.integer}
         loadImageStrategy = ${PropTypes.oneOf(['lazy', 'eager', null, false])}
     }
 
@@ -26,6 +28,8 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Preview) < prototype(Neos.Fusion:Com
             alt={props.label}
             src={props.src}
             srcset={props.srcset}
+            height={props.height}
+            width={props.width}
             loading={props.loadImageStrategy}
         />
     `

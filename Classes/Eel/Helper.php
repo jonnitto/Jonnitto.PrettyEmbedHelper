@@ -8,13 +8,21 @@ use Neos\ContentRepository\Domain\Model\NodeInterface;
 use Neos\Eel\ProtectedContextAwareInterface;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Http\Client\InfiniteRedirectionException;
+use Neos\Media\Domain\Model\AssetInterface;
+use Neos\Media\Domain\Model\ImageInterface;
+use Neos\Media\Domain\Model\ThumbnailConfiguration;
+use Neos\Media\Domain\Service\ThumbnailService;
+use Neos\Media\Exception\ThumbnailServiceException;
 use JsonException;
 
-/**
- * @Flow\Proxy(false)
- */
 class Helper implements ProtectedContextAwareInterface
 {
+    /**
+     * @Flow\Inject
+     * @var ThumbnailService
+     */
+    protected $thumbnailService;
+
     /**
      * Get the metadata from a node
      *
@@ -114,6 +122,51 @@ class Helper implements ProtectedContextAwareInterface
         $parseID = new ParseIDService();
         return $parseID->youtube($videoID);
     }
+
+
+
+    /**
+     * @param AssetInterface $asset
+     * @param integer $maximumWidth Desired maximum width of the image
+     * @param boolean $async Whether the thumbnail can be generated asynchronously
+     * @param integer $quality Quality of the processed image
+     * @param string $format Format for the image, only jpg, jpeg, gif, png, wbmp, xbm, webp and bmp are supported.
+     * @return null|ImageInterface
+     * @throws ThumbnailServiceException
+     */
+    public function createThumbnail(
+        AssetInterface $asset,
+        $maximumWidth = null,
+        $format = null,
+        $quality = null
+    ) {
+        $width = null;
+        $height = null;
+        $maximumHeight = null;
+        $allowCropping = false;
+        $allowUpScaling = false;
+        $async = false;
+
+        $thumbnailConfiguration = new ThumbnailConfiguration(
+            $width,
+            $maximumWidth,
+            $height,
+            $maximumHeight,
+            $allowCropping,
+            $allowUpScaling,
+            $async,
+            $quality,
+            $format
+        );
+
+        $thumbnailImage = $this->thumbnailService->getThumbnail($asset, $thumbnailConfiguration);
+        if (!$thumbnailImage instanceof ImageInterface) {
+            return null;
+        }
+        return $thumbnailImage;
+    }
+
+
 
     /**
      * All methods are considered safe
