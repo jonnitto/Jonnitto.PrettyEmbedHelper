@@ -123,8 +123,6 @@ class Helper implements ProtectedContextAwareInterface
         return $parseID->youtube($videoID);
     }
 
-
-
     /**
      * @param AssetInterface $asset
      * @param integer $maximumWidth Desired maximum width of the image
@@ -134,12 +132,8 @@ class Helper implements ProtectedContextAwareInterface
      * @return null|ImageInterface
      * @throws ThumbnailServiceException
      */
-    public function createThumbnail(
-        AssetInterface $asset,
-        $maximumWidth = null,
-        $format = null,
-        $quality = null
-    ) {
+    public function createThumbnail(AssetInterface $asset, $maximumWidth = null, $format = null, $quality = null)
+    {
         $width = null;
         $height = null;
         $maximumHeight = null;
@@ -165,8 +159,6 @@ class Helper implements ProtectedContextAwareInterface
         }
         return $thumbnailImage;
     }
-
-
 
     /**
      * All methods are considered safe
