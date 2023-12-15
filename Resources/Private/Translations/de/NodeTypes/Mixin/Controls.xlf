@@ -5,7 +5,7 @@
         <body>
             <trans-unit id="properties.controls" xml:space="preserve">
                 <source>Show controls</source>
-                <target>Show controls</target>
+                <target>Zeige Steuerelemente</target>
             </trans-unit>
             <trans-unit id="properties.controls.ui.help.message" xml:space="preserve">
                 <source>If set, the browser will offer controls to allow the user to control video playback, including volume, seeking, and pause/resume playback.</source>
