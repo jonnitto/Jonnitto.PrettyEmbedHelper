@@ -4,6 +4,7 @@ prototype(Jonnitto.PrettyEmbed:Content) < prototype(Neos.Neos:ContentComponent) 
     // Global Settings for all Embed Players
     maximumWidth = ${Configuration.setting('Jonnitto.PrettyEmbed.maximumWidth')}
     loadImageStrategy = ${Configuration.setting('Jonnitto.PrettyEmbed.loadImageStrategy')}
+    imageformat = ${Configuration.setting('Jonnitto.PrettyEmbed.imageformat')}
     wrapper = ${Configuration.setting('Jonnitto.PrettyEmbed.wrapper')}
     image = ${q(node).property('image')}
     metadata = ${Jonnitto.PrettyEmbedHelper.getMetadata(node)}

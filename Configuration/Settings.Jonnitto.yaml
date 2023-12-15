@@ -14,6 +14,9 @@ Jonnitto:
     # Can be `lazy`, `eager` or `null`
     loadImageStrategy: lazy
 
+    # Format for the image, jpg, jpeg, gif, png, wbmp, xbm, webp and bmp are supported
+    imageformat: webp
+
     # If this is set to a string, the element gets wrapped with a div and the class with the giving string.
     # If set to true, the element gets wrapped with a div without any class.
     # If set to false, the element get not wrapped at all
