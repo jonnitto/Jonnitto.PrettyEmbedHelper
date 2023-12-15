@@ -50,10 +50,10 @@
 }
 
 .jonnitto-prettyembed-ratio {
-  aspect-ratio: var(--aspect-ratio, 16 / 9);
+  aspect-ratio: var(--aspect-ratio, #{"16 / 9"});
 
   & :where(iframe, video) {
-    aspect-ratio: var(--aspect-ratio, 16 / 9);
+    aspect-ratio: var(--aspect-ratio, #{"16 / 9"});
   }
 }
 
