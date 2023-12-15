@@ -29,7 +29,7 @@
             </trans-unit>
             <trans-unit id="groups.metadata" xml:space="preserve">
                 <source>Metadata</source>
-                <target>Metadata</target>
+                <target>Metadaten</target>
             </trans-unit>
         </body>
     </file>
