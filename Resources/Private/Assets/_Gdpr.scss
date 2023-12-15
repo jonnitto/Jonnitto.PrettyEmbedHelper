@@ -12,13 +12,13 @@
       content: "";
       position: fixed;
       inset: 0;
-      background: $prettyembed-gdpr-overlay-color;
-      opacity: $prettyembed-gdpr-overlay-opacity;
+      background: var(--prettyembed-gdpr-overlay-color, $prettyembed-gdpr-overlay-color);
+      opacity: var(--prettyembed-gdpr-overlay-opacity, $prettyembed-gdpr-overlay-opacity);
       z-index: -1;
     }
 
     @if $prettyembed-gdpr-backdrop-filter {
-      backdrop-filter: $prettyembed-gdpr-backdrop-filter;
+      backdrop-filter: var(--prettyembed-gdpr-backdrop-filter, $prettyembed-gdpr-backdrop-filter);
     }
   }
 
@@ -26,16 +26,16 @@
     overflow: auto;
     display: flex;
     flex-direction: column;
-    gap: $prettyembed-gdpr-gap;
-    padding: $prettyembed-gdpr-padding;
-    color: $prettyembed-gdpr-color;
+    gap: var(--prettyembed-gdpr-gap, $prettyembed-gdpr-gap);
+    padding: var(--prettyembed-gdpr-padding, $prettyembed-gdpr-padding);
+    color: var(--prettyembed-gdpr-color, $prettyembed-gdpr-color);
     max-height: 100%;
     overflow: auto;
-    font-size: $prettyembed-gdpr-font-size-mobile;
+    font-size: var(--prettyembed-gdpr-font-size-mobile, $prettyembed-gdpr-font-size-mobile);
     pointer-events: auto !important;
 
     @media (min-width: $prettyembed-gdpr-font-size-breakpoint) {
-      font-size: $prettyembed-gdpr-font-size;
+      font-size: var(--prettyembed-gdpr-font-size, $prettyembed-gdpr-font-size);
     }
 
     & * {
@@ -46,8 +46,8 @@
     }
 
     & p {
-      font-size: $prettyembed-gdpr-explantation-font-size;
-      max-width: $prettyembed-gdpr-explantation-max-width;
+      font-size: var(--prettyembed-gdpr-explantation-font-size, $prettyembed-gdpr-explantation-font-size);
+      max-width: var(--prettyembed-gdpr-explantation-max-width, $prettyembed-gdpr-explantation-max-width);
       margin: 0 auto;
     }
 
@@ -56,13 +56,13 @@
       flex-wrap: wrap;
       align-items: center;
       justify-content: center;
-      gap: $prettyembed-gdpr-button-gap;
+      gap: var(--prettyembed-gdpr-button-gap, $prettyembed-gdpr-button-gap);
     }
   }
 
   .jonnitto-prettyembed-gdpr__button {
     display: block;
-    padding: $prettyembed-gdpr-button-padding;
+    padding: var(--prettyembed-gdpr-button-padding, $prettyembed-gdpr-button-padding);
     text-decoration: none;
     transition:
       color 0.2s ease-in-out,
@@ -71,52 +71,52 @@
     cursor: pointer;
 
     @if $prettyembed-gdpr-button-border-radius {
-      border-radius: $prettyembed-gdpr-button-border-radius;
+      border-radius: var(--prettyembed-gdpr-button-border-radius, $prettyembed-gdpr-button-border-radius);
     }
   }
 
   .jonnitto-prettyembed-gdpr__button--accept {
-    color: $prettyembed-gdpr-button-accept-color;
-    background-color: $prettyembed-gdpr-button-accept-background-color;
+    color: var(--prettyembed-gdpr-button-accept-color, $prettyembed-gdpr-button-accept-color);
+    background-color: var(--prettyembed-gdpr-button-accept-background-color, $prettyembed-gdpr-button-accept-background-color);
 
     @if $prettyembed-gdpr-button-accept-border {
-      border: $prettyembed-gdpr-button-accept-border;
+      border: var(--prettyembed-gdpr-button-accept-border, $prettyembed-gdpr-button-accept-border);
     }
 
     &:is(:hover, :focus) {
       @if $prettyembed-gdpr-button-accept-color-hover {
-        color: $prettyembed-gdpr-button-accept-color-hover;
+        color: var(--prettyembed-gdpr-button-accept-color-hover, $prettyembed-gdpr-button-accept-color-hover);
       }
 
       @if $prettyembed-gdpr-button-accept-background-color-hover {
-        background-color: $prettyembed-gdpr-button-accept-background-color-hover;
+        background-color: var(--prettyembed-gdpr-button-accept-background-color-hover, $prettyembed-gdpr-button-accept-background-color-hover);
       }
 
       @if $prettyembed-gdpr-button-accept-border-color-hover {
-        border-color: $prettyembed-gdpr-button-accept-border-color-hover;
+        border-color: var(--prettyembed-gdpr-button-accept-border-color-hover, $prettyembed-gdpr-button-accept-border-color-hover);
       }
     }
   }
 
   .jonnitto-prettyembed-gdpr__button--external {
-    color: $prettyembed-gdpr-button-external-color;
-    background-color: $prettyembed-gdpr-button-external-background-color;
+    color: var(--prettyembed-gdpr-button-external-color, $prettyembed-gdpr-button-external-color);
+    background-color: var(--prettyembed-gdpr-button-external-background-color, $prettyembed-gdpr-button-external-background-color);
 
     @if $prettyembed-gdpr-button-external-border {
-      border: $prettyembed-gdpr-button-external-border;
+      border: var(--prettyembed-gdpr-button-external-border, $prettyembed-gdpr-button-external-border);
     }
 
     &:is(:hover, :focus) {
       @if $prettyembed-gdpr-button-external-color-hover {
-        color: $prettyembed-gdpr-button-external-color-hover;
+        color: var(--prettyembed-gdpr-button-external-color-hover, $prettyembed-gdpr-button-external-color-hover);
       }
 
       @if $prettyembed-gdpr-button-external-background-color-hover {
-        background-color: $prettyembed-gdpr-button-external-background-color-hover;
+        background-color: var(--prettyembed-gdpr-button-external-background-color-hover, $prettyembed-gdpr-button-external-background-color-hover);
       }
 
       @if $prettyembed-gdpr-button-external-border-color-hover {
-        border-color: $prettyembed-gdpr-button-external-border-color-hover;
+        border-color: var(--prettyembed-gdpr-button-external-border-color-hover, $prettyembed-gdpr-button-external-border-color-hover);
       }
     }
   }
