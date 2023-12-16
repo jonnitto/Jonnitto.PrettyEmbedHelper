@@ -57,6 +57,12 @@ class ImageService
     private $pendingThumbnailToDelete = [];
 
     /**
+     * @Flow\InjectConfiguration(package="Jonnitto.PrettyEmbed", path="imageformat")
+     * @var string
+     */
+    protected $defaultImageFormat;
+
+    /**
      * Import image
      *
      * @param NodeInterface $node
@@ -87,14 +93,23 @@ class ImageService
         $pathParts = pathinfo(strtolower($url));
         $extension = isset($pathParts['extension']) ? explode('?', $pathParts['extension'])[0] : null;
 
+        if ($type === 'Vimeo') {
+            // Vimeo don't give us an extension, as they offer avif, webp and jpg based on the browser support
+            if ($this->defaultImageFormat === 'avif') {
+                $extension = 'avif';
+            } elseif ($this->defaultImageFormat === 'webp') {
+                $extension = 'webp';
+            } else {
+                $extension = 'jpg';
+            }
+
+            // Ensure we got the chosen variant
+            $url .= '.' . $extension;
+        }
+
         if (!$extension) {
             // If no extension is set, set it to jpg
             $extension = 'jpg';
-            if ($type === 'Vimeo') {
-                // Vimeo don't give us an extension, as they offer avif, webp and jpg based on the browser support
-                // Because of that, we add .jpg to ensure we got the jpg variant
-                $url .= '.jpg';
-            }
         }
 
         $filename = sprintf('%s-%s%s.%s', $type, str_replace('/', '-', $videoId), $filenameSuffix, $extension);
