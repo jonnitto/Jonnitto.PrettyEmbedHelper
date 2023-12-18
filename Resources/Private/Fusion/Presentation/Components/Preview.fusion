@@ -24,6 +24,7 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Preview) < prototype(Neos.Fusion:Com
         />
         <img
             @if={!props.content}
+            class="jonnitto-prettyembed-preview"
             x-show={props.show}
             alt={props.label}
             src={props.src}

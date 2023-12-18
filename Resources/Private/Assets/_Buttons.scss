@@ -9,6 +9,10 @@
   align-items: center;
   justify-content: center;
   transition: opacity 0.25s linear;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
 
   @if ($prettyembed-button-opacity != 1) {
     opacity: var(--prettyembed-button-opacity, $prettyembed-button-opacity);

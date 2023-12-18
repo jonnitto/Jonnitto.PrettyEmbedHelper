@@ -26,23 +26,14 @@
     padding: 0;
     isolation: isolate;
   }
+}
 
-  & > :where(button) {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    padding: 0;
-  }
-
-  & > img {
-    object-fit: cover;
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    padding: 0;
-  }
+.jonnitto-prettyembed-preview {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 .jonnitto-prettyembed-pointer-none {
