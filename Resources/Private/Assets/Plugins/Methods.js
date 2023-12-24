@@ -1,11 +1,12 @@
 export default function (Alpine) {
     Alpine.magic('prettyembedPause', () => pause);
-
     Alpine.magic('prettyembedReset', () => reset);
+    Alpine.magic('prettyembedPlay', () => play);
 }
 
 window.addEventListener('prettyembedReset', ({ detail }) => reset(detail));
 window.addEventListener('prettyembedPause', ({ detail }) => pause(detail));
+window.addEventListener('prettyembedPlay', ({ detail }) => play(detail));
 
 function reset(subject) {
     return getElements(subject).forEach((element) => {
@@ -23,6 +24,19 @@ function pause(subject) {
             // the true is to not skip the autoplay check
             data.pause(true);
         }
+    });
+}
+
+function play(subject) {
+    return getElements(subject).every((element) => {
+        const data = Alpine.$data(element);
+        if (typeof data.play === 'function') {
+            data.play();
+            // This cancels the loop
+            return false;
+        }
+        // This continues the loop
+        return true;
     });
 }
 
