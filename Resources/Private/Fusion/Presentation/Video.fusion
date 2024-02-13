@@ -62,6 +62,15 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Video) < prototype(Neos.Fusion:Compo
                 {props.streaming ? '' : props.content}
             </video>
         `
+
+        // @internal Move to @private if minimal Neos requirement is 8.3 or higher
+        _fileLoader = Jonnitto.PrettyEmbed:Assets {
+            player = 'Video'
+            debug = ${props.debug}
+        }
+        _fileLoaderAsAttributes = ${!Type.isString(this._fileLoader)}
+
+
         renderer = afx`
             <Jonnitto.PrettyEmbed:Presenation.Wrapper wrapper={props.wrapper}>
                 <div
@@ -73,8 +82,9 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Video) < prototype(Neos.Fusion:Compo
                     aria-label={props.label}
                     id={props.id}
                     class={Carbon.String.merge(props.class, BEM.modifier('jonnitto-prettyembed', 'video'))}
+                    {...(props._fileLoaderAsAttributes ? props._fileLoader : {})}
                 >
-                    <Jonnitto.PrettyEmbed:Assets player="Video" debug={props.debug} />
+                    {props._fileLoaderAsAttributes ? '' : props._fileLoader}
                     <Jonnitto.PrettyEmbed:Presentation.Preview
                         show={props.lightbox ? null : '!loaded'}
                         content={props.preview}

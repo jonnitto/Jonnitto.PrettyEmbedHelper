@@ -50,7 +50,16 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Iframe) < prototype(Neos.Fusion:Comp
         checkYouTube = ${this.player == 'YouTube' ? (this.videoID && this.href && this.embedHref) : true}
         checkPreviewImage = ${this.poster || this.preview}
     }
+
+    // @internal Move to @private if minimal Neos requirement is 8.3 or higher
     _alwaysOpenInPopup = ${this.gdprHandling == 'popup'}
+    _fileLoader = ${{debug: this.debug, player: this.player, gdprHandling: this.gdprHandling}}
+    _fileLoader.@process.convert = Jonnitto.PrettyEmbed:Assets {
+        player = ${value.player}
+        gdprHandling = ${value.gdprHandling}
+        debug = ${value.debug}
+    }
+    _fileLoaderAsAttributes = ${!Type.isString(this._fileLoader)}
 
     renderer = afx`
         <Jonnitto.PrettyEmbed:Presenation.Wrapper wrapper={props.wrapper}>
@@ -78,12 +87,9 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Iframe) < prototype(Neos.Fusion:Comp
                 id={props.id}
                 class={Carbon.String.merge(props.class, BEM.modifier('jonnitto-prettyembed', String.toLowerCase(props.player)), props.setAspectRatioClass && 'jonnitto-prettyembed-ratio')}
                 style={props.aspectRatio ? '--aspect-ratio:' + props.aspectRatio :  null}
+                {...(props._fileLoaderAsAttributes ? props._fileLoader : {})}
             >
-                <Jonnitto.PrettyEmbed:Assets
-                    player={props.player}
-                    gdprHandling={props.gdprHandling}
-                    debug={props.debug}
-                />
+                {props._fileLoaderAsAttributes ? '' : props._fileLoader}
                 <Jonnitto.PrettyEmbed:Presentation.Button.Play
                     @if={!props._alwaysOpenInPopup}
                     show={props.controls ? "!loaded" : "!playing"}

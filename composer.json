@@ -29,6 +29,7 @@
         "neos/neos": "^7.3 || ^8.0",
         "neos/fusion-afx": "^7.3 || ^8.0",
         "sitegeist/slipstream": "^2.1.6",
+        "carbon/fileloader": "^0.1",
         "carbon/notification": "^2.4",
         "carbon/eel": "^2.8"
     },

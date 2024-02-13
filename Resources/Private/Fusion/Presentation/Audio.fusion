@@ -23,6 +23,14 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Audio) < prototype(Neos.Fusion:Compo
 
     @if.checkAudio = ${this.content}
 
+    // @internal Move to @private if minimal Neos requirement is 8.3 or higher
+    _fileLoader = ${{debug: this.debug}}
+    _fileLoader.@process.convert = Jonnitto.PrettyEmbed:Assets {
+        player = 'Audio'
+        debug = ${value.debug}
+    }
+    _fileLoaderAsAttributes = ${!Type.isString(this._fileLoader)}
+
     renderer = afx`
         <Jonnitto.PrettyEmbed:Presenation.Wrapper wrapper={props.wrapper}>
             <div
@@ -31,8 +39,9 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Audio) < prototype(Neos.Fusion:Compo
                 aria-label={props.label}
                 id={props.id}
                 class={Carbon.String.merge(props.class, BEM.modifier('jonnitto-prettyembed', 'audio'))}
+                {...(props._fileLoaderAsAttributes ? props._fileLoader : {})}
             >
-                <Jonnitto.PrettyEmbed:Assets player="Audio" debug={props.debug} />
+                {props._fileLoaderAsAttributes ? '' : props._fileLoader}
                 {props.customControls}
                 <audio
                     x-prettyembedmedia:media
