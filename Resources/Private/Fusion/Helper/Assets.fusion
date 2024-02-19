@@ -25,5 +25,9 @@ prototype(Jonnitto.PrettyEmbed:Assets) < prototype(Neos.Fusion:Component) {
             pluginBasedOnPlayer = ${props.player == 'Video' || props.player == 'Audio' ? 'Media.js' : (props.player + '.js')}
             alpineJsCheck= ${props.includeAlpineJsCheck ? 'AlpineCheck.js' : null}
         }
+        slipstreamPrepend {
+            js = true
+            mjs = true
+        }
     }
 }
