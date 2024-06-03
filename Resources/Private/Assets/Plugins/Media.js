@@ -1,7 +1,7 @@
 import { loadScript, checkFullscreen } from './Helper';
 
 const eventName = 'prettyembed';
-const hlsScript = '/_Resources/Static/Packages/Jonnitto.PrettyEmbedHelper/Scripts/Hls.js?v=1.4.13';
+const hlsScript = '/_Resources/Static/Packages/Jonnitto.PrettyEmbedHelper/Scripts/Hls.js?v=1.5.9';
 
 export default function (Alpine) {
     Alpine.directive('prettyembedmedia', (element, { value, modifiers, expression }, { evaluate }) => {
@@ -173,7 +173,7 @@ function streamcheck() {
 }
 
 function handleStreaming(element, src) {
-    if (typeof Hls !== 'undefined') {
+    if (typeof window.Hls !== 'undefined') {
         loadHls(element, src);
         return;
     }
@@ -183,7 +183,8 @@ function handleStreaming(element, src) {
 }
 
 function loadHls(element, src) {
-    if (!Hls.isSupported()) {
+    const Hls = window.Hls;
+    if (!Hls || !Hls.isSupported()) {
         return;
     }
     const liveStreaming = new Hls();
