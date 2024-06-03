@@ -10,7 +10,7 @@ window.addEventListener('prettyembedPlay', ({ detail }) => play(detail));
 
 function reset(subject) {
     return getElements(subject).forEach((element) => {
-        const data = Alpine.$data(element);
+        const data = window.Alpine.$data(element);
         if (typeof data.reset === 'function') {
             data.reset();
         }
@@ -19,7 +19,7 @@ function reset(subject) {
 
 function pause(subject) {
     return getElements(subject).forEach((element) => {
-        const data = Alpine.$data(element);
+        const data = window.Alpine.$data(element);
         if (typeof data.pause === 'function') {
             // the true is to not skip the autoplay check
             data.pause(true);
@@ -29,7 +29,7 @@ function pause(subject) {
 
 function play(subject) {
     return getElements(subject).every((element) => {
-        const data = Alpine.$data(element);
+        const data = window.Alpine.$data(element);
         if (typeof data.play === 'function') {
             data.play();
             // This cancels the loop

@@ -85,7 +85,7 @@ function handeleRoot({ element, Alpine, options }) {
                     }
                     loadVimeoApi(() => {
                         const target = this.$refs?.vimeo || element;
-                        player = new Vimeo.Player(target, videoPlayerOptions);
+                        player = new window.Vimeo.Player(target, videoPlayerOptions);
 
                         const dispatchDetails = async (event) => {
                             const promises = [

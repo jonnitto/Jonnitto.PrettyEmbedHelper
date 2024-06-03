@@ -1,7 +1,6 @@
-import React, { useState, Fragment } from 'react';
+import React, { Fragment } from 'react';
 import { neos } from '@neos-project/neos-ui-decorators';
 import style from './style.module.css';
-import clsx from 'clsx';
 
 const neosifier = neos((globalRegistry) => ({
     i18nRegistry: globalRegistry.get('i18n'),
