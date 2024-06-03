@@ -11,7 +11,7 @@ install:
 
 ## Prettier files
 prettier:
-	@pnpm prettier --write --no-error-on-unmatched-pattern '**/*.{js,php,yaml,scss,mjs,md}'
+	@pnpm prettier --write --no-error-on-unmatched-pattern '**/*.{js,jsx,php,yaml,scss,mjs,md}'
 
 cleanup:
 	@rm -rf Resources/Public/Modules
