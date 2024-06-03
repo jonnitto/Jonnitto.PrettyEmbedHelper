@@ -94,60 +94,43 @@ function handeleRoot({ element, Alpine, options }) {
                     }
                     loadYoutubeApi(() => {
                         const target = this.$refs?.youtube || element;
-                        const dispatchDetails = () => {
-                            const videoUrl = player.getVideoUrl();
-                            const { title, author, video_id, video_quality, list } = player.getVideoData();
-                            return {
-                                type,
-                                style,
-                                title,
-                                author,
-                                videoUrl,
-                                videoID: video_id,
-                                quality: video_quality,
-                                playlistID: list || null,
-                            };
-                        };
+                        const YT = window.YT;
                         player = new YT.Player(target, {
                             ...videoPlayerOptions,
                             events: {
                                 onStateChange: ({ data }) => {
-                                    const currentTime = player.getCurrentTime();
-
-                                    if (data === YT.PlayerState.PLAYING) {
-                                        this.$dispatch('prettyembedPauseInternal', element);
-                                        this.loaded = true;
-                                        this.playing = true;
-
-                                        this.$dispatch(eventName, {
-                                            event: 'play',
-                                            currentTime,
-                                            ...dispatchDetails(),
-                                        });
-                                        return;
-                                    }
-
-                                    if (data === YT.PlayerState.PAUSED) {
-                                        this.playing = false;
-                                        this.$dispatch(eventName, {
-                                            event: 'pause',
-                                            currentTime,
-                                            ...dispatchDetails(),
-                                        });
-                                        return;
-                                    }
-
-                                    if (data === YT.PlayerState.ENDED) {
-                                        this.playing = false;
-                                        if (!loop && !this.lightbox && !checkFullscreen()) {
-                                            this.reset();
+                                    setTimeout(() => {
+                                        if (data === YT.PlayerState.PLAYING) {
+                                            this.$dispatch('prettyembedPauseInternal', element);
+                                            this.loaded = true;
+                                            this.playing = true;
+                                            this.$dispatch(
+                                                eventName,
+                                                dispatchDetails({ event: 'play', type, style, player }),
+                                            );
+                                            return;
                                         }
-                                        this.$dispatch(eventName, {
-                                            event: 'finished',
-                                            currentTime,
-                                            ...dispatchDetails(),
-                                        });
-                                    }
+
+                                        if (data === YT.PlayerState.PAUSED) {
+                                            this.playing = false;
+                                            this.$dispatch(
+                                                eventName,
+                                                dispatchDetails({ event: 'pause', type, style, player }),
+                                            );
+                                            return;
+                                        }
+
+                                        if (data === YT.PlayerState.ENDED) {
+                                            this.playing = false;
+                                            if (!loop && !this.lightbox && !checkFullscreen()) {
+                                                this.reset();
+                                            }
+                                            this.$dispatch(
+                                                eventName,
+                                                dispatchDetails({ event: 'finished', type, style, player }),
+                                            );
+                                        }
+                                    }, 10);
                                 },
                             },
                         });
@@ -179,4 +162,28 @@ function handeleRoot({ element, Alpine, options }) {
             this.pause();
         },
     });
+}
+
+function dispatchDetails({ player, type, style, event }) {
+    let videoUrl;
+    let currentTime = 0;
+    let data = {};
+    try {
+        videoUrl = player?.getVideoUrl() || null;
+        currentTime = player?.getCurrentTime() || 0;
+        data = player?.getVideoData() || {};
+    } catch (error) {} // eslint-disable-line
+
+    return {
+        event,
+        type,
+        style,
+        title: data?.title,
+        author: data?.author,
+        videoUrl,
+        currentTime,
+        videoID: data?.video_id,
+        quality: data?.video_quality,
+        playlistID: data?.list || null,
+    };
 }
