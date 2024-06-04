@@ -26,11 +26,11 @@
         "php": "^8.1",
         "ext-json": "*",
         "ext-dom": "*",
-        "neos/neos": "^7.3 || ^8.0",
-        "neos/fusion-afx": "^7.3 || ^8.0",
-        "sitegeist/slipstream": "^2.1.6",
+        "neos/neos": "^9.0 || dev-master",
+        "neos/fusion-afx": "^9.0 || dev-master",
+        "sitegeist/slipstream": "^2.1.7",
         "carbon/fileloader": "^0.1",
-        "carbon/notification": "^2.4",
+        "carbon/notification": "^3.0",
         "carbon/eel": "^2.8"
     },
     "suggest": {
