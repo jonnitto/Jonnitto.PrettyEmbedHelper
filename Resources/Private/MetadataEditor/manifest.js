@@ -9,5 +9,3 @@ manifest('Jonnitto.PrettyEmbed:Metadata', {}, (globalRegistry) => {
         component: Editor,
     });
 });
-
-// Jonnitto\PrettyEmbedHelper\Domain\Metadata
