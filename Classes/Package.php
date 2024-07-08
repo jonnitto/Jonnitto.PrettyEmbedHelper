@@ -21,7 +21,7 @@ class Package extends BasePackage
     public function boot(Bootstrap $bootstrap)
     {
         $dispatcher = $bootstrap->getSignalSlotDispatcher();
-        $dispatcher->connect(Node::class, 'nodeAdded', MetadataService::class, 'createDataFromService');
+        $dispatcher->connect(Node::class, 'nodeAdded', MetadataService::class, 'onNodeAdded');
         $dispatcher->connect(Node::class, 'nodePropertyChanged', MetadataService::class, 'updateDataFromService');
         $dispatcher->connect(Workspace::class, 'afterNodePublishing', ImageService::class, 'removeDataAfterNodePublishing');
         $dispatcher->connect(PersistenceManager::class, 'allObjectsPersisted', ImageService::class, 'deletePendingData', false);
