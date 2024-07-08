@@ -24,7 +24,7 @@ class Package extends BasePackage
             Node::class,
             'nodeAdded',
             MetadataService::class,
-            'createDataFromService'
+            'onNodeAdded'
         );
         $dispatcher->connect(
             Node::class,
