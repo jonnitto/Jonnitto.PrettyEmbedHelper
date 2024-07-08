@@ -51,6 +51,18 @@ class MetadataService
      */
     protected $defaultReturn = ['node' => null];
 
+    /**
+    * Wrapper method to handle signals from Node::nodeAdded
+    *
+    * @param NodeInterface $node
+    * @return array|null[]
+    * @throws IllegalObjectTypeException
+    * @throws NodeException
+    */
+    public function onNodeAdded(NodeInterface $node)
+    {
+        return $this->createDataFromService($node);
+    }
 
     /**
      * Create data
