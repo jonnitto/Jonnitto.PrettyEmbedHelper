@@ -60,6 +60,9 @@ Jonnitto:
       fallbackAspectRatio: '16 / 9'
 
     YouTube:
+      # Use the no cookie domain (https://www.youtube-nocookie.com) for youtube
+      useYoutubeNoCookieDomain: true
+
       # Set to false to disable the gdpr message, set to popup open the video in a new window or set to true to show the message in the player
       gdprHandling: true
 

@@ -13,7 +13,7 @@ export default function (Alpine) {
 
 function handeleRoot({ element, Alpine, options }) {
     const type = 'YouTube';
-    let { video, playlist, style, slim, loop } = options;
+    let { video, playlist, style, slim, loop, noCookie } = options;
 
     const videoPlayerOptions = {
         playerVars: {
@@ -26,6 +26,10 @@ function handeleRoot({ element, Alpine, options }) {
             loop: loop ? 1 : 0,
         },
     };
+
+    if (noCookie) {
+        videoPlayerOptions.host = 'https://www.youtube-nocookie.com';
+    }
 
     if (video) {
         videoPlayerOptions.videoId = video;

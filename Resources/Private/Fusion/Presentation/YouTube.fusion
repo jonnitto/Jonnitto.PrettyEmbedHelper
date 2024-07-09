@@ -6,4 +6,5 @@ prototype(Jonnitto.PrettyEmbed:Presentation.YouTube) < prototype(Jonnitto.Pretty
     lightbox = ${Configuration.setting('Jonnitto.PrettyEmbed.YouTube.lightbox')}
     preserveAspectRatio = ${Configuration.setting('Jonnitto.PrettyEmbed.YouTube.preserveAspectRatio')}
     fallbackAspectRatio = ${Configuration.setting('Jonnitto.PrettyEmbed.YouTube.fallbackAspectRatio')}
+    useYoutubeNoCookieDomain = ${Configuration.setting('Jonnitto.PrettyEmbed.YouTube.useYoutubeNoCookieDomain')}
 }
