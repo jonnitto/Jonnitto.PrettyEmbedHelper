@@ -1,4 +1,5 @@
-:is(.jonnitto-prettyembed, .jonnitto-prettyembed-lightbox__content) {
+:where(.jonnitto-prettyembed),
+.jonnitto-prettyembed-lightbox__content {
   display: block;
   width: 100%;
   max-width: 100%;
@@ -7,7 +8,9 @@
   margin: 0;
   padding: 0;
   border: 0 solid transparent;
+}
 
+:is(.jonnitto-prettyembed, .jonnitto-prettyembed-lightbox__content) {
   & > iframe {
     position: absolute;
     top: 0;
