@@ -26,4 +26,5 @@
         metadata:
           label: i18n
           icon: 'fas fa-database'
-          position: end
+          collapsed: true
+          position: end 1
