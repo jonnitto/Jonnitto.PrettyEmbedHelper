@@ -4,7 +4,8 @@ namespace Jonnitto\PrettyEmbedHelper\Eel;
 
 use Jonnitto\PrettyEmbedHelper\Service\ParseIDService;
 use Jonnitto\PrettyEmbedHelper\Utility\Utility;
-use Neos\ContentRepository\Domain\Model\NodeInterface;
+use JsonException;
+use Neos\ContentRepository\Core\Projection\ContentGraph\Node;
 use Neos\Eel\ProtectedContextAwareInterface;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Http\Client\InfiniteRedirectionException;
@@ -13,7 +14,6 @@ use Neos\Media\Domain\Model\ImageInterface;
 use Neos\Media\Domain\Model\ThumbnailConfiguration;
 use Neos\Media\Domain\Service\ThumbnailService;
 use Neos\Media\Exception\ThumbnailServiceException;
-use JsonException;
 
 class Helper implements ProtectedContextAwareInterface
 {
@@ -26,11 +26,11 @@ class Helper implements ProtectedContextAwareInterface
     /**
      * Get the metadata from a node
      *
-     * @param NodeInterface $node
+     * @param Node $node
      * @param string|null $property If not set, all metadata will be returned
      * @return mixed
      */
-    public function getMetadata($node, ?string $property = null)
+    public function getMetadata(Node $node, ?string $property = null)
     {
         return Utility::getMetadata($node, $property);
     }
@@ -126,13 +126,12 @@ class Helper implements ProtectedContextAwareInterface
     /**
      * @param AssetInterface $asset
      * @param integer $maximumWidth Desired maximum width of the image
-     * @param boolean $async Whether the thumbnail can be generated asynchronously
-     * @param integer $quality Quality of the processed image
      * @param string $format Format for the image, only jpg, jpeg, gif, png, wbmp, xbm, webp and bmp are supported.
-     * @return null|ImageInterface
+     * @param integer $quality Quality of the processed image
+     * @return ImageInterface|null
      * @throws ThumbnailServiceException
      */
-    public function createThumbnail(AssetInterface $asset, $maximumWidth = null, $format = null, $quality = null)
+    public function createThumbnail(AssetInterface $asset, $maximumWidth = null, $format = null, $quality = null): ?ImageInterface
     {
         $width = null;
         $height = null;
