@@ -3,8 +3,9 @@
 namespace Jonnitto\PrettyEmbedHelper\Service;
 
 use Jonnitto\PrettyEmbedHelper\Utility\Utility;
-use Neos\ContentRepository\Domain\Model\NodeInterface;
-use Neos\ContentRepository\Exception\NodeException;
+use Neos\ContentRepository\Core\Projection\ContentGraph\Node;
+use Neos\ContentRepository\Core\Projection\ContentGraph\NodePath;
+use Neos\ContentRepositoryRegistry\ContentRepositoryRegistry;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Http\Client\InfiniteRedirectionException;
 use Neos\Flow\Persistence\Exception\IllegalObjectTypeException;
@@ -42,23 +43,28 @@ class VimeoService
     protected $api;
 
     /**
+     * @Flow\Inject
+     * @var ContentRepositoryRegistry
+     */
+    protected $contentRepositoryRegistry;
+
+    /**
      * Get and save data from oembed service
      *
-     * @param NodeInterface $node
+     * @param Node $node
      * @param boolean $remove
      * @return array|null
-     * @throws NodeException
      * @throws IllegalObjectTypeException
      */
-    public function getAndSaveDataFromApi(NodeInterface $node, bool $remove = false): ?array
+    public function getAndSaveDataFromApi(Node $node, bool $remove = false): ?array
     {
         $this->imageService->remove($node);
 
         $returnArray = [
-            'nodeTypeName' => $node->getNodeType()->getName(),
+            'nodeTypeName' => $node->nodeTypeName->value,
             'node' => 'Vimeo',
             'type' => 'Video',
-            'path' => $node->getPath(),
+            'path' => NodePath::fromNodeNames($node->name),
             'data' => false,
         ];
 
@@ -89,7 +95,7 @@ class VimeoService
             }
         }
 
-        Utility::setMetadata($node, null, [
+        Utility::setMetadata($this->contentRepositoryRegistry, $node, null, [
             'videoID' => $videoID,
             'title' => $title ?? null,
             'aspectRatio' => $ratio ?? null,

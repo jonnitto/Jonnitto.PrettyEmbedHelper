@@ -3,14 +3,18 @@
 namespace Jonnitto\PrettyEmbedHelper\Service;
 
 use Jonnitto\PrettyEmbedHelper\Utility\Utility;
-use Neos\ContentRepository\Domain\Model\NodeInterface;
+use JsonException;
+use Neos\ContentRepository\Core\Feature\NodeModification\Command\SetNodeProperties;
+use Neos\ContentRepository\Core\Feature\NodeModification\Dto\PropertyValuesToWrite;
+use Neos\ContentRepository\Core\NodeType\NodeTypeName;
+use Neos\ContentRepository\Core\Projection\ContentGraph\Node;
 use Neos\ContentRepository\Exception\NodeException;
+use Neos\ContentRepositoryRegistry\ContentRepositoryRegistry;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Http\Client\InfiniteRedirectionException;
 use Neos\Flow\Persistence\Exception\IllegalObjectTypeException;
 use Neos\Flow\Persistence\Exception\InvalidQueryException;
 use Neos\Flow\ResourceManagement\Exception;
-use JsonException;
 
 /**
  * @Flow\Scope("singleton")
@@ -48,6 +52,12 @@ class MetadataService
     protected $imageService;
 
     /**
+     * @Flow\Inject
+     * @var ContentRepositoryRegistry
+     */
+    protected $contentRepositoryRegistry;
+
+    /**
      * @var array
      */
     protected $defaultReturn = ['node' => null];
@@ -55,12 +65,11 @@ class MetadataService
     /**
      * Wrapper method to handle signals from Node::nodeAdded
      *
-     * @param NodeInterface $node
+     * @param Node $node
      * @return array|null[]
      * @throws IllegalObjectTypeException
-     * @throws NodeException
      */
-    public function onNodeAdded(NodeInterface $node)
+    public function onNodeAdded(Node $node)
     {
         return $this->createDataFromService($node);
     }
@@ -68,17 +77,16 @@ class MetadataService
     /**
      * Create data
      *
-     * @param NodeInterface $node
+     * @param Node $node
      * @param bool $remove
      * @return array Information about the node
-     * @throws NodeException
      * @throws IllegalObjectTypeException
      */
-    public function createDataFromService(NodeInterface $node, bool $remove = false): array
+    public function createDataFromService(Node $node, bool $remove = false): array
     {
         if (
             $node->hasProperty('videoID') ||
-            $node->getNodeType()->isOfType('Jonnitto.PrettyEmbedHelper:Mixin.Metadata')
+            $node->nodeTypeName->equals( NodeTypeName::fromString('Jonnitto.PrettyEmbedHelper:Mixin.Metadata'))
         ) {
             return $this->dataFromService($node, $remove);
         }
@@ -89,29 +97,28 @@ class MetadataService
      * Removes the metadata
      * @throws IllegalObjectTypeException
      */
-    public function removeMetaData(NodeInterface $node): void
+    public function removeMetaData(Node $node): void
     {
-        Utility::removeMetadata($node);
+        Utility::removeMetadata($this->contentRepositoryRegistry, $node);
         $this->imageService->removeTagIfEmpty();
     }
 
     /**
      * Update data
      *
-     * @param NodeInterface $node
+     * @param Node $node
      * @param string $propertyName
      * @param mixed $oldValue
      * @param mixed $newValue
      * @return array Information about the node
-     * @throws NodeException
      * @throws IllegalObjectTypeException
      */
-    public function updateDataFromService(NodeInterface $node, string $propertyName, $oldValue, $newValue): array
+    public function updateDataFromService(Node $node, string $propertyName, $oldValue, $newValue): array
     {
         if (
             ($propertyName === 'videoID' && $oldValue !== $newValue) ||
             ($propertyName === 'type' && $node->hasProperty('videoID')) ||
-            ($propertyName === 'assets' && $node->getNodeType()->isOfType('Jonnitto.PrettyEmbedHelper:Mixin.Metadata'))
+            ($propertyName === 'assets' && $node->nodeTypeName->equals( NodeTypeName::fromString('Jonnitto.PrettyEmbedHelper:Mixin.Metadata')))
         ) {
             return $this->dataFromService($node);
         }
@@ -121,13 +128,12 @@ class MetadataService
     /**
      * Saves and returns the metadata
      *
-     * @param NodeInterface $node
+     * @param Node $node
      * @param boolean $remove
      * @return array Information about the node
-     * @throws NodeException
      * @throws IllegalObjectTypeException
      */
-    protected function dataFromService(NodeInterface $node, bool $remove = false): array
+    protected function dataFromService(Node $node, bool $remove = false): array
     {
         $platform = $this->checkNodeAndSetPlatform($node);
         if (!$platform) {
@@ -145,7 +151,7 @@ class MetadataService
         if ($platform == 'youtube') {
             try {
                 $data = $this->youtubeService->getAndSaveDataFromApi($node, $remove);
-            } catch (JsonException | NodeException | InfiniteRedirectionException | IllegalObjectTypeException | InvalidQueryException | Exception $e) {
+            } catch (JsonException | InfiniteRedirectionException | IllegalObjectTypeException | InvalidQueryException | Exception $e) {
             }
             return $data ?? $this->defaultReturn;
         }
@@ -160,29 +166,38 @@ class MetadataService
     /**
      * Check the node and return the platform/type
      *
-     * @param NodeInterface $node
+     * @param Node $node
      * @return string|null
-     * @throws NodeException
      */
-    protected function checkNodeAndSetPlatform(NodeInterface $node): ?string
+    protected function checkNodeAndSetPlatform(Node $node): ?string
     {
-        if ($node->getNodeType()->isOfType('Jonnitto.PrettyEmbedAudio:Mixin.Assets')) {
+        if ($node->nodeTypeName->equals( NodeTypeName::fromString('Jonnitto.PrettyEmbedAudio:Mixin.Assets'))) {
             return 'audio';
         }
 
-        if ($node->getNodeType()->isOfType('Jonnitto.PrettyEmbedVideo:Mixin.Assets')) {
+        if ($node->nodeTypeName->equals( NodeTypeName::fromString('Jonnitto.PrettyEmbedVideo:Mixin.Assets'))) {
             return 'video';
         }
 
-        if (!$node->getNodeType()->isOfType('Jonnitto.PrettyEmbedVideoPlatforms:Mixin.VideoID')) {
+        if (!$node->nodeTypeName->equals( NodeTypeName::fromString('Jonnitto.PrettyEmbedVideoPlatforms:Mixin.VideoID'))) {
             return null;
         }
 
         $platform = $this->parseID->platform($node->getProperty('videoID'));
         if (!$platform) {
-            Utility::removeMetadata($node);
+            Utility::removeMetadata($this->contentRepositoryRegistry, $node);
         }
-        $node->setProperty('platform', $platform);
+
+        $contentRepository = $this->contentRepositoryRegistry->get($node->contentRepositoryId);
+        $contentRepository->handle(SetNodeProperties::create(
+            $node->workspaceName,
+            $node->aggregateId,
+            $node->originDimensionSpacePoint,
+            PropertyValuesToWrite::fromArray([
+                'platform' => $platform,
+            ]),
+        ));
+
         return $platform;
     }
 }
