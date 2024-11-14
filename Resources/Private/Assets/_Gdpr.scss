@@ -8,6 +8,10 @@
     align-items: center;
     justify-content: center;
 
+    @if $prettyembed-gdpr-backdrop-filter {
+      backdrop-filter: var(--prettyembed-gdpr-backdrop-filter, $prettyembed-gdpr-backdrop-filter);
+    }
+
     &::after {
       content: "";
       position: fixed;
@@ -15,10 +19,6 @@
       background: var(--prettyembed-gdpr-overlay-color, $prettyembed-gdpr-overlay-color);
       opacity: var(--prettyembed-gdpr-overlay-opacity, $prettyembed-gdpr-overlay-opacity);
       z-index: -1;
-    }
-
-    @if $prettyembed-gdpr-backdrop-filter {
-      backdrop-filter: var(--prettyembed-gdpr-backdrop-filter, $prettyembed-gdpr-backdrop-filter);
     }
   }
 
