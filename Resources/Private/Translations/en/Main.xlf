@@ -51,6 +51,10 @@
                 <source>You need to define a video stream URL.</source>
                 <target>You need to define a video stream URL.</target>
             </trans-unit>
+            <trans-unit id="noAudio" xml:space="preserve">
+                <source>You need to define at least one audio source.</source>
+                <target>You need to define at least one audio source.</target>
+            </trans-unit>
             <trans-unit id="lang" xml:space="preserve">
                 <source>en</source>
                 <target>en</target>
