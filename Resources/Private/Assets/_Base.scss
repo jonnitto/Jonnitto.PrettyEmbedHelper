@@ -1,3 +1,5 @@
+@use "Variables";
+
 :where(.jonnitto-prettyembed),
 .jonnitto-prettyembed-lightbox__content {
   display: block;
@@ -60,7 +62,7 @@ a.jonnitto-prettyembed {
   text-decoration: none;
 }
 
-@if $prettyembed-lightbox-include {
+@if Variables.$prettyembed-lightbox-include {
   .jonnitto-prettyembed-lightbox {
     position: fixed;
     inset: 0;
@@ -73,28 +75,28 @@ a.jonnitto-prettyembed {
     overflow-y: auto;
     white-space: nowrap;
     -webkit-overflow-scrolling: touch;
-    z-index: var(--prettyembed-lightbox-z-index, $prettyembed-lightbox-z-index);
-    padding: var(--prettyembed-lightbox-padding, $prettyembed-lightbox-padding);
+    z-index: var(--prettyembed-lightbox-z-index, Variables.$prettyembed-lightbox-z-index);
+    padding: var(--prettyembed-lightbox-padding, Variables.$prettyembed-lightbox-padding);
 
     & :where(iframe, video) {
-      box-shadow: var(--prettyembed-lightbox-shadow, $prettyembed-lightbox-shadow);
+      box-shadow: var(--prettyembed-lightbox-shadow, Variables.$prettyembed-lightbox-shadow);
     }
   }
 
   .jonnitto-prettyembed-backdrop {
-    z-index: calc(var(--prettyembed-lightbox-z-index, $prettyembed-lightbox-z-index) - 1);
-    background: var(--prettyembed-lightbox-overlay-background, $prettyembed-lightbox-overlay-background);
+    z-index: calc(var(--prettyembed-lightbox-z-index, Variables.$prettyembed-lightbox-z-index) - 1);
+    background: var(--prettyembed-lightbox-overlay-background, Variables.$prettyembed-lightbox-overlay-background);
     position: fixed;
     inset: 0;
 
-    @if $prettyembed-lightbox-backdrop-filter {
-      backdrop-filter: var(--prettyembed-lightbox-backdrop-filter, $prettyembed-lightbox-backdrop-filter);
+    @if Variables.$prettyembed-lightbox-backdrop-filter {
+      backdrop-filter: var(--prettyembed-lightbox-backdrop-filter, Variables.$prettyembed-lightbox-backdrop-filter);
     }
   }
 
   .jonnitto-prettyembed-lightbox__inner {
     width: 100%;
-    max-width: var(--prettyembed-lightbox-max-width, $prettyembed-lightbox-max-width);
+    max-width: var(--prettyembed-lightbox-max-width, Variables.$prettyembed-lightbox-max-width);
     display: flex;
     align-items: center;
     flex-direction: column;
@@ -102,7 +104,7 @@ a.jonnitto-prettyembed {
 
   .jonnitto-prettyembed-lightbox__content {
     line-height: 0;
-    max-height: calc(99vh - (var(--prettyembed-lightbox-padding, $prettyembed-lightbox-padding) * 1.5 + var(--prettyembed-lightbox-close-size, $prettyembed-lightbox-close-size)));
+    max-height: calc(99vh - (var(--prettyembed-lightbox-padding, Variables.$prettyembed-lightbox-padding) * 1.5 + var(--prettyembed-lightbox-close-size, Variables.$prettyembed-lightbox-close-size)));
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -114,7 +116,7 @@ a.jonnitto-prettyembed {
     z-index: 1;
     padding: 10px 16px;
     margin: calc(-1em - 10px) -18px -8px auto;
-    font-size: var(--prettyembed-lightbox-close-size, $prettyembed-lightbox-close-size);
+    font-size: var(--prettyembed-lightbox-close-size, Variables.$prettyembed-lightbox-close-size);
     font-family: Arial, Baskerville, monospace;
     font-style: normal;
     line-height: 1;
@@ -126,12 +128,12 @@ a.jonnitto-prettyembed {
     outline: none;
     box-shadow: none;
     text-decoration: none;
-    color: var(--prettyembed-lightbox-close-color, $prettyembed-lightbox-close-color);
-    opacity: var(--prettyembed-lightbox-close-opacity, $prettyembed-lightbox-close-opacity);
+    color: var(--prettyembed-lightbox-close-color, Variables.$prettyembed-lightbox-close-color);
+    opacity: var(--prettyembed-lightbox-close-opacity, Variables.$prettyembed-lightbox-close-opacity);
     transition: opacity 0.2s linear;
 
     &:is(:hover, :focus, :active) {
-      opacity: var(--prettyembed-lightbox-close-opacity-hover, $prettyembed-lightbox-close-opacity-hover);
+      opacity: var(--prettyembed-lightbox-close-opacity-hover, Variables.$prettyembed-lightbox-close-opacity-hover);
       outline: none;
     }
 

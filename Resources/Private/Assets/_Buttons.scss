@@ -1,10 +1,12 @@
+@use "Variables";
+
 .jonnitto-prettyembed-button {
   position: absolute;
   inset: 0;
   z-index: 1;
   border: 0;
   background: transparent;
-  color: var(--prettyembed-button-foreground-color, $prettyembed-button-foreground-color);
+  color: var(--prettyembed-button-foreground-color, Variables.$prettyembed-button-foreground-color);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -14,8 +16,8 @@
   margin: 0;
   padding: 0;
 
-  @if ($prettyembed-button-opacity != 1) {
-    opacity: var(--prettyembed-button-opacity, $prettyembed-button-opacity);
+  @if (Variables.$prettyembed-button-opacity != 1) {
+    opacity: var(--prettyembed-button-opacity, Variables.$prettyembed-button-opacity);
   }
 
   & > * {
@@ -23,17 +25,17 @@
   }
 
   &:is(:hover, :focus) > svg {
-    transform: scale(var(--prettyembed-button-scale-hover, $prettyembed-button-scale-hover));
+    transform: scale(var(--prettyembed-button-scale-hover, Variables.$prettyembed-button-scale-hover));
   }
 
   &:active > svg {
-    transform: scale(var(--prettyembed-button-scale-active, $prettyembed-button-scale-active));
+    transform: scale(var(--prettyembed-button-scale-active, Variables.$prettyembed-button-scale-active));
   }
 
   & svg {
-    width: var(--prettyembed-button-play-size, $prettyembed-button-play-size);
-    height: var(--prettyembed-button-play-size, $prettyembed-button-play-size);
-    transform: scale(var(--prettyembed-button-scale, $prettyembed-button-scale));
+    width: var(--prettyembed-button-play-size, Variables.$prettyembed-button-play-size);
+    height: var(--prettyembed-button-play-size, Variables.$prettyembed-button-play-size);
+    transform: scale(var(--prettyembed-button-scale, Variables.$prettyembed-button-scale));
     transition:
       transform 0.25s ease-in-out,
       opacity 0.25s linear;
@@ -41,21 +43,21 @@
 }
 
 .jonnitto-prettyembed-button__background {
-  fill: var(--prettyembed-button-background-color, $prettyembed-button-background-color);
-  fill-opacity: var(--prettyembed-button-background-opactiy, $prettyembed-button-background-opactiy);
-  stroke-width: var(--prettyembed-button-background-stroke, $prettyembed-button-background-stroke);
+  fill: var(--prettyembed-button-background-color, Variables.$prettyembed-button-background-color);
+  fill-opacity: var(--prettyembed-button-background-opactiy, Variables.$prettyembed-button-background-opactiy);
+  stroke-width: var(--prettyembed-button-background-stroke, Variables.$prettyembed-button-background-stroke);
 }
 
 .jonnitto-prettyembed-button--pause {
   top: auto;
-  bottom: var(--prettyembed-button-pause-margin, $prettyembed-button-pause-margin);
-  left: var(--prettyembed-button-pause-margin, $prettyembed-button-pause-margin);
-  width: var(--prettyembed-button-pause-size, $prettyembed-button-pause-size);
-  height: var(--prettyembed-button-pause-size, $prettyembed-button-pause-size);
+  bottom: var(--prettyembed-button-pause-margin, Variables.$prettyembed-button-pause-margin);
+  left: var(--prettyembed-button-pause-margin, Variables.$prettyembed-button-pause-margin);
+  width: var(--prettyembed-button-pause-size, Variables.$prettyembed-button-pause-size);
+  height: var(--prettyembed-button-pause-size, Variables.$prettyembed-button-pause-size);
   transition: opacity 0.25s linear;
   opacity: 0;
 }
 
 :is(.jonnitto-prettyembed, .jonnitto-prettyembed-lightbox__content):is(:hover, :focus) .jonnitto-prettyembed-button--pause {
-  opacity: var(--prettyembed-button-opacity, $prettyembed-button-opacity);
+  opacity: var(--prettyembed-button-opacity, Variables.$prettyembed-button-opacity);
 }
