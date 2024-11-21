@@ -4,9 +4,12 @@ namespace Jonnitto\PrettyEmbedHelper\Service;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Jonnitto\PrettyEmbedHelper\Utility\Utility;
-use Neos\ContentRepository\Domain\Model\NodeInterface;
-use Neos\ContentRepository\Domain\Model\Workspace;
-use Neos\ContentRepository\Exception\NodeException;
+use Neos\ContentRepository\Core\NodeType\NodeTypeName;
+use Neos\ContentRepository\Core\Projection\ContentGraph\Node;
+use Neos\ContentRepository\Core\Projection\ContentGraph\VisibilityConstraints;
+use Neos\ContentRepository\Core\SharedModel\ContentRepository\ContentRepositoryId;
+use Neos\ContentRepository\Core\SharedModel\Workspace\Workspace;
+use Neos\ContentRepositoryRegistry\ContentRepositoryRegistry;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Persistence\Exception\IllegalObjectTypeException;
 use Neos\Flow\Persistence\Exception\InvalidQueryException;
@@ -17,6 +20,7 @@ use Neos\Media\Domain\Model\Image;
 use Neos\Media\Domain\Model\Tag;
 use Neos\Media\Domain\Repository\AssetRepository;
 use Neos\Media\Domain\Repository\TagRepository;
+use Neos\Neos\Domain\Service\WorkspaceService;
 use Throwable;
 use function explode;
 use function pathinfo;
@@ -52,6 +56,12 @@ class ImageService
     protected $resourceManager;
 
     /**
+     * @Flow\Inject
+     * @var ContentRepositoryRegistry
+     */
+    protected $contentRepositoryRegistry;
+
+    /**
      * @var Image[]
      */
     private $pendingThumbnailToDelete = [];
@@ -65,7 +75,7 @@ class ImageService
     /**
      * Import image
      *
-     * @param NodeInterface $node
+     * @param Node $node
      * @param string $url
      * @param string|integer $videoId
      * @param string $type
@@ -76,13 +86,13 @@ class ImageService
      * @throws \Exception
      */
     public function import(
-        NodeInterface $node,
+        Node $node,
         string $url,
         $videoId,
         string $type,
         ?string $filenameSuffix = null
     ): ?object {
-        if (!$node->getNodeType()->isOfType('Jonnitto.PrettyEmbedHelper:Mixin.Metadata')) {
+        if (!$node->nodeTypeName->equals( NodeTypeName::fromString('Jonnitto.PrettyEmbedHelper:Mixin.Metadata'))) {
             return null;
         }
 
@@ -141,15 +151,14 @@ class ImageService
     /**
      * Remove image
      *
-     * @param NodeInterface $node
+     * @param Node $node
      * @return void
-     * @throws NodeException
      */
-    public function remove(NodeInterface $node): void
+    public function remove(Node $node): void
     {
         $thumbnail = Utility::getMetadata($node, 'thumbnail');
         if (isset($thumbnail)) {
-            $this->pendingThumbnailToDelete[$node->getIdentifier()] = $thumbnail;
+            $this->pendingThumbnailToDelete[$node->aggregateId->value] = $thumbnail;
         }
     }
 
@@ -161,12 +170,9 @@ class ImageService
      */
     public function removeTagIfEmpty(): void
     {
-        /**
-         * @var Tag $tag
-         */
         $tag = $this->findTag();
 
-        if (isset($tag) && $this->assetRepository->countByTag($tag) === 0) {
+        if (!is_null($tag) && $this->assetRepository->countByTag($tag) === 0) {
             $this->tagRepository->remove($tag);
             $this->persistenceManager->persistAll();
         }
@@ -181,12 +187,9 @@ class ImageService
      */
     public function removeAllUnusedImages(): void
     {
-        /**
-         * @var Tag $tag
-         */
         $tag = $this->findTag();
 
-        if (isset($tag)) {
+        if (!is_null($tag)) {
             $images = $this->assetRepository->findByTag($tag)->toArray();
             foreach ($images as $image) {
                 try {
@@ -205,17 +208,22 @@ class ImageService
     /**
      * This gets triggered after node publishing and put the data into the pending array
      *
-     * @param NodeInterface $node
+     * @param Node $node
      * @param Workspace $targetWorkspace
      * @return void
-     * @throws NodeException
      */
-    public function removeDataAfterNodePublishing(NodeInterface $node, Workspace $targetWorkspace): void
+    public function removeDataAfterNodePublishing(Node $node, Workspace $targetWorkspace): void
     {
+        $contentRepository = $this->contentRepositoryRegistry->get($node->contentRepositoryId);
+        $subgraph = $contentRepository->getContentGraph($targetWorkspace->workspaceName)->getSubgraph(
+            $node->dimensionSpacePoint,
+            VisibilityConstraints::frontend()
+        );
+
         if (
-            !$targetWorkspace->isPublicWorkspace() ||
-            !$node->isRemoved() ||
-            !$node->getNodeType()->isOfType('Jonnitto.PrettyEmbedHelper:Mixin.Metadata')
+            !$targetWorkspace->isRootWorkspace() ||
+            !($subgraph->findNodeById($node->aggregateId) === null) ||
+            !$node->nodeTypeName->equals( NodeTypeName::fromString('Jonnitto.PrettyEmbedHelper:Mixin.Metadata'))
         ) {
             return;
         }
@@ -285,7 +293,7 @@ class ImageService
      */
     protected function findTag(): ?Tag
     {
-        return $this->tagRepository->findByLabel('PrettyEmbed')->getFirst();
+        return $this->tagRepository->findOneByLabel('PrettyEmbed');
     }
 
     /**
@@ -296,9 +304,6 @@ class ImageService
      */
     protected function createTag(): Tag
     {
-        /**
-         * @var Tag $tag
-         */
         $tag = new Tag('PrettyEmbed');
 
         $this->tagRepository->add($tag);
@@ -314,9 +319,6 @@ class ImageService
      */
     protected function findOrCreateTag(): Tag
     {
-        /**
-         * @var Tag $tag
-         */
         $tag = $this->findTag();
 
         return $tag ?? $this->createTag();
