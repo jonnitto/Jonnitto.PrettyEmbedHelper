@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import { neos } from '@neos-project/neos-ui-decorators';
 import style from './style.module.css';
 
@@ -30,10 +30,10 @@ function Editor(props) {
     return (
         <dl className={style.infoView}>
             {array.map(({ label, value }) => (
-                <Fragment>
+                <>
                     <dt className={style.propertyLabel}>{label}</dt>
                     <dd className={style.propertyValue} dangerouslySetInnerHTML={{ __html: value }}></dd>
-                </Fragment>
+                </>
             ))}
         </dl>
     );
