@@ -13,7 +13,7 @@
             </trans-unit>
             <trans-unit id="title.label" xml:space="preserve">
                 <source>Title</source>
-                <target>Tiel</target>
+                <target>Titel</target>
             </trans-unit>
             <trans-unit id="aspectRatio.label" xml:space="preserve">
                 <source>Aspect ratio</source>
