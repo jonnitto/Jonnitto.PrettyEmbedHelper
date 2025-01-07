@@ -77,7 +77,7 @@ class VimeoService
         if (isset($data)) {
             $videoID = $data['video_id'] ?? $videoID;
             $title = $data['title'] ?? null;
-            $ratio = $data['width'] && $data['height'] ? sprintf('%s / %s', $data['width'], $data['height']) : null;
+            $ratio = Utility::getRatio($data['width'], $data['height']);
             $image = $data['thumbnail_url'] ?? null;
             $duration = $data['duration'] ?? null;
 

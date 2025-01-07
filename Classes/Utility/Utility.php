@@ -123,6 +123,13 @@ class Utility
             return sprintf('https://www.youtube.com/playlist?list=%s', $videoID);
         }
 
+        if ($type == 'short') {
+            if ($embedded) {
+                return sprintf('https://www.youtube.com/embed/%s?%s', $videoID, $parameter);
+            }
+            return sprintf('https://www.youtube.com/shorts/%s', $videoID);
+        }
+
         if ($embedded) {
             return sprintf('https://www.youtube.com/embed/%s?%s', $videoID, $parameter);
         }
@@ -214,5 +221,42 @@ class Utility
         }
 
         return null;
+    }
+
+    /**
+     * Simplifies a fraction by dividing the numerator and denominator by their greatest common divisor.
+     *
+     * @param integer $numerator
+     * @param integer $denominator
+     * @return string
+     */
+    public static function getRatio($numerator, $denominator): ?string
+    {
+        if (!is_int($numerator) || !is_int($denominator) || $denominator == 0) {
+            return null;
+        }
+
+        $divisor = self::greatestCommonDivisor($numerator, $denominator);
+        $simplifiedNumerator = $numerator / $divisor;
+        $simplifiedDenominator = $denominator / $divisor;
+
+        return sprintf('%s / %s', $simplifiedNumerator, $simplifiedDenominator);
+    }
+
+    /**
+     * Calculates the greatest common divisor using the Euclidean algorithm.
+     *
+     * @param integer $numerator
+     * @param integer $denominator
+     * @return integer
+     */
+    protected static function greatestCommonDivisor(int $numerator, int $denominator): int
+    {
+        while ($denominator != 0) {
+            $temp = $denominator;
+            $denominator = $numerator % $denominator;
+            $numerator = $temp;
+        }
+        return abs($numerator); // Always return a positive GCD
     }
 }

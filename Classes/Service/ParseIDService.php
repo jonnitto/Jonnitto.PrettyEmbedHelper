@@ -113,6 +113,9 @@ class ParseIDService
      * http://www.youtube.com/user/Scobleizer#p/u/1/1p3vcRhsYGo
      * http://www.youtube.com/watch?v=IdOfTheVideo&feature=c4-overview-vl&list=PlaylistID
      * https://www.youtube.com/watch?v=IdOfTheVideo&list=PlaylistID
+     * shorts/IdOfTheVideo
+     * youtube.com/shorts/IdOfTheVideo
+     * https://www.youtube.com/shorts/IdOfTheVideo
      *
      * @param string|integer $url The URL or the plain id
      * @return string|null The video id extracted from url
@@ -124,6 +127,11 @@ class ParseIDService
         }
         $regs = [];
         $url = trim((string) $url);
+
+        if (strpos($url, 'shorts/') !== false) {
+            preg_match_all('/shorts\/([A-Za-z0-9_-]*)/', $url, $regs);
+            return (string) $regs[1][0];
+        }
 
         if (
             preg_match_all(

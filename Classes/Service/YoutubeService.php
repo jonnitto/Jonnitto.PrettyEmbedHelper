@@ -85,7 +85,7 @@ class YoutubeService
 
         if (isset($data)) {
             $title = $data['title'] ?? null;
-            $ratio = $data['width'] && $data['height'] ? sprintf('%s / %s', $data['width'], $data['height']) : null;
+            $ratio = Utility::getRatio($data['width'], $data['height']);
             $duration = $data['duration'] ?? null;
             if (isset($data['imageUrl'], $data['imageResolution'])) {
                 $image = $data['imageUrl'];
@@ -139,6 +139,9 @@ class YoutubeService
         $url = trim($url);
         if (!$url) {
             return 'video';
+        }
+        if (strpos($url, 'shorts/') !== false) {
+            return 'short';
         }
         return strpos($url, 'list=') !== false ? 'playlist' : 'video';
     }

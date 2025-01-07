@@ -54,7 +54,7 @@ class ApiService
      */
     public function youtube($id, string $type = 'video', ?string $apiKey = null): ?array
     {
-        if (!$id || ($type !== 'video' && $type !== 'playlist')) {
+        if (!$id || ($type !== 'video' && $type !== 'playlist' && $type !== 'short')) {
             return null;
         }
         if ($apiKey) {
@@ -63,8 +63,12 @@ class ApiService
                 return $data;
             }
         }
-        $pathAndQuery = ($type === 'video' ? 'watch?v=' : 'playlist?list=') . $id;
-        $url = urlencode('https://youtube.com/' . $pathAndQuery);
+        $prefix = [
+            'video' => 'watch?v=',
+            'playlist' => 'playlist?list=',
+            'short' => 'shorts/',
+        ];
+        $url = urlencode('https://youtube.com/' . $prefix[$type] . $id);
         $data = $this->getJson('https://www.youtube.com/oembed?url=' . $url, $type, 'YouTube Oembed Service', $id);
 
         return $data ?? null;
@@ -168,7 +172,12 @@ class ApiService
      */
     protected function makeCallToGoogleApi(string $id, string $apiKey, string $type): ?array
     {
-        $url = sprintf('https://www.googleapis.com/youtube/v3/%ss?key=%s&part=contentDetails', $type, $apiKey);
+        if ($type == 'short') {
+            $endpoint = 'videos';
+        } else {
+            $endpoint = $type . 's';
+        }
+        $url = sprintf('https://www.googleapis.com/youtube/v3/%s?key=%s&part=contentDetails', $endpoint, $apiKey);
         $typeForLogger = $type === 'playlistItem' ? 'playlist items' : $type;
 
         if ($type !== 'playlistItem') {
@@ -203,12 +212,17 @@ class ApiService
         // Get the title
         $title = $item['snippet']['title'];
 
-        // Get the dimensions
-        $dom = new DOMDocument();
-        $dom->loadHTML($item['player']['embedHtml']);
-        $iframe = $dom->getElementsByTagName('iframe')[0];
-        $width = $iframe ? (int) $iframe->getAttribute('width') : null;
-        $height = $iframe ? (int) $iframe->getAttribute('height') : null;
+        if ($type !== 'short') {
+            // Get the dimensions
+            $dom = new DOMDocument();
+            $dom->loadHTML($item['player']['embedHtml']);
+            $iframe = $dom->getElementsByTagName('iframe')[0];
+            $width = $iframe ? (int) $iframe->getAttribute('width') : null;
+            $height = $iframe ? (int) $iframe->getAttribute('height') : null;
+        } else {
+            $width = 9;
+            $height = 16;
+        }
 
         // Get the best possible image
         $thumbnail = end($item['snippet']['thumbnails']);
@@ -217,7 +231,7 @@ class ApiService
 
         // Get the duration
         $duration = 0;
-        if ($type === 'video') {
+        if ($type !== 'playlist') {
             // From a single video
             $duration = $this->convertToSeconds($item['contentDetails']['duration']);
         } else {
