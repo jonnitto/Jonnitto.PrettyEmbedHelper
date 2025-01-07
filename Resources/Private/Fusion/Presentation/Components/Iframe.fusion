@@ -52,15 +52,15 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Iframe) < prototype(Neos.Fusion:Comp
         checkPreviewImage = ${this.poster || this.preview}
     }
 
-    // @internal Move to @private if minimal Neos requirement is 8.3 or higher
-    _alwaysOpenInPopup = ${this.gdprHandling == 'popup'}
-    _fileLoader = ${{debug: this.debug, player: this.player, gdprHandling: this.gdprHandling}}
-    _fileLoader.@process.convert = Jonnitto.PrettyEmbed:Assets {
-        player = ${value.player}
-        gdprHandling = ${value.gdprHandling}
-        debug = ${value.debug}
+    @private {
+        alwaysOpenInPopup = ${props.gdprHandling == 'popup'}
+        fileLoader = Jonnitto.PrettyEmbed:Assets {
+            player = ${props.player}
+            gdprHandling = ${props.gdprHandling}
+            debug = ${props.debug}
+        }
+        fileLoaderAsAttributes = ${!Type.isString(private.fileLoader)}
     }
-    _fileLoaderAsAttributes = ${!Type.isString(this._fileLoader)}
 
     renderer = afx`
         <Jonnitto.PrettyEmbed:Presenation.Wrapper wrapper={props.wrapper}>
@@ -74,7 +74,7 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Iframe) < prototype(Neos.Fusion:Comp
                     style: props.lightbox && 'lightbox' || null,
                     loop: props.loop || null
                 })}
-                x-prettyembedvimeo.@if={props.player == 'Vimeo' && !props._alwaysOpenInPopup}
+                x-prettyembedvimeo.@if={props.player == 'Vimeo' && !private.alwaysOpenInPopup}
                 x-prettyembedyoutube={AlpineJS.object({
                     gdpr: props.gdprHandling || null,
                     video: props.videoID || null,
@@ -84,28 +84,28 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Iframe) < prototype(Neos.Fusion:Comp
                     loop: props.loop || null,
                     noCookie: props.useYoutubeNoCookieDomain || null
                 })}
-                x-prettyembedyoutube.@if={props.player== 'YouTube' && !props._alwaysOpenInPopup}
+                x-prettyembedyoutube.@if={props.player== 'YouTube' && !private.alwaysOpenInPopup}
                 aria-label={props.label}
                 id={props.id}
                 class={Carbon.String.merge(props.class, BEM.modifier('jonnitto-prettyembed', String.toLowerCase(props.player)), props.setAspectRatioClass && 'jonnitto-prettyembed-ratio')}
                 style={props.aspectRatio ? '--aspect-ratio:' + props.aspectRatio :  null}
-                {...(props._fileLoaderAsAttributes ? props._fileLoader : {})}
+                {...(private.fileLoaderAsAttributes ? private.fileLoader : {})}
             >
-                {props._fileLoaderAsAttributes ? '' : props._fileLoader}
+                {private.fileLoaderAsAttributes ? '' : private.fileLoader}
                 <Jonnitto.PrettyEmbed:Presentation.Button.Play
-                    @if={!props._alwaysOpenInPopup}
+                    @if={!private.alwaysOpenInPopup}
                     show={props.controls ? "!loaded" : "!playing"}
                     show.@if={!props.lightbox}
                     onClick="load"
                     href={props.href}
                 />
                 <Jonnitto.PrettyEmbed:Presentation.Button.Play
-                    @if={props._alwaysOpenInPopup}
+                    @if={private.alwaysOpenInPopup}
                     href={props.href}
                     popup={props.embedHref}
                 />
                 <Jonnitto.PrettyEmbed:Presentation.Button.Pause
-                    @if={!props.controls && !props.lightbox && !props._alwaysOpenInPopup}
+                    @if={!props.controls && !props.lightbox && !private.alwaysOpenInPopup}
                 />
                 <Jonnitto.PrettyEmbed:Presentation.GdprConsent
                     @if={props.gdprHandling == true}
@@ -113,7 +113,7 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Iframe) < prototype(Neos.Fusion:Comp
                     embedHref={props.embedHref}
                 />
                 <Jonnitto.PrettyEmbed:Presentation.Preview
-                    show={props._alwaysOpenInPopup || props.lightbox ? null : "!loaded"}
+                    show={private.alwaysOpenInPopup || props.lightbox ? null : "!loaded"}
                     content={props.preview}
                     label={props.label}
                     src={props.poster}
@@ -129,7 +129,7 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Iframe) < prototype(Neos.Fusion:Comp
                     controls={props.controls}
                 />
                 <Jonnitto.PrettyEmbed:Presentation.Lightbox
-                    @if={props.lightbox && !props._alwaysOpenInPopup }
+                    @if={props.lightbox && !private.alwaysOpenInPopup }
                     aspectRatio={props.aspectRatio}
                     player={props.player}
                     playButton={!props.controls}

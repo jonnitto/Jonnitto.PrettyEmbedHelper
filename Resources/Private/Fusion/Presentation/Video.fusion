@@ -41,9 +41,8 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Video) < prototype(Neos.Fusion:Compo
 
     @if.checkVideo = ${(this.poster || this.preview) && (this.content || this.streaming)}
 
-    renderer = Neos.Fusion:Component {
-        @apply.props = ${props}
-        _video = afx`
+    @private {
+        video = afx`
             <video
                 x-prettyembedmedia:media={props.streaming || true}
                 x-show="loaded"
@@ -62,57 +61,54 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Video) < prototype(Neos.Fusion:Compo
                 {props.streaming ? '' : props.content}
             </video>
         `
-
-        // @internal Move to @private if minimal Neos requirement is 8.3 or higher
-        _fileLoader = Jonnitto.PrettyEmbed:Assets {
+        fileLoader = Jonnitto.PrettyEmbed:Assets {
             player = 'Video'
             debug = ${props.debug}
         }
-        _fileLoaderAsAttributes = ${!Type.isString(this._fileLoader)}
-
-
-        renderer = afx`
-            <Jonnitto.PrettyEmbed:Presenation.Wrapper wrapper={props.wrapper}>
-                <div
-                    x-data
-                    x-prettyembedmedia={!props.streaming && !props.lightbox}
-                    "x-prettyembedmedia.lightbox"={!props.streaming && props.lightbox}
-                    "x-prettyembedmedia.streaming.lightbox"={props.streaming && props.lightbox}
-                    "x-prettyembedmedia.streaming"={props.streaming && !props.lightbox}
-                    aria-label={props.label}
-                    id={props.id}
-                    class={Carbon.String.merge(props.class, BEM.modifier('jonnitto-prettyembed', 'video'))}
-                    {...(props._fileLoaderAsAttributes ? props._fileLoader : {})}
-                >
-                    {props._fileLoaderAsAttributes ? '' : props._fileLoader}
-                    <Jonnitto.PrettyEmbed:Presentation.Preview
-                        show={props.lightbox ? null : '!loaded'}
-                        content={props.preview}
-                        label={props.label}
-                        src={props.poster}
-                        src2x={props.poster2x}
-                        srcset={props.posterSrcset}
-                        width={props.posterWidth}
-                        height={props.posterHeight}
-                        loadImageStrategy={props.loadImageStrategy}
-                    />
-                    {props.lightbox ? '' : props._video}
-                    <Jonnitto.PrettyEmbed:Presentation.Button.Play
-                        onClick="play"
-                        show={props.lightbox ? null : '!playing'}
-                    />
-                    <Jonnitto.PrettyEmbed:Presentation.Button.Pause
-                        @if={!props.controls && !props.lightbox}
-                    />
-                    <Jonnitto.PrettyEmbed:Presentation.Lightbox
-                        @if={props.lightbox}
-                        player="Video"
-                        playButton={true}
-                        pauseButton={!props.controls}
-                        content={props._video}
-                    />
-                </div>
-            </Jonnitto.PrettyEmbed:Presenation.Wrapper>
-        `
+        fileLoaderAsAttributes = ${!Type.isString(private.fileLoader)}
     }
+
+    renderer = afx`
+        <Jonnitto.PrettyEmbed:Presenation.Wrapper wrapper={props.wrapper}>
+            <div
+                x-data
+                x-prettyembedmedia={!props.streaming && !props.lightbox}
+                "x-prettyembedmedia.lightbox"={!props.streaming && props.lightbox}
+                "x-prettyembedmedia.streaming.lightbox"={props.streaming && props.lightbox}
+                "x-prettyembedmedia.streaming"={props.streaming && !props.lightbox}
+                aria-label={props.label}
+                id={props.id}
+                class={Carbon.String.merge(props.class, BEM.modifier('jonnitto-prettyembed', 'video'))}
+                {...(private.fileLoaderAsAttributes ? private.fileLoader : {})}
+            >
+                {private.fileLoaderAsAttributes ? '' : private.fileLoader}
+                <Jonnitto.PrettyEmbed:Presentation.Preview
+                    show={props.lightbox ? null : '!loaded'}
+                    content={props.preview}
+                    label={props.label}
+                    src={props.poster}
+                    src2x={props.poster2x}
+                    srcset={props.posterSrcset}
+                    width={props.posterWidth}
+                    height={props.posterHeight}
+                    loadImageStrategy={props.loadImageStrategy}
+                />
+                {props.lightbox ? '' : private.video}
+                <Jonnitto.PrettyEmbed:Presentation.Button.Play
+                    onClick="play"
+                    show={props.lightbox ? null : '!playing'}
+                />
+                <Jonnitto.PrettyEmbed:Presentation.Button.Pause
+                    @if={!props.controls && !props.lightbox}
+                />
+                <Jonnitto.PrettyEmbed:Presentation.Lightbox
+                    @if={props.lightbox}
+                    player="Video"
+                    playButton={true}
+                    pauseButton={!props.controls}
+                    content={private.video}
+                />
+            </div>
+        </Jonnitto.PrettyEmbed:Presenation.Wrapper>
+    `
 }
