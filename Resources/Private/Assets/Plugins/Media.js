@@ -70,7 +70,8 @@ function handleRoot({ element, Alpine, options }) {
                     this.__media?.play();
                 },
                 pause(skipAutoplay = false) {
-                    if (skipAutoplay && (this.autoplay || this.__media?.muted)) {
+                    const skip = typeof skipAutoplay === 'boolean' ? skipAutoplay : false;
+                    if (skip && (this.autoplay || this.__media?.muted)) {
                         return;
                     }
                     if (!this.__media?.paused) {
@@ -146,6 +147,10 @@ function handleMedia({ element, Alpine, src }) {
             this.id = this.url.split('/').pop();
             this.autoplay = element.autoplay;
             this.type = type;
+            if (this.autoplay) {
+                this.playing = true;
+                this.loaded = true;
+            }
         },
         '@play'() {
             if (!this.loaded) {
