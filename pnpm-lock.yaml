@@ -19,8 +19,8 @@ importers:
         specifier: ^9.17.0
         version: 9.17.0
       '@neos-project/neos-ui-extensibility':
-        specifier: 9.0.0-beta2
-        version: 9.0.0-beta2
+        specifier: ^8.3.11
+        version: 8.3.11
       '@prettier/plugin-php':
         specifier: ^0.22.2
         version: 0.22.2(prettier@3.4.2)
@@ -316,11 +316,11 @@ packages:
     resolution: {integrity: sha512-c7hNEllBlenFTHBky65mhq8WD2kbN9Q6gk0bTk8lSBvc554jpXSkST1iePudpt7+A/AQvuHs9EMqjHDXMY1lrA==}
     engines: {node: '>=18.18'}
 
-  '@neos-project/neos-ui-extensibility@9.0.0-beta2':
-    resolution: {integrity: sha512-XV9U5lzyJgJ2QlnkF8dSxfTTcB0V67KbyQ9BMjirBgm7HcJ+WpFtZHa0JmXDMQG9q54c0eMIWSZJg5+VbkANcQ==}
+  '@neos-project/neos-ui-extensibility@8.3.11':
+    resolution: {integrity: sha512-thhE0LBNTA/FclFcz42JWsYSIODtb3QUSl9+JZBk7npB6xxsuaxaU9SDqT9MwS72X//qKwqnU01fDW/w/yrlIg==}
 
-  '@neos-project/positional-array-sorter@9.0.0-beta2':
-    resolution: {integrity: sha512-wQT50TlPlWUOg5MtFThfvHUboVzc6BYqI8DXP2Mxg6Lj0n0Vvp/EiflDZQXJAOUUw1Ey2Ym9ofJTfL4Fl0V0lw==}
+  '@neos-project/positional-array-sorter@8.3.11':
+    resolution: {integrity: sha512-Bo1JjzidH3yUFeBcr0e0sv+K8VAdDmO1gqTMpRusfozV+kR0Rcmb2qJJ/dgNaHI6BcNpecLZF6EJDzrqwO1Ueg==}
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -1796,11 +1796,11 @@ snapshots:
 
   '@humanwhocodes/retry@0.4.1': {}
 
-  '@neos-project/neos-ui-extensibility@9.0.0-beta2':
+  '@neos-project/neos-ui-extensibility@8.3.11':
     dependencies:
-      '@neos-project/positional-array-sorter': 9.0.0-beta2
+      '@neos-project/positional-array-sorter': 8.3.11
 
-  '@neos-project/positional-array-sorter@9.0.0-beta2': {}
+  '@neos-project/positional-array-sorter@8.3.11': {}
 
   '@nodelib/fs.scandir@2.1.5':
     dependencies:
