@@ -11,3 +11,4 @@
         inspector:
           group: look
           position: 40
+          hidden: 'ClientEval: !!node.properties.lightbox'
