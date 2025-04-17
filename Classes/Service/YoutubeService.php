@@ -3,71 +3,58 @@
 namespace Jonnitto\PrettyEmbedHelper\Service;
 
 use Jonnitto\PrettyEmbedHelper\Utility\Utility;
-use Neos\ContentRepository\Domain\Model\NodeInterface;
-use Neos\ContentRepository\Exception\NodeException;
+use JsonException;
+use Neos\ContentRepository\Core\Feature\NodeModification\Command\SetNodeProperties;
+use Neos\ContentRepository\Core\Feature\NodeModification\Dto\PropertyValuesToWrite;
+use Neos\ContentRepository\Core\Projection\ContentGraph\Node;
+use Neos\ContentRepository\Core\Projection\ContentGraph\NodePath;
+use Neos\ContentRepositoryRegistry\ContentRepositoryRegistry;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Http\Client\InfiniteRedirectionException;
 use Neos\Flow\Persistence\Exception\IllegalObjectTypeException;
 use Neos\Flow\Persistence\Exception\InvalidQueryException;
 use Neos\Flow\ResourceManagement\Exception;
-use JsonException;
-use function strpos;
 use function trim;
 
-/**
- * @Flow\Scope("singleton")
- */
+#[Flow\Scope('singleton')]
 class YoutubeService
 {
-    /**
-     * @Flow\Inject
-     * @var ImageService
-     */
-    protected $imageService;
+    #[Flow\Inject]
+    protected ImageService $imageService;
 
-    /**
-     * @Flow\Inject
-     * @var ParseIDService
-     */
-    protected $parseID;
+    #[Flow\Inject]
+    protected ParseIDService $parseID;
 
-    /**
-     * @Flow\Inject
-     * @var ApiService
-     */
-    protected $api;
+    #[Flow\Inject]
+    protected ApiService $api;
 
-    /**
-     * @Flow\Inject
-     * @var MetadataService
-     */
-    protected $metadataService;
+    #[Flow\Inject]
+    protected MetadataService $metadataService;
 
-    /**
-     * @Flow\InjectConfiguration(package="Jonnitto.PrettyEmbed", path="YouTube.apiKey")
-     * @var string
-     */
+    #[Flow\Inject]
+    protected ContentRepositoryRegistry $contentRepositoryRegistry;
+
+    #[Flow\InjectConfiguration('YouTube.apiKey', 'Jonnitto.PrettyEmbed')]
     protected $apiKey;
 
     /**
      * Get and save data from oembed service
      *
-     * @param NodeInterface $node
+     * @param Node $node
      * @param boolean $remove
      * @return array|null
-     * @throws NodeException
      * @throws IllegalObjectTypeException
      * @throws Exception|InfiniteRedirectionException
      * @throws JsonException|InvalidQueryException
      */
-    public function getAndSaveDataFromApi(NodeInterface $node, bool $remove = false): ?array
+    public function getAndSaveDataFromApi(Node $node, bool $remove = false): ?array
     {
         $this->imageService->remove($node);
 
         $returnArray = [
-            'nodeTypeName' => $node->getNodeType()->getName(),
+            'nodeTypeName' => $node->nodeTypeName->value,
             'node' => 'Youtube',
-            'path' => $node->getPath(),
+            'path' => NodePath::fromNodeNames($node->name),
             'data' => false,
         ];
 
@@ -78,7 +65,18 @@ class YoutubeService
 
         $videoIDProperty = $node->getProperty('videoID');
         $type = $this->type($videoIDProperty);
-        $node->setProperty('type', $type);
+
+        $contentRepository = $this->contentRepositoryRegistry->get($node->contentRepositoryId);
+        $contentRepository->handle(
+            SetNodeProperties::create(
+                $node->workspaceName,
+                $node->aggregateId,
+                $node->originDimensionSpacePoint,
+                PropertyValuesToWrite::fromArray([
+                    'type' => $type,
+                ])
+            )
+        );
 
         $videoID = $this->parseID->youtube($videoIDProperty, $type);
         $data = $this->api->youtube($videoID, $type, $this->apiKey);
@@ -105,7 +103,7 @@ class YoutubeService
             $thumbnail = $this->imageService->import($node, $image, $videoID, 'Youtube', $resolution);
         }
 
-        Utility::setMetadata($node, null, [
+        Utility::setMetadata($this->contentRepositoryRegistry, $node, null, [
             'videoID' => $videoID,
             'title' => $title ?? null,
             'aspectRatio' => $ratio ?? null,

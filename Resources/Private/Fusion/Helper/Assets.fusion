@@ -9,7 +9,7 @@ prototype(Jonnitto.PrettyEmbed:Assets) < prototype(Neos.Fusion:Component) {
     debug = ${Configuration.setting('Jonnitto.PrettyEmbed.debug')}
     includeAssets = ${Configuration.setting('Jonnitto.PrettyEmbed.includeAssets')}
     includeAlpineJsCheck = ${Configuration.setting('Jonnitto.PrettyEmbed.includeAlpineJsCheck')}
-    inBackend = ${node.context.inBackend && node.context.currentRenderingMode.edit}
+    inBackend = ${renderingMode.isEdit}
 
     // This decides which file to load
     player = null
