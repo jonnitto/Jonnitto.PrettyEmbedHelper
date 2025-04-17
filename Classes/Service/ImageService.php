@@ -7,7 +7,6 @@ use Jonnitto\PrettyEmbedHelper\Utility\Utility;
 use Neos\ContentRepository\Core\NodeType\NodeTypeName;
 use Neos\ContentRepository\Core\Projection\ContentGraph\Node;
 use Neos\ContentRepository\Core\Projection\ContentGraph\VisibilityConstraints;
-use Neos\ContentRepository\Core\SharedModel\ContentRepository\ContentRepositoryId;
 use Neos\ContentRepository\Core\SharedModel\Workspace\Workspace;
 use Neos\ContentRepositoryRegistry\ContentRepositoryRegistry;
 use Neos\Flow\Annotations as Flow;
@@ -20,57 +19,36 @@ use Neos\Media\Domain\Model\Image;
 use Neos\Media\Domain\Model\Tag;
 use Neos\Media\Domain\Repository\AssetRepository;
 use Neos\Media\Domain\Repository\TagRepository;
-use Neos\Neos\Domain\Service\WorkspaceService;
 use Throwable;
 use function explode;
 use function pathinfo;
 use function strtolower;
 
-/**
- * @Flow\Scope("singleton")
- */
+#[Flow\Scope('singleton')]
 class ImageService
 {
-    /**
-     * @Flow\Inject
-     * @var PersistenceManagerInterface
-     */
-    protected $persistenceManager;
+    #[Flow\Inject]
+    protected PersistenceManagerInterface $persistenceManager;
 
-    /**
-     * @Flow\Inject
-     * @var TagRepository
-     */
-    protected $tagRepository;
+    #[Flow\Inject]
+    protected TagRepository $tagRepository;
 
-    /**
-     * @Flow\Inject
-     * @var AssetRepository
-     */
-    protected $assetRepository;
+    #[Flow\Inject]
+    protected AssetRepository $assetRepository;
 
-    /**
-     * * @Flow\Inject
-     * @var ResourceManager
-     */
-    protected $resourceManager;
+    #[Flow\Inject]
+    protected ResourceManager $resourceManager;
 
-    /**
-     * @Flow\Inject
-     * @var ContentRepositoryRegistry
-     */
-    protected $contentRepositoryRegistry;
+    #[Flow\Inject]
+    protected ContentRepositoryRegistry $contentRepositoryRegistry;
+
+    #[Flow\InjectConfiguration('imageformat', 'Jonnitto.PrettyEmbed')]
+    protected $defaultImageFormat;
 
     /**
      * @var Image[]
      */
     private $pendingThumbnailToDelete = [];
-
-    /**
-     * @Flow\InjectConfiguration(package="Jonnitto.PrettyEmbed", path="imageformat")
-     * @var string
-     */
-    protected $defaultImageFormat;
 
     /**
      * Import image
@@ -85,14 +63,9 @@ class ImageService
      * @throws Exception|InvalidQueryException
      * @throws \Exception
      */
-    public function import(
-        Node $node,
-        string $url,
-        $videoId,
-        string $type,
-        ?string $filenameSuffix = null
-    ): ?object {
-        if (!$node->nodeTypeName->equals( NodeTypeName::fromString('Jonnitto.PrettyEmbedHelper:Mixin.Metadata'))) {
+    public function import(Node $node, string $url, $videoId, string $type, ?string $filenameSuffix = null): ?object
+    {
+        if (!$node->nodeTypeName->equals(NodeTypeName::fromString('Jonnitto.PrettyEmbedHelper:Mixin.Metadata'))) {
             return null;
         }
 
@@ -215,15 +188,14 @@ class ImageService
     public function removeDataAfterNodePublishing(Node $node, Workspace $targetWorkspace): void
     {
         $contentRepository = $this->contentRepositoryRegistry->get($node->contentRepositoryId);
-        $subgraph = $contentRepository->getContentGraph($targetWorkspace->workspaceName)->getSubgraph(
-            $node->dimensionSpacePoint,
-            VisibilityConstraints::frontend()
-        );
+        $subgraph = $contentRepository
+            ->getContentGraph($targetWorkspace->workspaceName)
+            ->getSubgraph($node->dimensionSpacePoint, VisibilityConstraints::frontend());
 
         if (
             !$targetWorkspace->isRootWorkspace() ||
             !($subgraph->findNodeById($node->aggregateId) === null) ||
-            !$node->nodeTypeName->equals( NodeTypeName::fromString('Jonnitto.PrettyEmbedHelper:Mixin.Metadata'))
+            !$node->nodeTypeName->equals(NodeTypeName::fromString('Jonnitto.PrettyEmbedHelper:Mixin.Metadata'))
         ) {
             return;
         }

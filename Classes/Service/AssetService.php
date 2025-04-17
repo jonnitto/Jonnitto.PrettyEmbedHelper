@@ -15,28 +15,17 @@ use Neos\Utility\Files;
 use function file_exists;
 use function round;
 
-/**
- * @Flow\Scope("singleton")
- */
+#[Flow\Scope('singleton')]
 class AssetService
 {
-    /**
-     * @Flow\Inject
-     * @var Environment
-     */
-    protected $environment;
+    #[Flow\Inject]
+    protected Environment $environment;
 
-    /**
-     * @Flow\Inject
-     * @var ResourceManager
-     */
-    protected $resourceManager;
+    #[Flow\Inject]
+    protected ResourceManager $resourceManager;
 
-    /**
-     * @Flow\Inject
-     * @var ContentRepositoryRegistry
-     */
-    protected $contentRepositoryRegistry;
+    #[Flow\Inject]
+    protected ContentRepositoryRegistry $contentRepositoryRegistry;
 
     /**
      * Set cache directory

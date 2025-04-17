@@ -4,7 +4,6 @@ namespace Jonnitto\PrettyEmbedHelper\Eel;
 
 use Jonnitto\PrettyEmbedHelper\Service\ParseIDService;
 use Jonnitto\PrettyEmbedHelper\Utility\Utility;
-use JsonException;
 use Neos\ContentRepository\Core\Projection\ContentGraph\Node;
 use Neos\Eel\ProtectedContextAwareInterface;
 use Neos\Flow\Annotations as Flow;
@@ -14,14 +13,12 @@ use Neos\Media\Domain\Model\ImageInterface;
 use Neos\Media\Domain\Model\ThumbnailConfiguration;
 use Neos\Media\Domain\Service\ThumbnailService;
 use Neos\Media\Exception\ThumbnailServiceException;
+use JsonException;
 
 class Helper implements ProtectedContextAwareInterface
 {
-    /**
-     * @Flow\Inject
-     * @var ThumbnailService
-     */
-    protected $thumbnailService;
+    #[Flow\Inject]
+    protected ThumbnailService $thumbnailService;
 
     /**
      * Get the metadata from a node
@@ -131,8 +128,12 @@ class Helper implements ProtectedContextAwareInterface
      * @return ImageInterface|null
      * @throws ThumbnailServiceException
      */
-    public function createThumbnail(AssetInterface $asset, $maximumWidth = null, $format = null, $quality = null): ?ImageInterface
-    {
+    public function createThumbnail(
+        AssetInterface $asset,
+        $maximumWidth = null,
+        $format = null,
+        $quality = null
+    ): ?ImageInterface {
         $width = null;
         $height = null;
         $maximumHeight = null;

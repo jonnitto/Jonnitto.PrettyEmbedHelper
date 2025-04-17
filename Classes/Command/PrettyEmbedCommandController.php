@@ -5,17 +5,11 @@ namespace Jonnitto\PrettyEmbedHelper\Command;
 use Jonnitto\PrettyEmbedHelper\Service\ImageService;
 use Jonnitto\PrettyEmbedHelper\Service\MetadataService;
 use Neos\ContentRepository\Core\Projection\ContentGraph\Filter\FindDescendantNodesFilter;
-use Neos\ContentRepository\Core\Projection\ContentGraph\NodePath;
 use Neos\ContentRepository\Core\Projection\ContentGraph\VisibilityConstraints;
 use Neos\ContentRepository\Core\SharedModel\ContentRepository\ContentRepositoryId;
 use Neos\ContentRepository\Core\SharedModel\Workspace\WorkspaceName;
-use Neos\ContentRepository\Domain\Repository\WorkspaceRepository;
-use Neos\ContentRepository\Domain\Service\ContentDimensionCombinator;
-use Neos\ContentRepository\Domain\Service\ContextFactoryInterface;
-use Neos\ContentRepository\Exception\NodeException;
 use Neos\ContentRepositoryRegistry\ContentRepositoryRegistry;
 use Neos\Eel\Exception as EelException;
-use Neos\Eel\FlowQuery\FlowQuery;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Cli\CommandController;
 use Neos\Flow\Cli\Exception\StopCommandException;
@@ -26,70 +20,50 @@ use Neos\Neos\Domain\Service\NodeTypeNameFactory;
 use Psr\Log\LoggerInterface;
 use function array_reduce;
 
-/**
- * @Flow\Scope("singleton")
- */
+#[Flow\Scope('singleton')]
 class PrettyEmbedCommandController extends CommandController
 {
-    /**
-     * @Flow\Inject
-     * @var MetadataService
-     */
-    protected $metadataService;
+    #[Flow\Inject]
+    protected MetadataService $metadataService;
 
-    /**
-     * @Flow\Inject
-     * @var ContentRepositoryRegistry
-     */
-    protected $contentRepositoryRegistry;
+    #[Flow\Inject]
+    protected ContentRepositoryRegistry $contentRepositoryRegistry;
 
-    /**
-     * @Flow\Inject
-     * @var PersistenceManagerInterface
-     */
-    protected $persistenceManager;
+    #[Flow\Inject]
+    protected PersistenceManagerInterface $persistenceManager;
 
-    /**
-     * @Flow\Inject
-     * @var LoggerInterface
-     */
-    protected $logger;
+    #[Flow\Inject]
+    protected LoggerInterface $logger;
 
-    /**
-     * @Flow\Inject
-     * @var ImageService
-     */
-    protected $imageService;
+    #[Flow\Inject]
+    protected ImageService $imageService;
 
-    /**
-     * @var array
-     */
-    protected $success = [];
+    protected array $success = [];
 
-    /**
-     * @var array
-     */
-    protected $error = [];
+    protected array $error = [];
 
-    /**
-     * @var array
-     */
-    protected $nodes = [];
+    protected array $nodes = [];
 
     /**
      * Generate metadata for the PrettyEmbed Vimeo/YouTube/Video or Audio player
      *
      * This generates the metadata for all player which has the Jonnitto.PrettyEmbedHelper:Mixin.Metadata mixin
      *
+     * @param string $contentRepositoryId ID of the content repository, default is 'default'
      * @param string $workspaceName Workspace name, default is 'live'
      * @param boolean $remove If set, all metadata will be removed
      * @return void
      * @throws EelException
      * @throws StopCommandException
      */
-    public function metadataCommand(string $contentRepositoryId = 'default', string $workspaceName = 'live', bool $remove = false): void
-    {
-        $contentRepository = $this->contentRepositoryRegistry->get(ContentRepositoryId::fromString($contentRepositoryId));
+    public function metadataCommand(
+        string $contentRepositoryId = 'default',
+        string $workspaceName = 'live',
+        bool $remove = false
+    ): void {
+        $contentRepository = $this->contentRepositoryRegistry->get(
+            ContentRepositoryId::fromString($contentRepositoryId)
+        );
         $workspace = $contentRepository->findWorkspaceByName(WorkspaceName::fromString($workspaceName));
 
         $this->outputLine();
@@ -111,7 +85,10 @@ class PrettyEmbedCommandController extends CommandController
         foreach ($contentRepository->getVariationGraph()->getDimensionSpacePoints() as $dimensionSpacePoint) {
             $subgraph = $contentGraph->getSubgraph($dimensionSpacePoint, VisibilityConstraints::withoutRestrictions());
 
-            $nodes = $subgraph->findDescendantNodes($sitesNodeAggregate->nodeAggregateId, FindDescendantNodesFilter::create(nodeTypes: 'Jonnitto.PrettyEmbedHelper:Mixin.Metadata'));
+            $nodes = $subgraph->findDescendantNodes(
+                $sitesNodeAggregate->nodeAggregateId,
+                FindDescendantNodesFilter::create(nodeTypes: 'Jonnitto.PrettyEmbedHelper:Mixin.Metadata')
+            );
             $this->nodes = array_merge($this->nodes, iterator_to_array($nodes));
         }
 

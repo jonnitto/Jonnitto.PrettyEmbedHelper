@@ -16,45 +16,25 @@ use Neos\Flow\Persistence\Exception\InvalidQueryException;
 use Neos\Flow\ResourceManagement\Exception;
 use function trim;
 
-/**
- * @Flow\Scope("singleton")
- */
+#[Flow\Scope('singleton')]
 class YoutubeService
 {
-    /**
-     * @Flow\Inject
-     * @var ImageService
-     */
-    protected $imageService;
+    #[Flow\Inject]
+    protected ImageService $imageService;
 
-    /**
-     * @Flow\Inject
-     * @var ParseIDService
-     */
-    protected $parseID;
+    #[Flow\Inject]
+    protected ParseIDService $parseID;
 
-    /**
-     * @Flow\Inject
-     * @var ApiService
-     */
-    protected $api;
+    #[Flow\Inject]
+    protected ApiService $api;
 
-    /**
-     * @Flow\Inject
-     * @var MetadataService
-     */
-    protected $metadataService;
+    #[Flow\Inject]
+    protected MetadataService $metadataService;
 
-    /**
-     * @Flow\Inject
-     * @var ContentRepositoryRegistry
-     */
-    protected $contentRepositoryRegistry;
+    #[Flow\Inject]
+    protected ContentRepositoryRegistry $contentRepositoryRegistry;
 
-    /**
-     * @Flow\InjectConfiguration(package="Jonnitto.PrettyEmbed", path="YouTube.apiKey")
-     * @var string
-     */
+    #[Flow\InjectConfiguration('YouTube.apiKey', 'Jonnitto.PrettyEmbed')]
     protected $apiKey;
 
     /**
@@ -87,14 +67,16 @@ class YoutubeService
         $type = $this->type($videoIDProperty);
 
         $contentRepository = $this->contentRepositoryRegistry->get($node->contentRepositoryId);
-        $contentRepository->handle(SetNodeProperties::create(
-            $node->workspaceName,
-            $node->aggregateId,
-            $node->originDimensionSpacePoint,
-            PropertyValuesToWrite::fromArray([
-                'type' => $type,
-            ]),
-        ));
+        $contentRepository->handle(
+            SetNodeProperties::create(
+                $node->workspaceName,
+                $node->aggregateId,
+                $node->originDimensionSpacePoint,
+                PropertyValuesToWrite::fromArray([
+                    'type' => $type,
+                ])
+            )
+        );
 
         $videoID = $this->parseID->youtube($videoIDProperty, $type);
         $data = $this->api->youtube($videoID, $type, $this->apiKey);

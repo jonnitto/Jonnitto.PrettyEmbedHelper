@@ -3,12 +3,12 @@
 namespace Jonnitto\PrettyEmbedHelper\Utility;
 
 use Jonnitto\PrettyEmbedHelper\Service\ApiService;
-use JsonException;
 use Neos\ContentRepository\Core\Feature\NodeModification\Command\SetNodeProperties;
 use Neos\ContentRepository\Core\Feature\NodeModification\Dto\PropertyValuesToWrite;
 use Neos\ContentRepository\Core\Projection\ContentGraph\Node;
 use Neos\ContentRepositoryRegistry\ContentRepositoryRegistry;
 use Neos\Flow\Http\Client\InfiniteRedirectionException;
+use JsonException;
 use function get_headers;
 use function preg_replace;
 use function strpos;
@@ -49,46 +49,56 @@ class Utility
      * @param mixed $value
      * @return void
      */
-    public static function setMetadata(ContentRepositoryRegistry $contentRepositoryRegistry, Node $node, ?string $property = null, $value = null): void
-    {
+    public static function setMetadata(
+        ContentRepositoryRegistry $contentRepositoryRegistry,
+        Node $node,
+        ?string $property = null,
+        $value = null
+    ): void {
         $contentRepository = $contentRepositoryRegistry->get($node->contentRepositoryId);
 
         if (empty($property)) {
             $thumbnail = $value['thumbnail'] ?? null;
             unset($value['thumbnail']);
-            $contentRepository->handle(SetNodeProperties::create(
-                $node->workspaceName,
-                $node->aggregateId,
-                $node->originDimensionSpacePoint,
-                PropertyValuesToWrite::fromArray([
-                    self::THUMBNAIL_PROPERTY => $thumbnail,
-                    self::METADATA_PROPERTY => $value,
-                ]),
-            ));
+            $contentRepository->handle(
+                SetNodeProperties::create(
+                    $node->workspaceName,
+                    $node->aggregateId,
+                    $node->originDimensionSpacePoint,
+                    PropertyValuesToWrite::fromArray([
+                        self::THUMBNAIL_PROPERTY => $thumbnail,
+                        self::METADATA_PROPERTY => $value,
+                    ])
+                )
+            );
             return;
         }
         if ($property == 'thumbnail') {
-            $contentRepository->handle(SetNodeProperties::create(
-                $node->workspaceName,
-                $node->aggregateId,
-                $node->originDimensionSpacePoint,
-                PropertyValuesToWrite::fromArray([
-                    self::THUMBNAIL_PROPERTY => $value,
-                ]),
-            ));
+            $contentRepository->handle(
+                SetNodeProperties::create(
+                    $node->workspaceName,
+                    $node->aggregateId,
+                    $node->originDimensionSpacePoint,
+                    PropertyValuesToWrite::fromArray([
+                        self::THUMBNAIL_PROPERTY => $value,
+                    ])
+                )
+            );
             return;
         }
 
         $metadata = $node->getProperty(self::METADATA_PROPERTY) ?? [];
         $metadata[$property] = $value;
-        $contentRepository->handle(SetNodeProperties::create(
-            $node->workspaceName,
-            $node->aggregateId,
-            $node->originDimensionSpacePoint,
-            PropertyValuesToWrite::fromArray([
-                self::METADATA_PROPERTY => $metadata,
-            ]),
-        ));
+        $contentRepository->handle(
+            SetNodeProperties::create(
+                $node->workspaceName,
+                $node->aggregateId,
+                $node->originDimensionSpacePoint,
+                PropertyValuesToWrite::fromArray([
+                    self::METADATA_PROPERTY => $metadata,
+                ])
+            )
+        );
     }
 
     /**
@@ -98,43 +108,52 @@ class Utility
      * @param string|null $property If null, all metadata will be removed
      * @return void
      */
-    public static function removeMetadata(ContentRepositoryRegistry $contentRepositoryRegistry, Node $node, ?string $property = null): void
-    {
+    public static function removeMetadata(
+        ContentRepositoryRegistry $contentRepositoryRegistry,
+        Node $node,
+        ?string $property = null
+    ): void {
         $contentRepository = $contentRepositoryRegistry->get($node->contentRepositoryId);
 
         if ($property == 'thumbnail') {
-            $contentRepository->handle(SetNodeProperties::create(
-                $node->workspaceName,
-                $node->aggregateId,
-                $node->originDimensionSpacePoint,
-                PropertyValuesToWrite::fromArray([
-                    self::THUMBNAIL_PROPERTY => null,
-                ]),
-            ));
+            $contentRepository->handle(
+                SetNodeProperties::create(
+                    $node->workspaceName,
+                    $node->aggregateId,
+                    $node->originDimensionSpacePoint,
+                    PropertyValuesToWrite::fromArray([
+                        self::THUMBNAIL_PROPERTY => null,
+                    ])
+                )
+            );
             return;
         } elseif (empty($property)) {
-            $contentRepository->handle(SetNodeProperties::create(
-                $node->workspaceName,
-                $node->aggregateId,
-                $node->originDimensionSpacePoint,
-                PropertyValuesToWrite::fromArray([
-                    self::THUMBNAIL_PROPERTY => null,
-                    self::METADATA_PROPERTY => [],
-                ]),
-            ));
+            $contentRepository->handle(
+                SetNodeProperties::create(
+                    $node->workspaceName,
+                    $node->aggregateId,
+                    $node->originDimensionSpacePoint,
+                    PropertyValuesToWrite::fromArray([
+                        self::THUMBNAIL_PROPERTY => null,
+                        self::METADATA_PROPERTY => [],
+                    ])
+                )
+            );
             return;
         }
 
         $metadata = $node->getProperty(self::METADATA_PROPERTY) ?? [];
         unset($metadata[$property]);
-        $contentRepository->handle(SetNodeProperties::create(
-            $node->workspaceName,
-            $node->aggregateId,
-            $node->originDimensionSpacePoint,
-            PropertyValuesToWrite::fromArray([
-                self::METADATA_PROPERTY => $metadata,
-            ]),
-        ));
+        $contentRepository->handle(
+            SetNodeProperties::create(
+                $node->workspaceName,
+                $node->aggregateId,
+                $node->originDimensionSpacePoint,
+                PropertyValuesToWrite::fromArray([
+                    self::METADATA_PROPERTY => $metadata,
+                ])
+            )
+        );
     }
 
     /**

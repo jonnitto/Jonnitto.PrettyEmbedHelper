@@ -13,39 +13,26 @@ use Neos\Flow\Persistence\Exception\InvalidQueryException;
 use Neos\Flow\ResourceManagement\Exception;
 use JsonException;
 
-/**
- * @Flow\Scope("singleton")
- */
+#[Flow\Scope('singleton')]
 class VimeoService
 {
-    /**
-     * @Flow\Inject
-     * @var ImageService
-     */
-    protected $imageService;
+    #[Flow\Inject]
+    protected ImageService $imageService;
 
-    /**
-     * @Flow\Inject
-     * @var ParseIDService
-     */
-    protected $parseID;
+    #[Flow\Inject]
+    protected ParseIDService $parseID;
 
-    /**
-     * @Flow\Inject
-     * @var MetadataService
-     */
-    protected $metadataService;
+    #[Flow\Inject]
+    protected MetadataService $metadataService;
 
-    /**
-     * @Flow\Inject
-     * @var ApiService
-     */
-    protected $api;
+    #[Flow\Inject]
+    protected ApiService $api;
 
     /**
      * @Flow\Inject
      * @var ContentRepositoryRegistry
      */
+    #[Flow\Inject]
     protected $contentRepositoryRegistry;
 
     /**
