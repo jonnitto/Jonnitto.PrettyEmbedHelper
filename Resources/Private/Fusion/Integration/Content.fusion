@@ -18,6 +18,9 @@ prototype(Jonnitto.PrettyEmbed:Content) < prototype(Neos.Neos:ContentComponent) 
     // Async images
     async = true
 
+    // Some packages need to know this
+    inBackend = ${renderingMode.isEdit}
+
     @context {
         // set variable for helper prototypes
         player = ${this.player}
