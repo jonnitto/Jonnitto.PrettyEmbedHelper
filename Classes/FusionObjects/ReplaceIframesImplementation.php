@@ -16,11 +16,8 @@ use function str_replace;
  */
 class ReplaceIframesImplementation extends AbstractFusionObject
 {
-    /**
-     * @Flow\Inject
-     * @var YoutubeService
-     */
-    protected $youtubeService;
+    #[Flow\Inject]
+    protected YoutubeService $youtubeService;
 
     /**
      * @return string

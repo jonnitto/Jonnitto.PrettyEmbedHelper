@@ -10,9 +10,7 @@ use function strcmp;
 use function strpos;
 use function trim;
 
-/**
- * @Flow\Scope("singleton")
- */
+#[Flow\Scope('singleton')]
 class ParseIDService
 {
     /**

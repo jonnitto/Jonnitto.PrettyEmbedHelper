@@ -3,8 +3,9 @@
 namespace Jonnitto\PrettyEmbedHelper\Service;
 
 use Jonnitto\PrettyEmbedHelper\Utility\Utility;
-use Neos\ContentRepository\Domain\Model\NodeInterface;
-use Neos\ContentRepository\Exception\NodeException;
+use Neos\ContentRepository\Core\Projection\ContentGraph\Node;
+use Neos\ContentRepository\Core\Projection\ContentGraph\NodePath;
+use Neos\ContentRepositoryRegistry\ContentRepositoryRegistry;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\ResourceManagement\ResourceManager;
 use Neos\Flow\Utility\Environment;
@@ -14,22 +15,17 @@ use Neos\Utility\Files;
 use function file_exists;
 use function round;
 
-/**
- * @Flow\Scope("singleton")
- */
+#[Flow\Scope('singleton')]
 class AssetService
 {
-    /**
-     * @Flow\Inject
-     * @var Environment
-     */
-    protected $environment;
+    #[Flow\Inject]
+    protected Environment $environment;
 
-    /**
-     * @Flow\Inject
-     * @var ResourceManager
-     */
-    protected $resourceManager;
+    #[Flow\Inject]
+    protected ResourceManager $resourceManager;
+
+    #[Flow\Inject]
+    protected ContentRepositoryRegistry $contentRepositoryRegistry;
 
     /**
      * Set cache directory
@@ -55,18 +51,17 @@ class AssetService
     /**
      * Save the duration in seconds from audio or video files
      *
-     * @param NodeInterface $node
+     * @param Node $node
      * @param boolean $remove
      * @param string $type
      * @return array
-     * @throws NodeException
      */
-    public function getAndSaveDataId3(NodeInterface $node, bool $remove, string $type): array
+    public function getAndSaveDataId3(Node $node, bool $remove, string $type): array
     {
         $duration = null;
 
         if ($remove === true || !class_exists('JamesHeinrich\GetID3\GetID3')) {
-            Utility::removeMetadata($node, 'duration');
+            Utility::removeMetadata($this->contentRepositoryRegistry, $node, 'duration');
         } else {
             $this->setCacheDirectory();
             $assets = $node->getProperty('assets');
@@ -79,15 +74,15 @@ class AssetService
                     $duration = (int) round($fileInfo['playtime_seconds']);
                 }
             }
-            Utility::setMetadata($node, 'duration', $duration);
+            Utility::setMetadata($this->contentRepositoryRegistry, $node, 'duration', $duration);
         }
 
         return [
-            'nodeTypeName' => $node->getNodeType()->getName(),
+            'nodeTypeName' => $node->nodeTypeName->value,
             'node' => $type,
             'type' => '',
             'id' => '',
-            'path' => $node->getPath(),
+            'path' => NodePath::fromNodeNames($node->name),
             'data' => isset($duration),
         ];
     }

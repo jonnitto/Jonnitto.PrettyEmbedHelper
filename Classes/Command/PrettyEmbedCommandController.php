@@ -4,150 +4,92 @@ namespace Jonnitto\PrettyEmbedHelper\Command;
 
 use Jonnitto\PrettyEmbedHelper\Service\ImageService;
 use Jonnitto\PrettyEmbedHelper\Service\MetadataService;
-use Neos\ContentRepository\Domain\Repository\WorkspaceRepository;
-use Neos\ContentRepository\Domain\Service\ContentDimensionCombinator;
-use Neos\ContentRepository\Domain\Service\ContextFactoryInterface;
-use Neos\ContentRepository\Exception\NodeException;
+use Neos\ContentRepository\Core\Projection\ContentGraph\Filter\FindDescendantNodesFilter;
+use Neos\ContentRepository\Core\Projection\ContentGraph\VisibilityConstraints;
+use Neos\ContentRepository\Core\SharedModel\ContentRepository\ContentRepositoryId;
+use Neos\ContentRepository\Core\SharedModel\Workspace\WorkspaceName;
+use Neos\ContentRepositoryRegistry\ContentRepositoryRegistry;
 use Neos\Eel\Exception as EelException;
-use Neos\Eel\FlowQuery\FlowQuery;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Cli\CommandController;
 use Neos\Flow\Cli\Exception\StopCommandException;
 use Neos\Flow\Log\Utility\LogEnvironment;
 use Neos\Flow\Persistence\Exception\IllegalObjectTypeException;
 use Neos\Flow\Persistence\PersistenceManagerInterface;
-use Neos\Neos\Domain\Service\SiteService;
+use Neos\Neos\Domain\Service\NodeTypeNameFactory;
 use Psr\Log\LoggerInterface;
 use function array_reduce;
 
-/**
- * @Flow\Scope("singleton")
- */
+#[Flow\Scope('singleton')]
 class PrettyEmbedCommandController extends CommandController
 {
-    /**
-     * @Flow\Inject
-     * @var MetadataService
-     */
-    protected $metadataService;
+    #[Flow\Inject]
+    protected MetadataService $metadataService;
 
-    /**
-     * @Flow\Inject
-     * @var ContextFactoryInterface
-     */
-    protected $contextFactory;
+    #[Flow\Inject]
+    protected ContentRepositoryRegistry $contentRepositoryRegistry;
 
-    /**
-     * @Flow\Inject
-     * @var ContentDimensionCombinator
-     */
-    protected $dimensionCombinator;
+    #[Flow\Inject]
+    protected PersistenceManagerInterface $persistenceManager;
 
-    /**
-     * @Flow\Inject
-     * @var PersistenceManagerInterface
-     */
-    protected $persistenceManager;
+    #[Flow\Inject]
+    protected LoggerInterface $logger;
 
-    /**
-     * @Flow\Inject
-     * @var WorkspaceRepository
-     */
-    protected $workspaceRepository;
+    #[Flow\Inject]
+    protected ImageService $imageService;
 
-    /**
-     * @Flow\Inject
-     * @var LoggerInterface
-     */
-    protected $logger;
+    protected array $success = [];
 
-    /**
-     * @Flow\Inject
-     * @var ImageService
-     */
-    protected $imageService;
+    protected array $error = [];
 
-    /**
-     * @var array
-     */
-    protected $success = [];
-
-    /**
-     * @var array
-     */
-    protected $error = [];
-
-    /**
-     * @var array
-     */
-    protected $nodes = [];
+    protected array $nodes = [];
 
     /**
      * Generate metadata for the PrettyEmbed Vimeo/YouTube/Video or Audio player
      *
      * This generates the metadata for all player which has the Jonnitto.PrettyEmbedHelper:Mixin.Metadata mixin
      *
-     * @param string $workspace Workspace name, default is 'live'
+     * @param string $contentRepositoryId ID of the content repository, default is 'default'
+     * @param string $workspaceName Workspace name, default is 'live'
      * @param boolean $remove If set, all metadata will be removed
      * @return void
      * @throws EelException
      * @throws StopCommandException
      */
-    public function metadataCommand(string $workspace = 'live', bool $remove = false): void
-    {
+    public function metadataCommand(
+        string $contentRepositoryId = 'default',
+        string $workspaceName = 'live',
+        bool $remove = false
+    ): void {
+        $contentRepository = $this->contentRepositoryRegistry->get(
+            ContentRepositoryId::fromString($contentRepositoryId)
+        );
+        $workspace = $contentRepository->findWorkspaceByName(WorkspaceName::fromString($workspaceName));
+
         $this->outputLine();
-        /** @noinspection PhpUndefinedMethodInspection */
-        if ($this->workspaceRepository->countByName($workspace) === 0) {
-            $this->outputLine('<error>Workspace "%s" does not exist</error>', [$workspace]);
-            exit(1);
+        if ($workspace === null) {
+            $this->outputLine('<error>Workspace "%s" does not exist</error>', [$workspaceName]);
+            $this->quit(1);
         }
 
-        $contextProperties = [
-            'workspaceName' => $workspace,
-            'dimensions' => [],
-            'invisibleContentShown' => true,
-            'inaccessibleContentShown' => true,
-        ];
-        $baseContext = $this->contextFactory->create($contextProperties);
-        $baseContextSitesNode = $baseContext->getNode(SiteService::SITES_ROOT_PATH);
-        if (!$baseContextSitesNode) {
-            $this->outputFormatted(
-                sprintf('<error>Could not find "%s" root node</error>', SiteService::SITES_ROOT_PATH)
-            );
+        $contentGraph = $contentRepository->getContentGraph(WorkspaceName::fromString($workspaceName));
+        $sitesNodeAggregate = $contentGraph->findRootNodeAggregateByType(NodeTypeNameFactory::forSites());
+
+        if ($sitesNodeAggregate === null) {
+            $this->outputLine('<error>Could not find the sites node aggregate</error>');
             $this->quit(1);
         }
-        $baseContextSiteNodes = $baseContextSitesNode->getChildNodes();
-        if ($baseContextSiteNodes === []) {
-            $this->outputFormatted(
-                sprintf('<error>Could not find any site nodes in "%s" root node</error>', SiteService::SITES_ROOT_PATH)
-            );
-            $this->quit(1);
-        }
+
         $this->outputFormatted('Searching for PrettyEmbed nodes which are able to save metadata');
 
-        foreach ($this->dimensionCombinator->getAllAllowedCombinations() as $dimensionCombination) {
-            $flowQuery = new FlowQuery($baseContextSiteNodes);
-            $siteNodes = $flowQuery
-                ->context([
-                    'dimensions' => $dimensionCombination,
-                    'targetDimensions' => [],
-                ])
-                ->get();
+        foreach ($contentRepository->getVariationGraph()->getDimensionSpacePoints() as $dimensionSpacePoint) {
+            $subgraph = $contentGraph->getSubgraph($dimensionSpacePoint, VisibilityConstraints::withoutRestrictions());
 
-            if (count($siteNodes) > 0) {
-                $nodes = [$siteNodes];
-                foreach ($siteNodes as $siteNode) {
-                    $nodes[] = $flowQuery
-                        ->q($siteNode)
-                        ->context([
-                            'dimensions' => $dimensionCombination,
-                            'targetDimensions' => [],
-                        ])
-                        ->find('[instanceof Jonnitto.PrettyEmbedHelper:Mixin.Metadata]')
-                        ->get();
-                }
-                $this->nodes = array_merge(...$nodes);
-            }
+            $nodes = $subgraph->findDescendantNodes(
+                $sitesNodeAggregate->nodeAggregateId,
+                FindDescendantNodesFilter::create(nodeTypes: 'Jonnitto.PrettyEmbedHelper:Mixin.Metadata')
+            );
+            $this->nodes = array_merge($this->nodes, iterator_to_array($nodes));
         }
 
         $this->processNodes(true);
@@ -293,7 +235,7 @@ class PrettyEmbedCommandController extends CommandController
                         $this->error[] = $returnFromNode;
                     }
                 }
-            } catch (NodeException | IllegalObjectTypeException $e) {
+            } catch (IllegalObjectTypeException $e) {
             }
             $this->output->progressAdvance();
         }

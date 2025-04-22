@@ -17,16 +17,11 @@ use function json_decode;
 use function json_encode;
 use function urlencode;
 
-/**
- * @Flow\Scope("singleton")
- */
+#[Flow\Scope('singleton')]
 class ApiService
 {
-    /**
-     * @Flow\Inject
-     * @var LoggerInterface
-     */
-    protected $logger;
+    #[Flow\Inject]
+    protected LoggerInterface $logger;
 
     /**
      * @var Browser

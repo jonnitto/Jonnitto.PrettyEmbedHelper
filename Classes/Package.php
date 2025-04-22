@@ -4,8 +4,8 @@ namespace Jonnitto\PrettyEmbedHelper;
 
 use Jonnitto\PrettyEmbedHelper\Service\ImageService;
 use Jonnitto\PrettyEmbedHelper\Service\MetadataService;
-use Neos\ContentRepository\Domain\Model\Node;
-use Neos\ContentRepository\Domain\Model\Workspace;
+use Neos\ContentRepository\Core\Projection\ContentGraph\Node;
+use Neos\ContentRepository\Core\SharedModel\Workspace\Workspace;
 use Neos\Flow\Core\Bootstrap;
 use Neos\Flow\Package\Package as BasePackage;
 use Neos\Flow\Persistence\Doctrine\PersistenceManager;
