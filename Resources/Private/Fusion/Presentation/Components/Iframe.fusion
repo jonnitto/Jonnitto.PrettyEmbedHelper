@@ -64,7 +64,7 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Iframe) < prototype(Neos.Fusion:Comp
 
     renderer = afx`
         <Jonnitto.PrettyEmbed:Presenation.Wrapper wrapper={props.wrapper}>
-            <div
+            <aside
                 x-data
                 x-prettyembedvimeo={AlpineJS.object({
                     gdpr: props.gdprHandling || null,
@@ -135,7 +135,7 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Iframe) < prototype(Neos.Fusion:Comp
                     playButton={!props.controls}
                     pauseButton={!props.controls}
                 />
-            </div>
+            </aside>
         </Jonnitto.PrettyEmbed:Presenation.Wrapper>
     `
 }

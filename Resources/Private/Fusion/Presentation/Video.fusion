@@ -70,7 +70,7 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Video) < prototype(Neos.Fusion:Compo
 
     renderer = afx`
         <Jonnitto.PrettyEmbed:Presenation.Wrapper wrapper={props.wrapper}>
-            <div
+            <aside
                 x-data
                 x-prettyembedmedia={!props.streaming && !props.lightbox}
                 "x-prettyembedmedia.lightbox"={!props.streaming && props.lightbox}
@@ -108,7 +108,7 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Video) < prototype(Neos.Fusion:Compo
                     pauseButton={!props.controls}
                     content={private.video}
                 />
-            </div>
+            </aside>
         </Jonnitto.PrettyEmbed:Presenation.Wrapper>
     `
 }
