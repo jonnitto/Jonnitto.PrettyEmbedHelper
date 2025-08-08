@@ -3,7 +3,9 @@
 namespace Jonnitto\PrettyEmbedHelper\Service;
 
 use Jonnitto\PrettyEmbedHelper\Utility\Utility;
-use Jonnitto\PrettyPresentation\Utility\Utility as PresentationUtility;
+use Jonnitto\PrettyEmbedPresentation\Service\ApiService;
+use Jonnitto\PrettyEmbedPresentation\Service\ParseIDService;
+use Jonnitto\PrettyEmbedPresentation\Utility\Utility as PresentationUtility;
 use Neos\ContentRepository\Core\Projection\ContentGraph\Node;
 use Neos\ContentRepository\Core\Projection\ContentGraph\NodePath;
 use Neos\ContentRepositoryRegistry\ContentRepositoryRegistry;
