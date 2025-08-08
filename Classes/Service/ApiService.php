@@ -98,7 +98,7 @@ class ApiService
             'https://vimeo.com/api/oembed.json?width=2560&url=' . $url,
             'video',
             'Vimeo Oembed Service',
-            $id
+            $id,
         );
         return $data ?? null;
     }
@@ -123,7 +123,7 @@ class ApiService
             $code = $request->getStatusCode();
             $this->logger->error(
                 sprintf('The request for %s failed with the status code "%s"', $message, $code),
-                LogEnvironment::fromMethodName(__METHOD__)
+                LogEnvironment::fromMethodName(__METHOD__),
             );
             return null;
         }
@@ -135,7 +135,7 @@ class ApiService
         ) {
             $this->logger->error(
                 "Error while get $message. Returned data: " . json_encode($data, JSON_THROW_ON_ERROR),
-                LogEnvironment::fromMethodName(__METHOD__)
+                LogEnvironment::fromMethodName(__METHOD__),
             );
             return null;
         }

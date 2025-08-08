@@ -112,14 +112,14 @@ class PrettyEmbedCommandController extends CommandController
         $baseContextSitesNode = $baseContext->getNode(SiteService::SITES_ROOT_PATH);
         if (!$baseContextSitesNode) {
             $this->outputFormatted(
-                sprintf('<error>Could not find "%s" root node</error>', SiteService::SITES_ROOT_PATH)
+                sprintf('<error>Could not find "%s" root node</error>', SiteService::SITES_ROOT_PATH),
             );
             $this->quit(1);
         }
         $baseContextSiteNodes = $baseContextSitesNode->getChildNodes();
         if ($baseContextSiteNodes === []) {
             $this->outputFormatted(
-                sprintf('<error>Could not find any site nodes in "%s" root node</error>', SiteService::SITES_ROOT_PATH)
+                sprintf('<error>Could not find any site nodes in "%s" root node</error>', SiteService::SITES_ROOT_PATH),
             );
             $this->quit(1);
         }
@@ -183,7 +183,7 @@ class PrettyEmbedCommandController extends CommandController
                     ]);
                     $this->logger->debug(
                         sprintf('Saved the metadata from "%s %s" %s', $count, $platform, $entriesPlural),
-                        LogEnvironment::fromMethodName(__METHOD__)
+                        LogEnvironment::fromMethodName(__METHOD__),
                     );
                 }
             }
@@ -210,7 +210,7 @@ class PrettyEmbedCommandController extends CommandController
                         ]);
                         $this->logger->debug(
                             sprintf('Removed the metadata from "%s %s" %s', $count, $platform, $entriesPlural),
-                            LogEnvironment::fromMethodName(__METHOD__)
+                            LogEnvironment::fromMethodName(__METHOD__),
                         );
                     }
                 }
@@ -227,9 +227,9 @@ class PrettyEmbedCommandController extends CommandController
                             $error['type'],
                             $error['id'],
                             $error['nodeTypeName'],
-                            $error['path']
+                            $error['path'],
                         ),
-                        LogEnvironment::fromMethodName(__METHOD__)
+                        LogEnvironment::fromMethodName(__METHOD__),
                     );
                     $tableRows[] = [
                         $error['nodeTypeName'],

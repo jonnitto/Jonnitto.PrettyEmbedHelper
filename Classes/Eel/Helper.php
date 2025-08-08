@@ -150,7 +150,7 @@ class Helper implements ProtectedContextAwareInterface
             $allowUpScaling,
             $async,
             $quality,
-            $format
+            $format,
         );
 
         $thumbnailImage = $this->thumbnailService->getThumbnail($asset, $thumbnailConfiguration);

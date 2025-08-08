@@ -25,14 +25,14 @@ class Package extends BasePackage
             Workspace::class,
             'afterNodePublishing',
             ImageService::class,
-            'removeDataAfterNodePublishing'
+            'removeDataAfterNodePublishing',
         );
         $dispatcher->connect(
             PersistenceManager::class,
             'allObjectsPersisted',
             ImageService::class,
             'deletePendingData',
-            false
+            false,
         );
     }
 }

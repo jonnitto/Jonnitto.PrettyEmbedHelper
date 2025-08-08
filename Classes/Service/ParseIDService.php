@@ -85,7 +85,7 @@ class ParseIDService
             preg_match(
                 '%^https?:\/\/(?:www\.|player\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/([^\/]*)\/videos\/|album\/(\d+)\/video\/|video\/|)(\d+)(?:$|\/|\?)(?:[?]?.*)$%im',
                 $url,
-                $regs
+                $regs,
             )
         ) {
             return (string) $regs[3];
@@ -137,7 +137,7 @@ class ParseIDService
             preg_match_all(
                 '/(?<=(?:(?<=v)|(?<=i)|(?<=list))=)[a-zA-Z0-9-]+(?=&)|(?<=(?:(?<=v)|(?<=i)|(?<=list))\/)[^&\n]+|(?<=embed\/)[^"&\n]+|(?<=(?:(?<=v)|(?<=i)|(?<=list))=)[^&\n]+|(?<=youtu.be\/)[^&\n]+/im',
                 $url,
-                $regs
+                $regs,
             )
         ) {
             $array = $regs[0];

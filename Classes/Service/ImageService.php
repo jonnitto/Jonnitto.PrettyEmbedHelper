@@ -80,7 +80,7 @@ class ImageService
         string $url,
         $videoId,
         string $type,
-        ?string $filenameSuffix = null
+        ?string $filenameSuffix = null,
     ): ?object {
         if (!$node->getNodeType()->isOfType('Jonnitto.PrettyEmbedHelper:Mixin.Metadata')) {
             return null;
