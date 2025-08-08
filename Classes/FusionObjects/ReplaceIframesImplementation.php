@@ -49,13 +49,13 @@ class ReplaceIframesImplementation extends AbstractFusionObject
             '/<iframe[^>]*?src=\"(https:\/\/www\.youtube(?:-nocookie)?\.com\/embed\/[^"]*)(?:(?!<\/iframe>).)+<\/iframe>/im',
             $content,
             $youtubeIframeMatcher,
-            PREG_SET_ORDER
+            PREG_SET_ORDER,
         );
         preg_match_all(
             '/<iframe[^>]*?src=\"(https:\/\/player\.vimeo\.com\/video\/[^"]*)(?:(?!<\/iframe>).)+<\/iframe>/im',
             $content,
             $vimeoIframeMatcher,
-            PREG_SET_ORDER
+            PREG_SET_ORDER,
         );
         $parseID = new ParseIDService();
 

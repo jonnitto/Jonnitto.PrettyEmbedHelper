@@ -53,7 +53,7 @@ class Utility
         ContentRepositoryRegistry $contentRepositoryRegistry,
         Node $node,
         ?string $property = null,
-        $value = null
+        $value = null,
     ): void {
         $contentRepository = $contentRepositoryRegistry->get($node->contentRepositoryId);
 
@@ -68,8 +68,8 @@ class Utility
                     PropertyValuesToWrite::fromArray([
                         self::THUMBNAIL_PROPERTY => $thumbnail,
                         self::METADATA_PROPERTY => $value,
-                    ])
-                )
+                    ]),
+                ),
             );
             return;
         }
@@ -81,8 +81,8 @@ class Utility
                     $node->originDimensionSpacePoint,
                     PropertyValuesToWrite::fromArray([
                         self::THUMBNAIL_PROPERTY => $value,
-                    ])
-                )
+                    ]),
+                ),
             );
             return;
         }
@@ -96,8 +96,8 @@ class Utility
                 $node->originDimensionSpacePoint,
                 PropertyValuesToWrite::fromArray([
                     self::METADATA_PROPERTY => $metadata,
-                ])
-            )
+                ]),
+            ),
         );
     }
 
@@ -111,7 +111,7 @@ class Utility
     public static function removeMetadata(
         ContentRepositoryRegistry $contentRepositoryRegistry,
         Node $node,
-        ?string $property = null
+        ?string $property = null,
     ): void {
         $contentRepository = $contentRepositoryRegistry->get($node->contentRepositoryId);
 
@@ -123,8 +123,8 @@ class Utility
                     $node->originDimensionSpacePoint,
                     PropertyValuesToWrite::fromArray([
                         self::THUMBNAIL_PROPERTY => null,
-                    ])
-                )
+                    ]),
+                ),
             );
             return;
         } elseif (empty($property)) {
@@ -136,8 +136,8 @@ class Utility
                     PropertyValuesToWrite::fromArray([
                         self::THUMBNAIL_PROPERTY => null,
                         self::METADATA_PROPERTY => [],
-                    ])
-                )
+                    ]),
+                ),
             );
             return;
         }
@@ -151,8 +151,8 @@ class Utility
                 $node->originDimensionSpacePoint,
                 PropertyValuesToWrite::fromArray([
                     self::METADATA_PROPERTY => $metadata,
-                ])
-            )
+                ]),
+            ),
         );
     }
 

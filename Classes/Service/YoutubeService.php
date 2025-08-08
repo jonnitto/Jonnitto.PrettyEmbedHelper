@@ -74,8 +74,8 @@ class YoutubeService
                 $node->originDimensionSpacePoint,
                 PropertyValuesToWrite::fromArray([
                     'type' => $type,
-                ])
-            )
+                ]),
+            ),
         );
 
         $videoID = $this->parseID->youtube($videoIDProperty, $type);

@@ -59,10 +59,10 @@ class PrettyEmbedCommandController extends CommandController
     public function metadataCommand(
         string $contentRepositoryId = 'default',
         string $workspaceName = 'live',
-        bool $remove = false
+        bool $remove = false,
     ): void {
         $contentRepository = $this->contentRepositoryRegistry->get(
-            ContentRepositoryId::fromString($contentRepositoryId)
+            ContentRepositoryId::fromString($contentRepositoryId),
         );
         $workspace = $contentRepository->findWorkspaceByName(WorkspaceName::fromString($workspaceName));
 
@@ -87,7 +87,7 @@ class PrettyEmbedCommandController extends CommandController
 
             $nodes = $subgraph->findDescendantNodes(
                 $sitesNodeAggregate->nodeAggregateId,
-                FindDescendantNodesFilter::create(nodeTypes: 'Jonnitto.PrettyEmbedHelper:Mixin.Metadata')
+                FindDescendantNodesFilter::create(nodeTypes: 'Jonnitto.PrettyEmbedHelper:Mixin.Metadata'),
             );
             $this->nodes = array_merge($this->nodes, iterator_to_array($nodes));
         }
@@ -125,7 +125,7 @@ class PrettyEmbedCommandController extends CommandController
                     ]);
                     $this->logger->debug(
                         sprintf('Saved the metadata from "%s %s" %s', $count, $platform, $entriesPlural),
-                        LogEnvironment::fromMethodName(__METHOD__)
+                        LogEnvironment::fromMethodName(__METHOD__),
                     );
                 }
             }
@@ -152,7 +152,7 @@ class PrettyEmbedCommandController extends CommandController
                         ]);
                         $this->logger->debug(
                             sprintf('Removed the metadata from "%s %s" %s', $count, $platform, $entriesPlural),
-                            LogEnvironment::fromMethodName(__METHOD__)
+                            LogEnvironment::fromMethodName(__METHOD__),
                         );
                     }
                 }
@@ -169,9 +169,9 @@ class PrettyEmbedCommandController extends CommandController
                             $error['type'],
                             $error['id'],
                             $error['nodeTypeName'],
-                            $error['path']
+                            $error['path'],
                         ),
-                        LogEnvironment::fromMethodName(__METHOD__)
+                        LogEnvironment::fromMethodName(__METHOD__),
                     );
                     $tableRows[] = [
                         $error['nodeTypeName'],

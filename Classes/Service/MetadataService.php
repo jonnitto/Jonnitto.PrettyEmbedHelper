@@ -178,8 +178,8 @@ class MetadataService
                 $node->originDimensionSpacePoint,
                 PropertyValuesToWrite::fromArray([
                     'platform' => $platform,
-                ])
-            )
+                ]),
+            ),
         );
 
         return $platform;
