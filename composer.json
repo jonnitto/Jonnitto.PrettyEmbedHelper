@@ -27,10 +27,7 @@
         "ext-json": "*",
         "ext-dom": "*",
         "neos/neos": "^8.3",
-        "sitegeist/slipstream": "^2.1.6",
-        "carbon/fileloader": "^0.1",
-        "carbon/notification": "^2.4",
-        "carbon/eel": "^2.8"
+        "jonnitto/prettyembedpresentation": "^1.0"
     },
     "suggest": {
         "james-heinrich/getid3": "Get the duration of internal audio and video files. You need to install the 2.0-beta version"

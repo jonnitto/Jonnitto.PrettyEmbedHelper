@@ -3,6 +3,7 @@
 namespace Jonnitto\PrettyEmbedHelper\Service;
 
 use Jonnitto\PrettyEmbedHelper\Utility\Utility;
+use Jonnitto\PrettyEmbedPresentation\Service\ParseIDService;
 use Neos\ContentRepository\Domain\Model\NodeInterface;
 use Neos\ContentRepository\Exception\NodeException;
 use Neos\Flow\Annotations as Flow;
@@ -12,40 +13,23 @@ use Neos\Flow\Persistence\Exception\InvalidQueryException;
 use Neos\Flow\ResourceManagement\Exception;
 use JsonException;
 
-/**
- * @Flow\Scope("singleton")
- */
+#[Flow\Scope('singleton')]
 class MetadataService
 {
-    /**
-     * @Flow\Inject
-     * @var AssetService
-     */
-    protected $assetService;
+    #[Flow\Inject]
+    protected AssetService $assetService;
 
-    /**
-     * @Flow\Inject
-     * @var YoutubeService
-     */
-    protected $youtubeService;
+    #[Flow\Inject]
+    protected YoutubeService $youtubeService;
 
-    /**
-     * @Flow\Inject
-     * @var VimeoService
-     */
-    protected $vimeoService;
+    #[Flow\Inject]
+    protected VimeoService $vimeoService;
 
-    /**
-     * @Flow\Inject
-     * @var ParseIDService
-     */
-    protected $parseID;
+    #[Flow\Inject]
+    protected ParseIDService $parseID;
 
-    /**
-     * @Flow\Inject
-     * @var ImageService
-     */
-    protected $imageService;
+    #[Flow\Inject]
+    protected ImageService $imageService;
 
     /**
      * @var array

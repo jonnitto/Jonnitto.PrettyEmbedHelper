@@ -20,67 +20,35 @@ use Neos\Neos\Domain\Service\SiteService;
 use Psr\Log\LoggerInterface;
 use function array_reduce;
 
-/**
- * @Flow\Scope("singleton")
- */
+#[Flow\Scope('singleton')]
 class PrettyEmbedCommandController extends CommandController
 {
-    /**
-     * @Flow\Inject
-     * @var MetadataService
-     */
-    protected $metadataService;
+    #[Flow\Inject]
+    protected MetadataService $metadataService;
 
-    /**
-     * @Flow\Inject
-     * @var ContextFactoryInterface
-     */
-    protected $contextFactory;
+    #[Flow\Inject]
+    protected ContextFactoryInterface $contextFactory;
 
-    /**
-     * @Flow\Inject
-     * @var ContentDimensionCombinator
-     */
-    protected $dimensionCombinator;
+    #[Flow\Inject]
+    protected ContentDimensionCombinator $dimensionCombinator;
 
-    /**
-     * @Flow\Inject
-     * @var PersistenceManagerInterface
-     */
-    protected $persistenceManager;
+    #[Flow\Inject]
+    protected PersistenceManagerInterface $persistenceManager;
 
-    /**
-     * @Flow\Inject
-     * @var WorkspaceRepository
-     */
-    protected $workspaceRepository;
+    #[Flow\Inject]
+    protected WorkspaceRepository $workspaceRepository;
 
-    /**
-     * @Flow\Inject
-     * @var LoggerInterface
-     */
-    protected $logger;
+    #[Flow\Inject]
+    protected LoggerInterface $logger;
 
-    /**
-     * @Flow\Inject
-     * @var ImageService
-     */
-    protected $imageService;
+    #[Flow\Inject]
+    protected ImageService $imageService;
 
-    /**
-     * @var array
-     */
-    protected $success = [];
+    protected array $success = [];
 
-    /**
-     * @var array
-     */
-    protected $error = [];
+    protected array $error = [];
 
-    /**
-     * @var array
-     */
-    protected $nodes = [];
+    protected array $nodes = [];
 
     /**
      * Generate metadata for the PrettyEmbed Vimeo/YouTube/Video or Audio player

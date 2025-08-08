@@ -2,8 +2,9 @@
 
 namespace Jonnitto\PrettyEmbedHelper\Eel;
 
-use Jonnitto\PrettyEmbedHelper\Service\ParseIDService;
 use Jonnitto\PrettyEmbedHelper\Utility\Utility;
+use Jonnitto\PrettyEmbedPresentation\Service\ParseIDService;
+use Jonnitto\PrettyEmbedPresentation\Utility\Utility as PresentationUtility;
 use Neos\ContentRepository\Domain\Model\NodeInterface;
 use Neos\Eel\ProtectedContextAwareInterface;
 use Neos\Flow\Annotations as Flow;
@@ -17,11 +18,8 @@ use JsonException;
 
 class Helper implements ProtectedContextAwareInterface
 {
-    /**
-     * @Flow\Inject
-     * @var ThumbnailService
-     */
-    protected $thumbnailService;
+    #[Flow\Inject]
+    protected ThumbnailService $thumbnailService;
 
     /**
      * Get the metadata from a node
@@ -45,7 +43,7 @@ class Helper implements ProtectedContextAwareInterface
      */
     public function vimeoThumbnail($videoID): ?string
     {
-        return Utility::vimeoThumbnail($videoID);
+        return PresentationUtility::vimeoThumbnail($videoID);
     }
 
     /**
@@ -57,7 +55,7 @@ class Helper implements ProtectedContextAwareInterface
      */
     public function vimeoHref($videoID, bool $embedded = false): string
     {
-        return Utility::vimeoHref($videoID, $embedded);
+        return PresentationUtility::vimeoHref($videoID, $embedded);
     }
 
     /**
@@ -70,7 +68,7 @@ class Helper implements ProtectedContextAwareInterface
      */
     public function youtubeHref(string $videoID, ?string $type = 'video', bool $embedded = false): string
     {
-        return Utility::youtubeHref($videoID, $type, $embedded);
+        return PresentationUtility::youtubeHref($videoID, $type, $embedded);
     }
 
     /**
@@ -81,7 +79,7 @@ class Helper implements ProtectedContextAwareInterface
      */
     public function youtubeThumbnail(string $videoID): ?string
     {
-        return Utility::youtubeThumbnail($videoID);
+        return PresentationUtility::youtubeThumbnail($videoID);
     }
 
     /**
@@ -126,10 +124,9 @@ class Helper implements ProtectedContextAwareInterface
     /**
      * @param AssetInterface $asset
      * @param integer $maximumWidth Desired maximum width of the image
-     * @param boolean $async Whether the thumbnail can be generated asynchronously
-     * @param integer $quality Quality of the processed image
      * @param string $format Format for the image, only jpg, jpeg, gif, png, wbmp, xbm, webp and bmp are supported.
-     * @return null|ImageInterface
+     * @param integer $quality Quality of the processed image
+     * @return ImageInterface|null
      * @throws ThumbnailServiceException
      */
     public function createThumbnail(AssetInterface $asset, $maximumWidth = null, $format = null, $quality = null)
