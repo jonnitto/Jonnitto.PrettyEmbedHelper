@@ -3,6 +3,7 @@
 namespace Jonnitto\PrettyEmbedHelper\Service;
 
 use Jonnitto\PrettyEmbedHelper\Utility\Utility;
+use Jonnitto\PrettyPresentation\Utility\Utility as PresentationUtility;
 use Neos\ContentRepository\Core\Projection\ContentGraph\Node;
 use Neos\ContentRepository\Core\Projection\ContentGraph\NodePath;
 use Neos\ContentRepositoryRegistry\ContentRepositoryRegistry;
@@ -70,9 +71,10 @@ class VimeoService
         if (isset($data)) {
             $videoID = $data['video_id'] ?? $videoID;
             $title = $data['title'] ?? null;
-            $ratio = Utility::getRatio($data['width'], $data['height']);
+            $ratio = PresentationUtility::getRatio($data['width'], $data['height']);
             $image = $data['thumbnail_url'] ?? null;
             $duration = $data['duration'] ?? null;
+            $hash = isset($data['uri']) && str_contains($data['uri'], ':') ? explode(':', $data['uri'])[1] : null;
 
             if (isset($image)) {
                 try {
@@ -84,13 +86,14 @@ class VimeoService
 
         Utility::setMetadata($this->contentRepositoryRegistry, $node, null, [
             'videoID' => $videoID,
+            'hash' => $hash,
             'title' => $title ?? null,
             'aspectRatio' => $ratio ?? null,
             'duration' => $duration ?? null,
-            'image' => Utility::removeProtocolFromUrl($image ?? null),
+            'image' => PresentationUtility::removeProtocolFromUrl($image ?? null),
             'thumbnail' => $thumbnail ?? null,
-            'href' => Utility::vimeoHref($videoID, false),
-            'embedHref' => Utility::vimeoHref($videoID, true),
+            'href' => PresentationUtility::vimeoHref($videoID, false, $hash),
+            'embedHref' => PresentationUtility::vimeoHref($videoID, true, $hash),
         ]);
 
         $this->imageService->removeTagIfEmpty();

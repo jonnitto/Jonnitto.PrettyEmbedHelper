@@ -1,13 +1,5 @@
 Neos:
   Neos:
-    Ui:
-      resources:
-        javascript:
-          Jonnitto.PrettyEmbed:Metadata:
-            resource: resource://Jonnitto.PrettyEmbedHelper/Public/Plugin/Metadata.js
-        stylesheets:
-          Jonnitto.PrettyEmbed:Metadata:
-            resource: resource://Jonnitto.PrettyEmbedHelper/Public/Plugin/Metadata.css
     userInterface:
       translation:
         autoInclude:
@@ -18,9 +10,6 @@ Neos:
         prettyembed:
           position: 200
           label: 'Jonnitto.PrettyEmbedHelper:NodeTypes.Mixin.Groups:prettyembed'
-    fusion:
-      autoInclude:
-        Jonnitto.PrettyEmbedHelper: true
   Fusion:
     defaultContext:
       Jonnitto.PrettyEmbedHelper: 'Jonnitto\PrettyEmbedHelper\Eel\Helper'

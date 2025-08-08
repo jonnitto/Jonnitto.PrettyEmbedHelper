@@ -3,7 +3,7 @@
 namespace Jonnitto\PrettyEmbedHelper\Service;
 
 use Jonnitto\PrettyEmbedHelper\Utility\Utility;
-use JsonException;
+use Jonnitto\PrettyPresentation\Utility\Utility as PresentationUtility;
 use Neos\ContentRepository\Core\Feature\NodeModification\Command\SetNodeProperties;
 use Neos\ContentRepository\Core\Feature\NodeModification\Dto\PropertyValuesToWrite;
 use Neos\ContentRepository\Core\Projection\ContentGraph\Node;
@@ -14,6 +14,7 @@ use Neos\Flow\Http\Client\InfiniteRedirectionException;
 use Neos\Flow\Persistence\Exception\IllegalObjectTypeException;
 use Neos\Flow\Persistence\Exception\InvalidQueryException;
 use Neos\Flow\ResourceManagement\Exception;
+use JsonException;
 use function trim;
 
 #[Flow\Scope('singleton')]
@@ -83,18 +84,18 @@ class YoutubeService
 
         if (isset($data)) {
             $title = $data['title'] ?? null;
-            $ratio = Utility::getRatio($data['width'], $data['height']);
+            $ratio = PresentationUtility::getRatio($data['width'], $data['height']);
             $duration = $data['duration'] ?? null;
             if (isset($data['imageUrl'], $data['imageResolution'])) {
                 $image = $data['imageUrl'];
                 $resolution = $data['imageResolution'];
             } else {
-                $youtubeImageArray = Utility::getBestPossibleYoutubeImage($videoID, $data['thumbnail_url'] ?? null);
+                $youtubeImageArray = PresentationUtility::getBestPossibleYoutubeImage($videoID, $data['thumbnail_url'] ?? null);
                 $image = $youtubeImageArray['image'];
                 $resolution = $youtubeImageArray['resolution'];
             }
         } else {
-            $youtubeImageArray = Utility::getBestPossibleYoutubeImage($videoID);
+            $youtubeImageArray = PresentationUtility::getBestPossibleYoutubeImage($videoID);
             $image = $youtubeImageArray['image'] ?? null;
             $resolution = $youtubeImageArray['resolution'] ?? null;
         }
@@ -108,9 +109,9 @@ class YoutubeService
             'title' => $title ?? null,
             'aspectRatio' => $ratio ?? null,
             'duration' => $duration ?? null,
-            'image' => Utility::removeProtocolFromUrl($image ?? null),
-            'href' => Utility::youtubeHref($videoID, $type, false),
-            'embedHref' => Utility::youtubeHref($videoID, $type, true),
+            'image' => PresentationUtility::removeProtocolFromUrl($image ?? null),
+            'href' => PresentationUtility::youtubeHref($videoID, $type, false),
+            'embedHref' => PresentationUtility::youtubeHref($videoID, $type, true),
             'thumbnail' => $thumbnail ?? null,
         ]);
 
