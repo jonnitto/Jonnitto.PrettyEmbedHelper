@@ -17,11 +17,8 @@ use JsonException;
 
 class Helper implements ProtectedContextAwareInterface
 {
-    /**
-     * @Flow\Inject
-     * @var ThumbnailService
-     */
-    protected $thumbnailService;
+    #[Flow\Inject]
+    protected ThumbnailService $thumbnailService;
 
     /**
      * Get the metadata from a node
