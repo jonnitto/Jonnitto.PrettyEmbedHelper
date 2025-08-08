@@ -22,45 +22,28 @@ use function explode;
 use function pathinfo;
 use function strtolower;
 
-/**
- * @Flow\Scope("singleton")
- */
+#[Flow\Scope('singleton')]
 class ImageService
 {
-    /**
-     * @Flow\Inject
-     * @var PersistenceManagerInterface
-     */
-    protected $persistenceManager;
+    #[Flow\Inject]
+    protected PersistenceManagerInterface $persistenceManager;
 
-    /**
-     * @Flow\Inject
-     * @var TagRepository
-     */
-    protected $tagRepository;
+    #[Flow\Inject]
+    protected TagRepository $tagRepository;
 
-    /**
-     * @Flow\Inject
-     * @var AssetRepository
-     */
-    protected $assetRepository;
+    #[Flow\Inject]
+    protected AssetRepository $assetRepository;
 
-    /**
-     * * @Flow\Inject
-     * @var ResourceManager
-     */
-    protected $resourceManager;
+    #[Flow\Inject]
+    protected ResourceManager $resourceManager;
+
+    #[Flow\InjectConfiguration('imageformat', 'Jonnitto.PrettyEmbed')]
+    protected $defaultImageFormat;
 
     /**
      * @var Image[]
      */
     private $pendingThumbnailToDelete = [];
-
-    /**
-     * @Flow\InjectConfiguration(package="Jonnitto.PrettyEmbed", path="imageformat")
-     * @var string
-     */
-    protected $defaultImageFormat;
 
     /**
      * Import image

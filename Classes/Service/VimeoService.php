@@ -3,6 +3,7 @@
 namespace Jonnitto\PrettyEmbedHelper\Service;
 
 use Jonnitto\PrettyEmbedHelper\Utility\Utility;
+use Jonnitto\PrettyPresentation\Utility\Utility as PresentationUtility;
 use Neos\ContentRepository\Domain\Model\NodeInterface;
 use Neos\ContentRepository\Exception\NodeException;
 use Neos\Flow\Annotations as Flow;
@@ -12,34 +13,20 @@ use Neos\Flow\Persistence\Exception\InvalidQueryException;
 use Neos\Flow\ResourceManagement\Exception;
 use JsonException;
 
-/**
- * @Flow\Scope("singleton")
- */
+#[Flow\Scope('singleton')]
 class VimeoService
 {
-    /**
-     * @Flow\Inject
-     * @var ImageService
-     */
-    protected $imageService;
+    #[Flow\Inject]
+    protected ImageService $imageService;
 
-    /**
-     * @Flow\Inject
-     * @var ParseIDService
-     */
-    protected $parseID;
+    #[Flow\Inject]
+    protected ParseIDService $parseID;
 
-    /**
-     * @Flow\Inject
-     * @var MetadataService
-     */
-    protected $metadataService;
+    #[Flow\Inject]
+    protected MetadataService $metadataService;
 
-    /**
-     * @Flow\Inject
-     * @var ApiService
-     */
-    protected $api;
+    #[Flow\Inject]
+    protected ApiService $api;
 
     /**
      * Get and save data from oembed service
@@ -77,7 +64,7 @@ class VimeoService
         if (isset($data)) {
             $videoID = $data['video_id'] ?? $videoID;
             $title = $data['title'] ?? null;
-            $ratio = Utility::getRatio($data['width'], $data['height']);
+            $ratio = PresentationUtility::getRatio($data['width'], $data['height']);
             $image = $data['thumbnail_url'] ?? null;
             $duration = $data['duration'] ?? null;
             $hash = isset($data['uri']) && str_contains($data['uri'], ':') ? explode(':', $data['uri'])[1] : null;
@@ -96,10 +83,10 @@ class VimeoService
             'title' => $title ?? null,
             'aspectRatio' => $ratio ?? null,
             'duration' => $duration ?? null,
-            'image' => Utility::removeProtocolFromUrl($image ?? null),
+            'image' => PresentationUtility::removeProtocolFromUrl($image ?? null),
             'thumbnail' => $thumbnail ?? null,
-            'href' => Utility::vimeoHref($videoID, false, $hash),
-            'embedHref' => Utility::vimeoHref($videoID, true, $hash),
+            'href' => PresentationUtility::vimeoHref($videoID, false, $hash),
+            'embedHref' => PresentationUtility::vimeoHref($videoID, true, $hash),
         ]);
 
         $this->imageService->removeTagIfEmpty();

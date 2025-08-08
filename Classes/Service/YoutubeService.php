@@ -3,6 +3,7 @@
 namespace Jonnitto\PrettyEmbedHelper\Service;
 
 use Jonnitto\PrettyEmbedHelper\Utility\Utility;
+use Jonnitto\PrettyPresentation\Utility\Utility as PresentationUtility;
 use Neos\ContentRepository\Domain\Model\NodeInterface;
 use Neos\ContentRepository\Exception\NodeException;
 use Neos\Flow\Annotations as Flow;
@@ -14,39 +15,22 @@ use JsonException;
 use function strpos;
 use function trim;
 
-/**
- * @Flow\Scope("singleton")
- */
+#[Flow\Scope('singleton')]
 class YoutubeService
 {
-    /**
-     * @Flow\Inject
-     * @var ImageService
-     */
-    protected $imageService;
+    #[Flow\Inject]
+    protected ImageService $imageService;
 
-    /**
-     * @Flow\Inject
-     * @var ParseIDService
-     */
-    protected $parseID;
+    #[Flow\Inject]
+    protected ParseIDService $parseID;
 
-    /**
-     * @Flow\Inject
-     * @var ApiService
-     */
-    protected $api;
+    #[Flow\Inject]
+    protected ApiService $api;
 
-    /**
-     * @Flow\Inject
-     * @var MetadataService
-     */
-    protected $metadataService;
+    #[Flow\Inject]
+    protected MetadataService $metadataService;
 
-    /**
-     * @Flow\InjectConfiguration(package="Jonnitto.PrettyEmbed", path="YouTube.apiKey")
-     * @var string
-     */
+    #[Flow\InjectConfiguration('YouTube.apiKey', 'Jonnitto.PrettyEmbed')]
     protected $apiKey;
 
     /**
@@ -85,18 +69,18 @@ class YoutubeService
 
         if (isset($data)) {
             $title = $data['title'] ?? null;
-            $ratio = Utility::getRatio($data['width'], $data['height']);
+            $ratio = PresentationUtility::getRatio($data['width'], $data['height']);
             $duration = $data['duration'] ?? null;
             if (isset($data['imageUrl'], $data['imageResolution'])) {
                 $image = $data['imageUrl'];
                 $resolution = $data['imageResolution'];
             } else {
-                $youtubeImageArray = Utility::getBestPossibleYoutubeImage($videoID, $data['thumbnail_url'] ?? null);
+                $youtubeImageArray = PresentationUtility::getBestPossibleYoutubeImage($videoID, $data['thumbnail_url'] ?? null);
                 $image = $youtubeImageArray['image'];
                 $resolution = $youtubeImageArray['resolution'];
             }
         } else {
-            $youtubeImageArray = Utility::getBestPossibleYoutubeImage($videoID);
+            $youtubeImageArray = PresentationUtility::getBestPossibleYoutubeImage($videoID);
             $image = $youtubeImageArray['image'] ?? null;
             $resolution = $youtubeImageArray['resolution'] ?? null;
         }
@@ -110,9 +94,9 @@ class YoutubeService
             'title' => $title ?? null,
             'aspectRatio' => $ratio ?? null,
             'duration' => $duration ?? null,
-            'image' => Utility::removeProtocolFromUrl($image ?? null),
-            'href' => Utility::youtubeHref($videoID, $type, false),
-            'embedHref' => Utility::youtubeHref($videoID, $type, true),
+            'image' => PresentationUtility::removeProtocolFromUrl($image ?? null),
+            'href' => PresentationUtility::youtubeHref($videoID, $type, false),
+            'embedHref' => PresentationUtility::youtubeHref($videoID, $type, true),
             'thumbnail' => $thumbnail ?? null,
         ]);
 
