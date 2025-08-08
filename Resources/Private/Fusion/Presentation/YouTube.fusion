@@ -7,4 +7,7 @@ prototype(Jonnitto.PrettyEmbed:Presentation.YouTube) < prototype(Jonnitto.Pretty
     preserveAspectRatio = ${Configuration.setting('Jonnitto.PrettyEmbed.YouTube.preserveAspectRatio')}
     fallbackAspectRatio = ${Configuration.setting('Jonnitto.PrettyEmbed.YouTube.fallbackAspectRatio')}
     useYoutubeNoCookieDomain = ${Configuration.setting('Jonnitto.PrettyEmbed.YouTube.useYoutubeNoCookieDomain')}
+
+    // Set this to true if poster, aspectRatio, videoID, href, embedHref are values from AlpineJS
+    alpineJsValues = false
 }

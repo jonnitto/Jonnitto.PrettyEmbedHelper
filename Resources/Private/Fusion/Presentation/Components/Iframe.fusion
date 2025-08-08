@@ -45,6 +45,9 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Iframe) < prototype(Neos.Fusion:Comp
     aspectRatio.@process.fallback =${value || this.fallbackAspectRatio}
     setAspectRatioClass = ${this.lightbox && this.preserveAspectRatio ? false : !!this.aspectRatio}
 
+    // Set this to true if poster, aspectRatio, videoID, playlistID, href, embedHref are values from AlpineJS
+    alpineJsValues = false
+
     @if {
         checkPlayer = ${this.player == 'YouTube' || this.player == 'Vimeo'}
         checkVimeo = ${this.player == 'Vimeo' ? (this.videoID && this.href && this.embedHref) : true}
@@ -68,7 +71,8 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Iframe) < prototype(Neos.Fusion:Comp
                 x-data
                 x-prettyembedvimeo={AlpineJS.object({
                     gdpr: props.gdprHandling || null,
-                    video: props.videoID,
+                    video: props.alpineJsValues ? AlpineJS.expression(props.videoID) : props.videoID,
+                    hash: props.hash ? (props.alpineJsValues ? AlpineJS.expression(props.hash) : props.hash) : null,
                     color: Type.isString(props.color) ? props.color : null,
                     slim: !props.controls || null,
                     style: props.lightbox && 'lightbox' || null,
@@ -77,8 +81,8 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Iframe) < prototype(Neos.Fusion:Comp
                 x-prettyembedvimeo.@if={props.player == 'Vimeo' && !private.alwaysOpenInPopup}
                 x-prettyembedyoutube={AlpineJS.object({
                     gdpr: props.gdprHandling || null,
-                    video: props.videoID || null,
-                    playlist: props.playlistID || null,
+                    video: props.videoID ? (props.alpineJsValues ? AlpineJS.expression(props.videoID) : props.videoID) : null,
+                    playlist: props.videoID ? (props.alpineJsValues ? AlpineJS.expression(props.playlistID) : props.playlistID) : null,
                     slim: !props.controls || null,
                     style: props.lightbox && 'lightbox' || null,
                     loop: props.loop || null,
@@ -88,7 +92,8 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Iframe) < prototype(Neos.Fusion:Comp
                 aria-label={props.label}
                 id={props.id}
                 class={Carbon.String.merge(props.class, BEM.modifier('jonnitto-prettyembed', String.toLowerCase(props.player)), props.setAspectRatioClass && 'jonnitto-prettyembed-ratio')}
-                style={props.aspectRatio ? '--aspect-ratio:' + props.aspectRatio :  null}
+                style={props.aspectRatio && !props.alpineJsValues ? '--aspect-ratio:' + props.aspectRatio :  null}
+                :style={props.aspectRatio && props.alpineJsValues ? ("{'--aspect-ratio':" + props.aspectRatio + "}") :  null}
                 {...(private.fileLoaderAsAttributes ? private.fileLoader : {})}
             >
                 {private.fileLoaderAsAttributes ? '' : private.fileLoader}
@@ -98,20 +103,23 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Iframe) < prototype(Neos.Fusion:Comp
                     show.@if={!props.lightbox}
                     onClick="load"
                     href={props.href}
+                    alpineJsValues={props.alpineJsValues}
                 />
                 <Jonnitto.PrettyEmbed:Presentation.Button.Play
                     @if={private.alwaysOpenInPopup}
                     href={props.href}
                     popup={props.embedHref}
-                />
+                    alpineJsValues={props.alpineJsValues}
+                    />
                 <Jonnitto.PrettyEmbed:Presentation.Button.Pause
                     @if={!props.controls && !props.lightbox && !private.alwaysOpenInPopup}
-                />
+                    />
                 <Jonnitto.PrettyEmbed:Presentation.GdprConsent
                     @if={props.gdprHandling == true}
                     href={props.href}
                     embedHref={props.embedHref}
-                />
+                    alpineJsValues={props.alpineJsValues}
+                    />
                 <Jonnitto.PrettyEmbed:Presentation.Preview
                     show={private.alwaysOpenInPopup || props.lightbox ? null : "!loaded"}
                     content={props.preview}
@@ -122,15 +130,17 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Iframe) < prototype(Neos.Fusion:Comp
                     width={props.posterWidth}
                     height={props.posterHeight}
                     loadImageStrategy={props.loadImageStrategy}
-                />
+                    alpineJsValues={props.alpineJsValues}
+                    />
                 <Jonnitto.PrettyEmbed:Presentation.YouTubeTarget
                     @if={!props.lightbox}
                     player={props.player}
                     controls={props.controls}
-                />
+                    />
                 <Jonnitto.PrettyEmbed:Presentation.Lightbox
                     @if={props.lightbox && !private.alwaysOpenInPopup }
                     aspectRatio={props.aspectRatio}
+                    alpineJsValues={props.alpineJsValues}
                     player={props.player}
                     playButton={!props.controls}
                     pauseButton={!props.controls}

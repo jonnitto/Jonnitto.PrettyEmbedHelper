@@ -80,6 +80,7 @@ class VimeoService
             $ratio = Utility::getRatio($data['width'], $data['height']);
             $image = $data['thumbnail_url'] ?? null;
             $duration = $data['duration'] ?? null;
+            $hash = isset($data['uri']) && str_contains($data['uri'], ':') ? explode(':', $data['uri'])[1] : null;
 
             if (isset($image)) {
                 try {
@@ -91,13 +92,14 @@ class VimeoService
 
         Utility::setMetadata($node, null, [
             'videoID' => $videoID,
+            'hash' => $hash,
             'title' => $title ?? null,
             'aspectRatio' => $ratio ?? null,
             'duration' => $duration ?? null,
             'image' => Utility::removeProtocolFromUrl($image ?? null),
             'thumbnail' => $thumbnail ?? null,
-            'href' => Utility::vimeoHref($videoID, false),
-            'embedHref' => Utility::vimeoHref($videoID, true),
+            'href' => Utility::vimeoHref($videoID, false, $hash),
+            'embedHref' => Utility::vimeoHref($videoID, true, $hash),
         ]);
 
         $this->imageService->removeTagIfEmpty();

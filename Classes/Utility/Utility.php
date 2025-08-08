@@ -93,15 +93,18 @@ class Utility
      *
      * @param string|integer $videoID
      * @param boolean $embedded
+     * @param string|null $hash
      * @return string
      */
-    public static function vimeoHref($videoID, bool $embedded = false): string
+    public static function vimeoHref($videoID, bool $embedded = false, $hash = null): string
     {
         if ($embedded) {
+            $hash = !empty($hash) ? '&h=' . $hash : '';
             $parameter = 'autoplay=1&background=0&title=0&byline=0&portrait=0';
-            return sprintf('https://player.vimeo.com/video/%s?%s', $videoID, $parameter);
+            return sprintf('https://player.vimeo.com/video/%s?%s%s', $videoID, $parameter, $hash);
         }
-        return sprintf('https://vimeo.com/%s', $videoID);
+        $hash = !empty($hash) ? '/' . $hash : '';
+        return sprintf('https://vimeo.com/%s%s', $videoID, $hash);
     }
 
     /**

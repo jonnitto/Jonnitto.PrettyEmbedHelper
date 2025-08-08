@@ -8,6 +8,7 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Preview) < prototype(Neos.Fusion:Com
         srcset = ${PropTypes.string}
         width = ${PropTypes.integer}
         height = ${PropTypes.integer}
+        alpineJsValues = ${PropTypes.boolean}
         loadImageStrategy = ${PropTypes.oneOf(['lazy', 'eager', null, false])}
     }
 
@@ -27,7 +28,8 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Preview) < prototype(Neos.Fusion:Com
             class="jonnitto-prettyembed-preview"
             x-show={props.show}
             alt={props.label}
-            src={props.src}
+            src={props.alpineJsValues ? null : props.src}
+            :src={props.alpineJsValues ? props.src : null}
             srcset={props.srcset}
             height={props.height}
             width={props.width}

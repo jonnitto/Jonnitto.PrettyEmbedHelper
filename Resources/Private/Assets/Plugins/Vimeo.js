@@ -13,9 +13,13 @@ export default function (Alpine) {
 
 function handeleRoot({ element, Alpine, options }) {
     const type = 'Vimeo';
-    const { style, slim, video, color, loop, gdpr, background } = options;
+    const { style, slim, video, color, loop, gdpr, hash, background } = options;
+    let url = `https://player.vimeo.com/video/${video}`;
+    if (hash) {
+        url += `?h=${hash}`;
+    }
     const videoPlayerOptions = {
-        id: video,
+        url,
         autopip: true,
         autoplay: true,
         pip: true,

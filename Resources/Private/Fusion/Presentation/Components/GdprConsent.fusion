@@ -2,6 +2,14 @@ prototype(Jonnitto.PrettyEmbed:Presentation.GdprConsent) < prototype(Neos.Fusion
     @propTypes {
         href = ${PropTypes.string}
         embedHref = ${PropTypes.string}
+        alpineJsValues = ${PropTypes.boolean}
+    }
+
+    alpineJsValues = false
+
+    @private {
+        embedHref = ${props.embedHref || props.href}
+        href = ${props.href || props.embedHref}
     }
 
     renderer = afx`
@@ -10,9 +18,11 @@ prototype(Jonnitto.PrettyEmbed:Presentation.GdprConsent) < prototype(Neos.Fusion
                 <p>{Translation.translate('gdprMessage', 'While playing this video, external contents are loaded and you may be tracked by the inital content provider.', [], 'Main', 'Jonnitto.PrettyEmbedHelper')}</p>
                 <div>
                     <a
-                        @if={props.href || props.embedHref}
-                        x-prettyembedpopup={props.embedHref || props.href}
-                        href={props.href || props.embedHref}
+                        @if={private.href}
+                        x-prettyembedpopup={props.alpineJsValues ? null : private.embedHref}
+                        "x-prettyembedpopup.dynamic"={props.alpineJsValues ? private.embedHref : null}
+                        href={props.alpineJsValues ? private.href : null}
+                        :href={props.alpineJsValues ? null : private.href}
                         class={BEM.modifier('jonnitto-prettyembed-gdpr__button', 'external')}
                     >
                         {Translation.translate('gdprMessageNewWindow', 'Open in new window', [], 'Main', 'Jonnitto.PrettyEmbedHelper')}

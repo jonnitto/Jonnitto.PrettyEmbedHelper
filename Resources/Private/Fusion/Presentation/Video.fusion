@@ -19,8 +19,9 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Video) < prototype(Neos.Fusion:Compo
         streaming = ${PropTypes.string}
         autoplay = ${PropTypes.boolean}
         muted = ${PropTypes.boolean}
-        width = ${PropTypes.integer}
-        height = ${PropTypes.integer}
+        alpineJsValues = ${PropTypes.boolean}
+        width = ${PropTypes.anyOf(PropTypes.string, PropTypes.string)}
+        height = ${PropTypes.anyOf(PropTypes.string, PropTypes.string)}
 
         # Should be source tags
         content = ${PropTypes.string}
@@ -39,12 +40,16 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Video) < prototype(Neos.Fusion:Compo
 
     wrapper = ${Configuration.setting('Jonnitto.PrettyEmbed.wrapper')}
 
+    // Set this to true if streaming, poster are values from AlpineJS
+    // width, height are option AlpineJS values
+    alpineJsValues = false
+
     @if.checkVideo = ${(this.poster || this.preview) && (this.content || this.streaming)}
 
     @private {
         video = afx`
             <video
-                x-prettyembedmedia:media={props.streaming || true}
+                x-prettyembedmedia:media={props.alpineJsValues && props.streaming ? AlpineJS.expression(props.streaming) : (props.streaming || true)}
                 x-show="loaded"
                 x-cloak
                 preload={props.preload}
@@ -54,9 +59,12 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Video) < prototype(Neos.Fusion:Compo
                 muted={props.autoplay || props.muted}
                 controls={props.controls}
                 crossorigin={props.crossorigin}
-                poster={props.poster}
-                width={props.width}
-                height={props.height}
+                poster={props.alpineJsValues ? null : props.poster}
+                :poster={props.alpineJsValues ? props.poster : null}
+                width={!props.alpineJsValues || Type.isInteger(props.width) ? props.width : null}
+                height={!props.alpineJsValues || Type.isInteger(props.height) ? props.height : null}
+                :width={props.alpineJsValues && Type.isString(props.width) ? props.width : null}
+                :height={props.alpineJsValues && Type.isString(props.height) ? props.height : null}
             >
                 {props.streaming ? '' : props.content}
             </video>
@@ -92,6 +100,7 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Video) < prototype(Neos.Fusion:Compo
                     width={props.posterWidth}
                     height={props.posterHeight}
                     loadImageStrategy={props.loadImageStrategy}
+                    alpineJsValues={props.alpineJsValues}
                 />
                 {props.lightbox ? '' : private.video}
                 <Jonnitto.PrettyEmbed:Presentation.Button.Play

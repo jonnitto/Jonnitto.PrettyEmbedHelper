@@ -5,6 +5,7 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Button.Play) < prototype(Neos.Fusion
         show = ${PropTypes.string}
         onClick = ${PropTypes.string}
         href = ${PropTypes.string}
+        alpineJsValues = ${PropTypes.boolean}
         popup = ${PropTypes.string}
         content = ${PropTypes.string.isRequired}
     }
@@ -21,11 +22,13 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Button.Play) < prototype(Neos.Fusion
             @if={props.href}
             x-show={props.show}
             x-on:click={props.onClick}
-            x-prettyembedpopup={props.popup}
+            x-prettyembedpopup={props.alpineJsValues ? null : props.popup}
+            "x-prettyembedpopup.dynamic"={props.alpineJsValues ? props.popup : null}
             x-transition
             aria-label={props.label}
             class={props.class}
-            href={props.href}
+            href={props.alpineJsValues ? null : props.href}
+            :href={props.alpineJsValues ? props.href : null}
             rel="noopener external"
             target="_blank"
         >
@@ -35,7 +38,8 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Button.Play) < prototype(Neos.Fusion
             @if={!props.href}
             x-show={props.show}
             x-on:click={props.onClick}
-            x-prettyembedpopup={props.popup}
+            x-prettyembedpopup={props.alpineJsValues ? null : props.popup}
+            "x-prettyembedpopup.dynamic"={props.alpineJsValues ? props.popup : null}
             x-transition
             x-cloak
             aria-label={props.label}

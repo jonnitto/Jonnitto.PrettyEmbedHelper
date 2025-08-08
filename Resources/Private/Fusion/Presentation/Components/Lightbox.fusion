@@ -5,6 +5,7 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Lightbox) < prototype(Neos.Fusion:Co
         aspectRatio = ${PropTypes.anyOf(PropTypes.string, PropTypes.float, PropTypes.integer)}
         playButton = ${PropTypes.boolean}
         pauseButton = ${PropTypes.boolean}
+        alpineJsValues = ${PropTypes.boolean}
    }
 
     player = 'Video'
@@ -36,9 +37,10 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Lightbox) < prototype(Neos.Fusion:Co
                     <Jonnitto.PrettyEmbed:Presentation.Button.Close />
                     <div
                         x-ref={props.player == 'Vimeo' ? 'vimeo' : null}
-                        style={props.aspectRatio ? '--aspect-ratio:' + props.aspectRatio :  null}
                         class.base="jonnitto-prettyembed-lightbox__content"
                         class.ratio={props.aspectRatio ? "jonnitto-prettyembed-ratio" : null}
+                        style={props.aspectRatio && !props.alpineJsValues ? '--aspect-ratio:' + props.aspectRatio :  null}
+                        :style={props.aspectRatio && props.alpineJsValues ? ("{'--aspect-ratio':" + props.aspectRatio + "}") :  null}
                     >
                         <Jonnitto.PrettyEmbed:Presentation.YouTubeTarget
                             player={props.player}

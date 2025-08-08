@@ -8,4 +8,7 @@ prototype(Jonnitto.PrettyEmbed:Presentation.Vimeo) < prototype(Jonnitto.PrettyEm
     lightbox = ${Configuration.setting('Jonnitto.PrettyEmbed.Vimeo.lightbox')}
     preserveAspectRatio = ${Configuration.setting('Jonnitto.PrettyEmbed.Vimeo.preserveAspectRatio')}
     fallbackAspectRatio = ${Configuration.setting('Jonnitto.PrettyEmbed.Vimeo.fallbackAspectRatio')}
+
+    // Set this to true if poster, aspectRatio, videoID, href, embedHref are values from AlpineJS
+    alpineJsValues = false
 }
