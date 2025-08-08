@@ -123,10 +123,9 @@ class Helper implements ProtectedContextAwareInterface
     /**
      * @param AssetInterface $asset
      * @param integer $maximumWidth Desired maximum width of the image
-     * @param boolean $async Whether the thumbnail can be generated asynchronously
-     * @param integer $quality Quality of the processed image
      * @param string $format Format for the image, only jpg, jpeg, gif, png, wbmp, xbm, webp and bmp are supported.
-     * @return null|ImageInterface
+     * @param integer $quality Quality of the processed image
+     * @return ImageInterface|null
      * @throws ThumbnailServiceException
      */
     public function createThumbnail(AssetInterface $asset, $maximumWidth = null, $format = null, $quality = null)
