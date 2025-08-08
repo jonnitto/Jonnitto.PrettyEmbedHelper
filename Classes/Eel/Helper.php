@@ -2,8 +2,9 @@
 
 namespace Jonnitto\PrettyEmbedHelper\Eel;
 
-use Jonnitto\PrettyEmbedHelper\Service\ParseIDService;
 use Jonnitto\PrettyEmbedHelper\Utility\Utility;
+use Jonnitto\PrettyEmbedPresentation\Service\ParseIDService;
+use Jonnitto\PrettyEmbedPresentation\Utility\Utility as PresentationUtility;
 use Neos\ContentRepository\Domain\Model\NodeInterface;
 use Neos\Eel\ProtectedContextAwareInterface;
 use Neos\Flow\Annotations as Flow;
@@ -42,7 +43,7 @@ class Helper implements ProtectedContextAwareInterface
      */
     public function vimeoThumbnail($videoID): ?string
     {
-        return Utility::vimeoThumbnail($videoID);
+        return PresentationUtility::vimeoThumbnail($videoID);
     }
 
     /**
@@ -54,7 +55,7 @@ class Helper implements ProtectedContextAwareInterface
      */
     public function vimeoHref($videoID, bool $embedded = false): string
     {
-        return Utility::vimeoHref($videoID, $embedded);
+        return PresentationUtility::vimeoHref($videoID, $embedded);
     }
 
     /**
@@ -67,7 +68,7 @@ class Helper implements ProtectedContextAwareInterface
      */
     public function youtubeHref(string $videoID, ?string $type = 'video', bool $embedded = false): string
     {
-        return Utility::youtubeHref($videoID, $type, $embedded);
+        return PresentationUtility::youtubeHref($videoID, $type, $embedded);
     }
 
     /**
@@ -78,7 +79,7 @@ class Helper implements ProtectedContextAwareInterface
      */
     public function youtubeThumbnail(string $videoID): ?string
     {
-        return Utility::youtubeThumbnail($videoID);
+        return PresentationUtility::youtubeThumbnail($videoID);
     }
 
     /**

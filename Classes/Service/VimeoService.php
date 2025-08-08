@@ -3,7 +3,9 @@
 namespace Jonnitto\PrettyEmbedHelper\Service;
 
 use Jonnitto\PrettyEmbedHelper\Utility\Utility;
-use Jonnitto\PrettyPresentation\Utility\Utility as PresentationUtility;
+use Jonnitto\PrettyEmbedPresentation\Service\ApiService;
+use Jonnitto\PrettyEmbedPresentation\Service\ParseIDService;
+use Jonnitto\PrettyEmbedPresentation\Utility\Utility as PresentationUtility;
 use Neos\ContentRepository\Domain\Model\NodeInterface;
 use Neos\ContentRepository\Exception\NodeException;
 use Neos\Flow\Annotations as Flow;
