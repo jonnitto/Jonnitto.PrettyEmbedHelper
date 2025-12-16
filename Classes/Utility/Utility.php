@@ -38,6 +38,7 @@ class Utility
     /**
      * Set Metadata value
      *
+     * @param ContentRepositoryRegistry $contentRepositoryRegistry
      * @param Node $node
      * @param string|null $property is null, all metadata will be replaced
      * @param mixed $value
