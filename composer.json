@@ -27,7 +27,7 @@
         "ext-json": "*",
         "ext-dom": "*",
         "neos/neos": "^8.3",
-        "jonnitto/prettyembedpresentation": "^1.0"
+        "jonnitto/prettyembedpresentation": "^1.0 || ^2.0"
     },
     "suggest": {
         "james-heinrich/getid3": "Get the duration of internal audio and video files. You need to install the 2.0-beta version"
