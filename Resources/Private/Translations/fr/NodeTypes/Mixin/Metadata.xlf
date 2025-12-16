@@ -15,6 +15,18 @@
                 <source>Title</source>
                 <target>Titre</target>
             </trans-unit>
+            <trans-unit id="artist.label" xml:space="preserve">
+                <source>Artist</source>
+                <target>Artiste</target>
+            </trans-unit>
+            <trans-unit id="album.label" xml:space="preserve">
+                <source>Album</source>
+                <target>Album</target>
+            </trans-unit>
+            <trans-unit id="date.label" xml:space="preserve">
+                <source>Date</source>
+                <target>Date</target>
+            </trans-unit>
             <trans-unit id="aspectRatio.label" xml:space="preserve">
                 <source>Aspect ratio</source>
                 <target>Rapport d'aspect</target>
