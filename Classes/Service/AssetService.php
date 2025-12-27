@@ -55,9 +55,10 @@ class AssetService
      * @param Node $node
      * @param boolean $remove
      * @param string $type
+     * @param boolean $single
      * @return array
      */
-    public function getAndSaveDataId3(Node $node, bool $remove, string $type): array
+    public function getAndSaveDataId3(Node $node, bool $remove, string $type, bool $single = false): array
     {
         $duration = null;
         $audio = null;
@@ -66,9 +67,12 @@ class AssetService
             Utility::removeMetadata($this->contentRepositoryRegistry, $node, 'duration');
         } else {
             $this->setCacheDirectory();
-            $assets = $node->getProperty('assets');
+            $assets = $node->getProperty($single ? 'asset' : 'assets');
 
             if (isset($assets) && !empty($assets)) {
+                if ($single) {
+                    $assets = [$assets];
+                }
                 $getID3 = new \JamesHeinrich\GetID3\GetID3();
                 $file = $assets[0]->getResource()->createTemporaryLocalCopy();
                 if (file_exists($file)) {

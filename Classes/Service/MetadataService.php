@@ -97,12 +97,20 @@ class MetadataService
     {
         if (
             ($propertyName === 'videoID' && $oldValue !== $newValue) ||
-            ($propertyName === 'type' && $node->hasProperty('videoID')) ||
-            ($propertyName === 'assets' &&
-                $node->nodeTypeName->equals(NodeTypeName::fromString('Jonnitto.PrettyEmbedHelper:Mixin.Metadata')))
+            ($propertyName === 'type' && $node->hasProperty('videoID'))
         ) {
             return $this->dataFromService($node);
         }
+
+        $hasMetadata = $node->nodeTypeName->equals(NodeTypeName::fromString('Jonnitto.PrettyEmbedHelper:Mixin.Metadata'));
+        if (!$hasMetadata) {
+            return $this->defaultReturn;
+        }
+
+        if ($propertyName === 'assets' || ($propertyName === 'asset') && $node->nodeTypeName->equals(NodeTypeName::fromString('Jonnitto.PrettyEmbedAudio:Mixin.Asset'))) {
+            return $this->dataFromService($node);
+        }
+
         return $this->defaultReturn;
     }
 
@@ -119,6 +127,10 @@ class MetadataService
         $platform = $this->checkNodeAndSetPlatform($node);
         if (!$platform) {
             return $this->defaultReturn;
+        }
+
+        if ($platform == 'audio_single') {
+            return $this->assetService->getAndSaveDataId3($node, $remove, 'Audio', true);
         }
 
         if ($platform == 'audio') {
@@ -152,6 +164,10 @@ class MetadataService
      */
     protected function checkNodeAndSetPlatform(Node $node): ?string
     {
+        if ($node->nodeTypeName->equals(NodeTypeName::fromString('Jonnitto.PrettyEmbedAudio:Mixin.Asset'))) {
+            return 'audio_single';
+        }
+
         if ($node->nodeTypeName->equals(NodeTypeName::fromString('Jonnitto.PrettyEmbedAudio:Mixin.Assets'))) {
             return 'audio';
         }
