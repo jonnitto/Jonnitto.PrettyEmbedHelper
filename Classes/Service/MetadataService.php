@@ -168,7 +168,8 @@ class MetadataService
         if ($nodeType->isOfType('Jonnitto.PrettyEmbedAudio:Mixin.Asset')) {
             return 'audio_single';
         }
-        if ($nodeType->isOfType('Jonnitto.PrettyEmbedAudio:Mixin.Asset')) {
+
+        if ($nodeType->isOfType('Jonnitto.PrettyEmbedAudio:Mixin.Assets')) {
             return 'audio';
         }
 

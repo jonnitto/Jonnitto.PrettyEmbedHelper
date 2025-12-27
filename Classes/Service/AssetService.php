@@ -51,6 +51,7 @@ class AssetService
      * @param NodeInterface $node
      * @param boolean $remove
      * @param string $type
+     * @param boolean $single
      * @return array
      * @throws NodeException
      */
