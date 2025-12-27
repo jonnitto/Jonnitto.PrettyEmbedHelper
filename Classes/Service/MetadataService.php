@@ -94,11 +94,21 @@ class MetadataService
     {
         if (
             ($propertyName === 'videoID' && $oldValue !== $newValue) ||
-            ($propertyName === 'type' && $node->hasProperty('videoID')) ||
-            ($propertyName === 'assets' && $node->getNodeType()->isOfType('Jonnitto.PrettyEmbedHelper:Mixin.Metadata'))
+            ($propertyName === 'type' && $node->hasProperty('videoID'))
         ) {
             return $this->dataFromService($node);
         }
+
+        $nodeType = $node->getNodeType();
+        $hasMetadata = $nodeType->isOfType('Jonnitto.PrettyEmbedHelper:Mixin.Metadata');
+        if (!$hasMetadata) {
+            return $this->defaultReturn;
+        }
+
+        if ($propertyName === 'assets' || ($propertyName === 'asset') && $nodeType->isOfType('Jonnitto.PrettyEmbedAudio:Mixin.Asset')) {
+            return $this->dataFromService($node);
+        }
+
         return $this->defaultReturn;
     }
 
@@ -116,6 +126,10 @@ class MetadataService
         $platform = $this->checkNodeAndSetPlatform($node);
         if (!$platform) {
             return $this->defaultReturn;
+        }
+
+        if ($platform == 'audio_single') {
+            return $this->assetService->getAndSaveDataId3($node, $remove, 'Audio', true);
         }
 
         if ($platform == 'audio') {
@@ -150,15 +164,19 @@ class MetadataService
      */
     protected function checkNodeAndSetPlatform(NodeInterface $node): ?string
     {
-        if ($node->getNodeType()->isOfType('Jonnitto.PrettyEmbedAudio:Mixin.Assets')) {
+        $nodeType = $node->getNodeType();
+        if ($nodeType->isOfType('Jonnitto.PrettyEmbedAudio:Mixin.Asset')) {
+            return 'audio_single';
+        }
+        if ($nodeType->isOfType('Jonnitto.PrettyEmbedAudio:Mixin.Asset')) {
             return 'audio';
         }
 
-        if ($node->getNodeType()->isOfType('Jonnitto.PrettyEmbedVideo:Mixin.Assets')) {
+        if ($nodeType->isOfType('Jonnitto.PrettyEmbedVideo:Mixin.Assets')) {
             return 'video';
         }
 
-        if (!$node->getNodeType()->isOfType('Jonnitto.PrettyEmbedVideoPlatforms:Mixin.VideoID')) {
+        if (!$nodeType->isOfType('Jonnitto.PrettyEmbedVideoPlatforms:Mixin.VideoID')) {
             return null;
         }
 
