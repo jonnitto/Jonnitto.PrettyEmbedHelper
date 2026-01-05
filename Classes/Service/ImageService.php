@@ -64,6 +64,7 @@ class ImageService
         $videoId,
         string $type,
         ?string $filenameSuffix = null,
+        ?string $copyrightHolder = null
     ): ?object {
         if (!$node->getNodeType()->isOfType('Jonnitto.PrettyEmbedHelper:Mixin.Metadata')) {
             return null;
@@ -116,6 +117,9 @@ class ImageService
         $image->getResource()->setFilename($filename);
         $image->getResource()->setMediaType('image/' . $extension);
         $image->setTags($tags);
+        if (!empty($copyrightHolder)) {
+            $image->setCopyrightNotice($copyrightHolder);
+        }
         $this->assetRepository->add($image);
         $this->persistenceManager->persistAll();
         return $image;

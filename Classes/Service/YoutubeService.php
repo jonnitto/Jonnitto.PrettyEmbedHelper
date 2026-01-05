@@ -71,6 +71,7 @@ class YoutubeService
 
         if (isset($data)) {
             $title = $data['title'] ?? null;
+            $author = $data['author'] ?? $data['author_name'] ?? null;
             $ratio = PresentationUtility::getRatio($data['width'], $data['height']);
             $duration = $data['duration'] ?? null;
             if (isset($data['imageUrl'], $data['imageResolution'])) {
@@ -88,12 +89,13 @@ class YoutubeService
         }
 
         if (isset($image)) {
-            $thumbnail = $this->imageService->import($node, $image, $videoID, 'Youtube', $resolution);
+            $thumbnail = $this->imageService->import($node, $image, $videoID, 'Youtube', $resolution, $author);
         }
 
         Utility::setMetadata($node, null, [
             'videoID' => $videoID,
             'title' => $title ?? null,
+            'author' => $author ?? null,
             'aspectRatio' => $ratio ?? null,
             'duration' => $duration ?? null,
             'image' => PresentationUtility::removeProtocolFromUrl($image ?? null),

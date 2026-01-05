@@ -22,6 +22,7 @@
           editorOptions:
             videoID: Jonnitto.PrettyEmbedHelper:NodeTypes.Mixin.Metadata:videoID
             title: Jonnitto.PrettyEmbedHelper:NodeTypes.Mixin.Metadata:title
+            author: Jonnitto.PrettyEmbedHelper:NodeTypes.Mixin.Metadata:author
             artist: Jonnitto.PrettyEmbedHelper:NodeTypes.Mixin.Metadata:artist
             album: Jonnitto.PrettyEmbedHelper:NodeTypes.Mixin.Metadata:album
             date: Jonnitto.PrettyEmbedHelper:NodeTypes.Mixin.Metadata:date

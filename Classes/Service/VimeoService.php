@@ -66,6 +66,7 @@ class VimeoService
         if (isset($data)) {
             $videoID = $data['video_id'] ?? $videoID;
             $title = $data['title'] ?? null;
+            $author = $data['author_name'] ?? null;
             $ratio = PresentationUtility::getRatio($data['width'], $data['height']);
             $image = $data['thumbnail_url'] ?? null;
             $duration = $data['duration'] ?? null;
@@ -73,7 +74,7 @@ class VimeoService
 
             if (isset($image)) {
                 try {
-                    $thumbnail = $this->imageService->import($node, $image, $videoID, 'Vimeo');
+                    $thumbnail = $this->imageService->import($node, $image, $videoID, 'Vimeo', null, $author);
                 } catch (IllegalObjectTypeException | InvalidQueryException | Exception | \Exception $e) {
                 }
             }
@@ -83,6 +84,7 @@ class VimeoService
             'videoID' => $videoID,
             'hash' => $hash,
             'title' => $title ?? null,
+            'author' => $author ?? null,
             'aspectRatio' => $ratio ?? null,
             'duration' => $duration ?? null,
             'image' => PresentationUtility::removeProtocolFromUrl($image ?? null),
