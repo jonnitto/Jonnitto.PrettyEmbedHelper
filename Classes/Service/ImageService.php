@@ -53,6 +53,7 @@ class ImageService
      * @param string|integer $videoId
      * @param string $type
      * @param string|null $filenameSuffix
+     * @param string|null $copyrightHolder
      * @return object|null
      * @throws IllegalObjectTypeException
      * @throws Exception|InvalidQueryException
