@@ -51,6 +51,7 @@ class Helper implements ProtectedContextAwareInterface
      *
      * @param string|integer $videoID
      * @param boolean $embedded
+     * @param string|null $hash
      * @return string
      */
     public function vimeoHref($videoID, bool $embedded = false, ?string $hash = null): string
