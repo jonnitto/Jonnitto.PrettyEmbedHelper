@@ -19,6 +19,10 @@
                 <source>Artist</source>
                 <target>Kunstner</target>
             </trans-unit>
+            <trans-unit id="author.label" xml:space="preserve">
+                <source>Author</source>
+                <target>Forfatter</target>
+            </trans-unit>
             <trans-unit id="album.label" xml:space="preserve">
                 <source>Album</source>
                 <target>Album</target>
