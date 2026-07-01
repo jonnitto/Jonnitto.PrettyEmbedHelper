@@ -6,7 +6,7 @@ use Jonnitto\PrettyEmbedHelper\Utility\Utility;
 use Jonnitto\PrettyEmbedPresentation\Service\ParseIDService;
 use Neos\ContentRepository\Core\Feature\NodeModification\Command\SetNodeProperties;
 use Neos\ContentRepository\Core\Feature\NodeModification\Dto\PropertyValuesToWrite;
-use Neos\ContentRepository\Core\NodeType\NodeTypeName;
+use Neos\ContentRepository\Core\NodeType\NodeType;
 use Neos\ContentRepository\Core\Projection\ContentGraph\Node;
 use Neos\ContentRepositoryRegistry\ContentRepositoryRegistry;
 use Neos\Flow\Annotations as Flow;
@@ -45,11 +45,10 @@ class MetadataService
     /**
      * Wrapper method to handle signals from Node::nodeAdded
      *
-     * @param Node $node
      * @return array|null[]
      * @throws IllegalObjectTypeException
      */
-    public function onNodeAdded(Node $node)
+    public function onNodeAdded(Node $node): array
     {
         return $this->createDataFromService($node);
     }
@@ -57,18 +56,18 @@ class MetadataService
     /**
      * Create data
      *
-     * @param Node $node
-     * @param bool $remove
      * @return array Information about the node
      * @throws IllegalObjectTypeException
      */
     public function createDataFromService(Node $node, bool $remove = false): array
     {
+        $nodeTypeManager = $this->contentRepositoryRegistry->get($node->contentRepositoryId)->getNodeTypeManager();
+        $nodeType = $nodeTypeManager->getNodeType($node->nodeTypeName);
         if (
             $node->hasProperty('videoID') ||
-            $node->nodeTypeName->equals(NodeTypeName::fromString('Jonnitto.PrettyEmbedHelper:Mixin.Metadata'))
+            ($nodeType !== null && $nodeType->isOfType('Jonnitto.PrettyEmbedHelper:Mixin.Metadata'))
         ) {
-            return $this->dataFromService($node, $remove);
+            return $this->dataFromService($node, $nodeType, $remove);
         }
         return $this->defaultReturn;
     }
@@ -86,8 +85,6 @@ class MetadataService
     /**
      * Update data
      *
-     * @param Node $node
-     * @param string $propertyName
      * @param mixed $oldValue
      * @param mixed $newValue
      * @return array Information about the node
@@ -95,20 +92,26 @@ class MetadataService
      */
     public function updateDataFromService(Node $node, string $propertyName, $oldValue, $newValue): array
     {
+        $nodeTypeManager = $this->contentRepositoryRegistry->get($node->contentRepositoryId)->getNodeTypeManager();
+        $nodeType = $nodeTypeManager->getNodeType($node->nodeTypeName);
+
         if (
             ($propertyName === 'videoID' && $oldValue !== $newValue) ||
             ($propertyName === 'type' && $node->hasProperty('videoID'))
         ) {
-            return $this->dataFromService($node);
+            return $this->dataFromService($node, $nodeType);
         }
 
-        $hasMetadata = $node->nodeTypeName->equals(NodeTypeName::fromString('Jonnitto.PrettyEmbedHelper:Mixin.Metadata'));
+        $hasMetadata = $nodeType !== null && $nodeType->isOfType('Jonnitto.PrettyEmbedHelper:Mixin.Metadata');
         if (!$hasMetadata) {
             return $this->defaultReturn;
         }
 
-        if ($propertyName === 'assets' || ($propertyName === 'asset') && $node->nodeTypeName->equals(NodeTypeName::fromString('Jonnitto.PrettyEmbedAudio:Mixin.Asset'))) {
-            return $this->dataFromService($node);
+        if (
+            $propertyName === 'assets' ||
+            ($propertyName === 'asset' && $nodeType !== null && $nodeType->isOfType('Jonnitto.PrettyEmbedAudio:Mixin.Asset'))
+        ) {
+            return $this->dataFromService($node, $nodeType);
         }
 
         return $this->defaultReturn;
@@ -117,31 +120,29 @@ class MetadataService
     /**
      * Saves and returns the metadata
      *
-     * @param Node $node
-     * @param boolean $remove
      * @return array Information about the node
      * @throws IllegalObjectTypeException
      */
-    protected function dataFromService(Node $node, bool $remove = false): array
+    protected function dataFromService(Node $node, ?NodeType $nodeType, bool $remove = false): array
     {
-        $platform = $this->checkNodeAndSetPlatform($node);
+        $platform = $this->checkNodeAndSetPlatform($node, $nodeType);
         if (!$platform) {
             return $this->defaultReturn;
         }
 
-        if ($platform == 'audio_single') {
+        if ($platform === 'audio_single') {
             return $this->assetService->getAndSaveDataId3($node, $remove, 'Audio', true);
         }
 
-        if ($platform == 'audio') {
+        if ($platform === 'audio') {
             return $this->assetService->getAndSaveDataId3($node, $remove, 'Audio');
         }
 
-        if ($platform == 'video') {
+        if ($platform === 'video') {
             return $this->assetService->getAndSaveDataId3($node, $remove, 'Video');
         }
 
-        if ($platform == 'youtube') {
+        if ($platform === 'youtube') {
             try {
                 $data = $this->youtubeService->getAndSaveDataFromApi($node, $remove);
             } catch (JsonException | InfiniteRedirectionException | IllegalObjectTypeException | InvalidQueryException | Exception $e) {
@@ -149,7 +150,7 @@ class MetadataService
             return $data ?? $this->defaultReturn;
         }
 
-        if ($platform == 'vimeo') {
+        if ($platform === 'vimeo') {
             return $this->vimeoService->getAndSaveDataFromApi($node, $remove);
         }
 
@@ -158,27 +159,26 @@ class MetadataService
 
     /**
      * Check the node and return the platform/type
-     *
-     * @param Node $node
-     * @return string|null
      */
-    protected function checkNodeAndSetPlatform(Node $node): ?string
+    protected function checkNodeAndSetPlatform(Node $node, ?NodeType $nodeType): ?string
     {
-        if ($node->nodeTypeName->equals(NodeTypeName::fromString('Jonnitto.PrettyEmbedAudio:Mixin.Asset'))) {
+        if (!$nodeType) {
+            return null;
+        }
+
+        if ($nodeType->isOfType('Jonnitto.PrettyEmbedAudio:Mixin.Asset')) {
             return 'audio_single';
         }
 
-        if ($node->nodeTypeName->equals(NodeTypeName::fromString('Jonnitto.PrettyEmbedAudio:Mixin.Assets'))) {
+        if ($nodeType->isOfType('Jonnitto.PrettyEmbedAudio:Mixin.Assets')) {
             return 'audio';
         }
 
-        if ($node->nodeTypeName->equals(NodeTypeName::fromString('Jonnitto.PrettyEmbedVideo:Mixin.Assets'))) {
+        if ($nodeType->isOfType('Jonnitto.PrettyEmbedVideo:Mixin.Assets')) {
             return 'video';
         }
 
-        if (
-            !$node->nodeTypeName->equals(NodeTypeName::fromString('Jonnitto.PrettyEmbedVideoPlatforms:Mixin.VideoID'))
-        ) {
+        if (!$nodeType->isOfType('Jonnitto.PrettyEmbedVideoPlatforms:Mixin.VideoID')) {
             return null;
         }
 
