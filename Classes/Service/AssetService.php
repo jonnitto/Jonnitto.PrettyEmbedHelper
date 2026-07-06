@@ -96,7 +96,7 @@ class AssetService
             'node' => $type,
             'type' => '',
             'id' => '',
-            'path' => NodePath::fromNodeNames($node->name),
+            'path' => $node->name ? NodePath::fromNodeNames($node->name) : $node->aggregateId,
             'data' => isset($duration),
         ];
     }

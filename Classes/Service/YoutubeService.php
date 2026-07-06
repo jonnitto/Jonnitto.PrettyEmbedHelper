@@ -57,7 +57,7 @@ class YoutubeService
         $returnArray = [
             'nodeTypeName' => $node->nodeTypeName->value,
             'node' => 'Youtube',
-            'path' => NodePath::fromNodeNames($node->name),
+            'path' => $node->name ? NodePath::fromNodeNames($node->name) : $node->aggregateId,
             'data' => false,
         ];
 

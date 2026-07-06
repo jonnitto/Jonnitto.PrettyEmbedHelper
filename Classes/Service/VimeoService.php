@@ -54,7 +54,7 @@ class VimeoService
             'nodeTypeName' => $node->nodeTypeName->value,
             'node' => 'Vimeo',
             'type' => 'Video',
-            'path' => NodePath::fromNodeNames($node->name),
+            'path' => $node->name ? NodePath::fromNodeNames($node->name) : $node->aggregateId,
             'data' => false,
         ];
 
