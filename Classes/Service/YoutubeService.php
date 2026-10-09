@@ -68,7 +68,6 @@ class YoutubeService
 
         $videoID = $this->parseID->youtube($videoIDProperty, $type);
         $data = $this->api->youtube($videoID, $type, $this->apiKey);
-        $author = null;
 
         if (isset($data)) {
             $title = $data['title'] ?? null;
@@ -90,7 +89,7 @@ class YoutubeService
         }
 
         if (isset($image)) {
-            $thumbnail = $this->imageService->import($node, $image, $videoID, 'Youtube', $resolution, $author);
+            $thumbnail = $this->imageService->import($node, $image, $videoID, 'Youtube', $resolution, $author ?? null);
         }
 
         Utility::setMetadata($node, null, [
