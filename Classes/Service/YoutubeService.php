@@ -68,6 +68,7 @@ class YoutubeService
 
         $videoID = $this->parseID->youtube($videoIDProperty, $type);
         $data = $this->api->youtube($videoID, $type, $this->apiKey);
+        $author = null;
 
         if (isset($data)) {
             $title = $data['title'] ?? null;
